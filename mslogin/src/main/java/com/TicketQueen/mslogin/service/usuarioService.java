@@ -41,5 +41,24 @@ public usuario actualizarUsuario(Integer id, usuario usuarioActualizado) {
     return null;
 
 }
-//tipo de usuario
+//crear usuario y contraseña
+public usuario crearUsuario(String nombreUsuario, String email, String password) {
+    usuario nuevoUsuario = new usuario();
+    nuevoUsuario.setNombreUsuario(nombreUsuario);
+    nuevoUsuario.setEmail(email);
+    nuevoUsuario.setPassword(password);
+    return usuarioRepository.save(nuevoUsuario);
+}
+// verificar si el usuario existe por correo
+public boolean verificarUsuarioPorCorreo(String correo) {
+    return usuarioRepository.findByCorreo(correo).isPresent();
+}
+// verificar si la contraseña es correcta y el correo existe
+public boolean verificarCredenciales(String correo, String password) {
+    usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
+    if (usuario != null) {
+        return usuario.getPassword().equals(password);
+    }
+    return false;
+}
 }
