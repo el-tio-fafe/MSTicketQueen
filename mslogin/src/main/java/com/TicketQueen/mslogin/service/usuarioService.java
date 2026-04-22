@@ -1,5 +1,45 @@
 package com.TicketQueen.mslogin.service;
 
-public class usuarioService {
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.TicketQueen.mslogin.model.usuario;
+import com.TicketQueen.mslogin.repository.usuarioRepository;
+@Service
+public class usuarioService {
+@Autowired
+private usuarioRepository usuarioRepository;
+
+//listar usuarios
+public List<usuario> listarUsuarios() {
+    return usuarioRepository.findAll(); 
+}
+//guardar usuario
+public usuario guardarUsuario(usuario usuario) {
+    return usuarioRepository.save(usuario);
+
+}
+//buscar usuario por correo
+public usuario buscarUsuarioPorCorreo(String correo) {
+    return usuarioRepository.findByCorreo(correo).orElse(null);
+}
+//eliminar usuario
+public void eliminarUsuario(Integer id) {
+    usuarioRepository.deleteById(id);
+}
+//actualizar usuario
+public usuario actualizarUsuario(Integer id, usuario usuarioActualizado) {
+    usuario usuarioExistente = usuarioRepository.findById(id).orElse(null);
+    if (usuarioExistente != null) {
+        usuarioExistente.setNombreUsuario(usuarioActualizado.getNombreUsuario());
+        usuarioExistente.setEmail(usuarioActualizado.getEmail());
+        usuarioExistente.setPassword(usuarioActualizado.getPassword());
+        return usuarioRepository.save(usuarioExistente);
+    }
+    return null;
+
+}
+//tipo de usuario
 }
