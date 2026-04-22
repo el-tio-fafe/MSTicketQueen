@@ -11,5 +11,6 @@ public interface DoctorClient {
 
     @GetMapping("/api/v1/doctores/{id}")
     DoctorDTO obtenerDoctor(@PathVariable("id") Integer id);
+//comentario
 
 }
