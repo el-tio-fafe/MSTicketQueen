@@ -11,5 +11,6 @@ import cl.duoc.msAdministrador.model.Administrador;
 public interface AdministradorRepository extends JpaRepository<Administrador, Integer> {
 
     Optional<Administrador> findByRutAdm(String rutAdm);
+
     
 }

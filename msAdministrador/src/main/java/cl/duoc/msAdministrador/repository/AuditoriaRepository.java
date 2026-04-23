@@ -12,4 +12,5 @@ import cl.duoc.msAdministrador.model.Auditoria;
 public interface AuditoriaRepository extends JpaRepository<Auditoria, Integer>   {
 
     Optional<Auditoria> findByIdAdministrador(Administrador administrador);
+
 }

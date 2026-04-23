@@ -24,7 +24,7 @@ public class Auditoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAuditoria;
+    private Integer IdAuditoria;
 
     @Column(nullable = false)
     private String nombreResponsable;
