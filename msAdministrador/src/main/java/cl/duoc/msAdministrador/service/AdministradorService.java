@@ -49,12 +49,11 @@ public class AdministradorService {
         administrador.setTelefonoAdm(administradorActualizado.getTelefonoAdm());
 
         if(administradorActualizado.getAuditoria() != null){
-            administradorActualizado.getAuditoria().setAdministrador(administrador);
+            administradorActualizado.getAuditoria().forEach(auditoria -> auditoria.setAdministrador(administrador));
             administrador.setAuditoria(administradorActualizado.getAuditoria());
         }
 
         return administradorRepository.save(administrador);
     }
-    
 
 }

@@ -33,7 +33,6 @@ public class AdministradorController {
         }
     }
 
-
     @GetMapping("/id/{idAdm}")
     public ResponseEntity<Administrador> buscarPorId(@PathVariable Integer idAdm){
         try {
@@ -79,6 +78,5 @@ public class AdministradorController {
             return ResponseEntity.notFound().build();
         }
     }
-
 
 }

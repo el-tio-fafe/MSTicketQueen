@@ -1,5 +1,7 @@
 package cl.duoc.msAdministrador.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +15,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "administrador")
 
 public class Administrador {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +39,6 @@ public class Administrador {
     private String telefonoAdm;
 
     @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)
-    private Auditoria auditoria;
+    private List<Auditoria> auditoria;
     
-
-
-
-
 }

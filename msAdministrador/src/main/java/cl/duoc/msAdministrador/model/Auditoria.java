@@ -30,7 +30,7 @@ public class Auditoria {
     private String nombreResponsable;
 
     @Column(nullable = false)
-    private Date fechaHora;
+    private Date fecha;
 
     @Column(nullable = false)
     private String tipoAccion;
@@ -41,7 +41,5 @@ public class Auditoria {
     @ManyToOne
     @JoinColumn(name = "id_administrador")
     private Administrador administrador; // Relación con Administrador (opcional)
-
-
 
 }
