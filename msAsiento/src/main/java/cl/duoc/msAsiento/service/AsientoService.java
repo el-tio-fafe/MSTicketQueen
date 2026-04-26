@@ -15,7 +15,7 @@ public class AsientoService {
     private AsientoRepository asientoRepository;
 
 
-    public List<Asiento> listar(){
+    public List<Asiento> listarAsientos(){
         return asientoRepository.findAll();
     }
 
@@ -62,23 +62,13 @@ public class AsientoService {
 
         asiento.setNumeroAsiento(asientoActualizado.getNumeroAsiento());
         asiento.setEstadoAsiento(asientoActualizado.getEstadoAsiento());
-
-        if(asientoActualizado.getReservaTemporal() != null){
-            asientoActualizado.getReservaTemporala().setAsiento(asiento);
-            asiento.setReservaTemporal(asientoActualizado.getReservaTemporal());
-        }
-
+        
         return asientoRepository.save(asiento);
 
     }
 
 
-    // confraternidades:
-    // 6 - 6
-    // 4 - 7
-    // 16 - 8 aniversario shalom
-    // 5 - 9
-    //24 y 25 -10 conferencias renca
+   
 
 
 }

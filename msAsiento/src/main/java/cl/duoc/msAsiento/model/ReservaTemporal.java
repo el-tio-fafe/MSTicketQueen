@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "reservas_temporales")
+@Table(name = "reserva_temporal")
 public class ReservaTemporal {
 
     @Id
