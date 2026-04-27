@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity 
 @Table(name = "reserva_temporal")
 public class ReservaTemporal {
 

@@ -43,7 +43,7 @@ public class AsientoService {
         asientoRepository.deleteById(idAsiento);
     }
 
-    // public boolean eliminarPorNumAsiento(String numAsiento){
+    // public boolean eliminarPorNumAsiento(String numAsiento){ 
     //     asientoRepository.eliminarPorNumeroAsiento(numAsiento);
     //     return true;
     // }
@@ -52,7 +52,7 @@ public class AsientoService {
         if(!asientoRepository.findByNumeroAsiento(numAsiento).isPresent()){
             throw new RuntimeException("Asiento numero: " + numAsiento + " no existe");
         }
-        asientoRepository.eliminarPorNumeroAsiento(numAsiento);
+        asientoRepository.deleteByNumeroAsiento(numAsiento);
     }
 
 

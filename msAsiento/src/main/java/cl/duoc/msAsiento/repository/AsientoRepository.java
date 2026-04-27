@@ -14,7 +14,8 @@ public interface AsientoRepository extends JpaRepository<Asiento, Integer>{
 
     Optional<Asiento> findByNumeroAsiento(String numeroAsiento);
     
-    public void eliminarPorNumeroAsiento(String numeroAsiento);
+    public void deleteByNumeroAsiento(String numeroAsiento);
 
 
 }
+ 
