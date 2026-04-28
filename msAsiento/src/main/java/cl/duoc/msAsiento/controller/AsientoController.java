@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -85,6 +86,16 @@ public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable Integer idAsie
     return ResponseEntity.ok(dto);
 }
 
+
+ @PutMapping("/{idAsiento}")
+    public ResponseEntity<Asiento> actualizar(@PathVariable Integer idAsiento, @RequestBody Asiento asiento){
+        try {
+            Asiento asientoActualizado = asientoService.actualizar(idAsiento, asiento);
+            return ResponseEntity.ok(asientoActualizado);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
 
