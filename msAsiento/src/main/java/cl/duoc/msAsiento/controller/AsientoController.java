@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +36,7 @@ public class AsientoController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Asiento> buscar(@PathVariable Integer id) {
+    public ResponseEntity<Asiento> buscarPorId(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(asientoService.buscarPorId(id));
         } catch (Exception e) {
@@ -45,35 +44,30 @@ public class AsientoController {
         }
     }
 
+    @GetMapping("numero/{numAsiento}")
+    public ResponseEntity<Asiento> buscarPorNumero(@PathVariable String numAsiento) {
+        try {
+            return ResponseEntity.ok(asientoService.buscarPorNumAsiento(numAsiento));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping
     public ResponseEntity<Asiento> guardar(@RequestBody Asiento asiento) {
         return ResponseEntity.ok(asientoService.guardar(asiento));
     }
 
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
-        try {
-            asientoService.eliminarPorId(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-
-     @DeleteMapping("/numero-asiento/{numAsiento}")
-    public ResponseEntity<Void> eliminarPorNumAsiento(@PathVariable String numAsiento) {
-        try {
-            asientoService.eliminarPorNumAsiento(numAsiento);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-
+    //NO NECESITAMOS ELIMINAR ASIENTOS EN UN EVENTO, DE TODAS FORMAS ESTE SERÍA EL METODO PARA HACERLO:
+    // @DeleteMapping("/{id}")
+    // public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    //     try {
+    //         asientoService.eliminarPorId(id);
+    //         return ResponseEntity.noContent().build();
+    //     } catch (Exception e) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
 
     @GetMapping("/dto/{id}")
 public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable Integer idAsiento) {
@@ -86,7 +80,6 @@ public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable Integer idAsie
     return ResponseEntity.ok(dto);
 }
 
-
  @PutMapping("/{idAsiento}")
     public ResponseEntity<Asiento> actualizar(@PathVariable Integer idAsiento, @RequestBody Asiento asiento){
         try {
@@ -96,17 +89,5 @@ public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable Integer idAsie
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-    
 
 }

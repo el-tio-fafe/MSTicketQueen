@@ -33,15 +33,28 @@ public class AdministradorController {
         }
     }
 
+    // @GetMapping("/id/{idAdm}")
+    // public ResponseEntity<Administrador> buscarPorId(@PathVariable Integer idAdm){
+    //     try {
+    //         Administrador admin = administradorService.buscarPorIdAdm(idAdm);
+    //         return ResponseEntity.ok(admin);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
+
     @GetMapping("/id/{idAdm}")
-    public ResponseEntity<Administrador> buscarPorId(@PathVariable Integer idAdm){
-        try {
-            Administrador admin = administradorService.buscarPorIdAdm(idAdm);
-            return ResponseEntity.ok(admin);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Administrador> buscarPorId(@PathVariable Integer idAdm) {
+    Administrador admin = administradorService.buscarPorIdAdm(idAdm);
+    
+    if (admin != null) {
+        return ResponseEntity.ok(admin);
+    } else {
+        // Esto le dirá a Postman: 404 Not Found
+        return ResponseEntity.notFound().build();
     }
+}
+
 
     @GetMapping("/rut/{rutAdm}")
     public ResponseEntity<Administrador> buscarPorRut(@PathVariable String rutAdm){

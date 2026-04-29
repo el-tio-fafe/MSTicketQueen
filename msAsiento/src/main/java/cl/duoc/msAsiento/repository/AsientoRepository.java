@@ -17,5 +17,5 @@ public interface AsientoRepository extends JpaRepository<Asiento, Integer>{
     public void deleteByNumeroAsiento(String numeroAsiento);
 
 
-}
+} 
  

@@ -66,9 +66,4 @@ public class AsientoService {
         return asientoRepository.save(asiento);
 
     }
-
-
-   
-
-
 }
