@@ -70,7 +70,7 @@ public class AsientoController {
     // }
 
     @GetMapping("/dto/{id}")
-public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable Integer idAsiento) {
+    public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable("id") Integer idAsiento) {
     Asiento asiento = asientoService.buscarPorId(idAsiento);
     AsientoDTO dto = new AsientoDTO(
             asiento.getIdAsiento(),

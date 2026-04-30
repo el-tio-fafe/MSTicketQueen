@@ -1,5 +1,7 @@
 package cl.duoc.msAsiento.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,15 +19,15 @@ public class ReservaTemporal {
     private Integer idReserva;
 
     @Column(nullable = false)
-    private String fechaHoraReserva;  //FORMATO: DD-MM-YYYY HH:MM:SS
+    private LocalDateTime fechaHoraReserva;  
 
     @Column(nullable = false)
-    private String estado;  //RESERVADO O CANCELADO
+    private LocalDateTime fechaExpiracion;  //esta es la fechaHoraReserva + los 10 min 
+
+    @Column(nullable = false)
+    private String estado;  //RESERVADO, CANCELADO O PAGADO
 
     @ManyToOne
     @JoinColumn(name = "id_asiento", nullable = false)
     private Asiento asiento;
-
-
-
 }

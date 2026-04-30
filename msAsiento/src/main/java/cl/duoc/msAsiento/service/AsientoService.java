@@ -49,10 +49,10 @@ public class AsientoService {
     // }
 
     public void eliminarPorNumAsiento(String numAsiento){
-        if(!asientoRepository.findByNumeroAsiento(numAsiento).isPresent()){
-            throw new RuntimeException("Asiento numero: " + numAsiento + " no existe");
-        }
-        asientoRepository.deleteByNumeroAsiento(numAsiento);
+        Asiento asiento = asientoRepository.findByNumeroAsiento(numAsiento).
+            orElseThrow(() ->new RuntimeException("Asiento numero: " + numAsiento + " no existe"));
+        
+        asientoRepository.deleteById(asiento.getIdAsiento());
     }
 
 
