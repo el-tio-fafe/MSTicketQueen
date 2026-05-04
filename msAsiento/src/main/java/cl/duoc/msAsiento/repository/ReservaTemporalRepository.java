@@ -12,5 +12,9 @@ public interface ReservaTemporalRepository extends JpaRepository<ReservaTemporal
 
     Optional<ReservaTemporal> findByIdReserva(Integer idReserva);
 
+    Optional<ReservaTemporal> findByAsientoIdAsientoAndEstado(Integer idAsiento, String estado);
+
+    Optional<ReservaTemporal> findByAsientoNumeroAsientoAndEstado(String numeroAsiento, String estado);
+
 }
  

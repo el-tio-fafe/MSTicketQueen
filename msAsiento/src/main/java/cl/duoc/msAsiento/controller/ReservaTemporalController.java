@@ -25,14 +25,33 @@ public class ReservaTemporalController {
     }
 
     @GetMapping("/verificar/{idReserva}")
-    public ResponseEntity<String> verificar(@PathVariable Integer idReserva){
-        return ResponseEntity.ok(reservaTemporalService.verificarExpiracion(idReserva));
+    public ResponseEntity<String> verificarPorIdReserva(@PathVariable Integer idReserva){
+        return ResponseEntity.ok(reservaTemporalService.verificarExpiracionPorIdReserva(idReserva));
     }
 
-    @PutMapping("/confirmar/{idReserva}")
-    public ResponseEntity<String> confirmarCompra(@PathVariable Integer idReserva) {
+    @GetMapping("/verificar/numero/{numeroAsiento}")
+    public ResponseEntity<String> verificarPorNumAsiento(@PathVariable String numeroAsiento) {
         try {
-            return ResponseEntity.ok(reservaTemporalService.confirmarCompra(idReserva));
+            return ResponseEntity.ok(reservaTemporalService.verificarExpiracionPorNumAsiento(numeroAsiento));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // @PutMapping("/confirmar/{idReserva}")  //lo quité porque el frontend no tiene el idReserva, sino el numeroAsiento
+    // public ResponseEntity<String> confirmarCompra(@PathVariable Integer idReserva) {
+    //     try {
+    //         return ResponseEntity.ok(reservaTemporalService.confirmarCompra(idReserva));
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
+
+
+    @PutMapping("/confirmar/numero/{numeroAsiento}")
+    public ResponseEntity<String> confirmarPorNumAsiento(@PathVariable String numeroAsiento) {
+        try {
+            return ResponseEntity.ok(reservaTemporalService.confirmarCompraPorNumAsiento(numeroAsiento));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
