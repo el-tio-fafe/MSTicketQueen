@@ -61,8 +61,12 @@ public class AsientoController {
     }
 
     @PostMapping
-    public ResponseEntity<Asiento> guardar(@RequestBody Asiento asiento) {
-        return ResponseEntity.ok(asientoService.guardar(asiento));
+    public ResponseEntity<?> guardar(@RequestBody Asiento asiento) {
+        try {
+            return ResponseEntity.ok(asientoService.guardar(asiento));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     //NO NECESITAMOS ELIMINAR ASIENTOS EN UN EVENTO, DE TODAS FORMAS ESTE SERÍA EL METODO PARA HACERLO:

@@ -37,6 +37,13 @@ public class AsientoService {
     }
 
     public Asiento guardar(Asiento asiento){
+        asiento.setNumeroAsiento(asiento.getNumeroAsiento().toUpperCase());
+        asiento.setEstadoAsiento(asiento.getEstadoAsiento().toUpperCase());
+
+        if(asientoRepository.findByNumeroAsiento(asiento.getNumeroAsiento()).isPresent()){
+            throw new RuntimeException("El número de asiento " + asiento.getNumeroAsiento() + " ya existe");
+        }
+        
         return asientoRepository.save(asiento);
     }
 

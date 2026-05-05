@@ -17,7 +17,7 @@ public class Asiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAsiento;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String numeroAsiento;
 
     @Column(nullable = false)
