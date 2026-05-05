@@ -43,7 +43,7 @@ public class AsientoService {
         if(asientoRepository.findByNumeroAsiento(asiento.getNumeroAsiento()).isPresent()){
             throw new RuntimeException("El número de asiento " + asiento.getNumeroAsiento() + " ya existe");
         }
-        
+
         return asientoRepository.save(asiento);
     }
 
@@ -67,8 +67,8 @@ public class AsientoService {
         Asiento asiento = asientoRepository.findById(idAsiento)
             .orElseThrow( () -> new RuntimeException("Asiento id: " + idAsiento + " no encontrado"));
 
-        asiento.setNumeroAsiento(asientoActualizado.getNumeroAsiento());
-        asiento.setEstadoAsiento(asientoActualizado.getEstadoAsiento());
+        asiento.setNumeroAsiento(asientoActualizado.getNumeroAsiento().toUpperCase());
+        asiento.setEstadoAsiento(asientoActualizado.getEstadoAsiento().toUpperCase());
         
         return asientoRepository.save(asiento);
 
