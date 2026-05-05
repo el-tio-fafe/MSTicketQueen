@@ -26,12 +26,19 @@ public class AsientoController {
     @GetMapping
     public ResponseEntity<List<Asiento>> listar() {
         List<Asiento> lista = asientoService.listarAsientos();
-
         if (lista.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/estado/{estadoAsiento}")
+    public ResponseEntity<?> listarPorEstado(@PathVariable String estadoAsiento){
+        List<Asiento> listaEstados = asientoService.listarPorEstado(estadoAsiento);
+        if (listaEstados.isEmpty()){
+            return ResponseEntity.badRequest().body("No hay asientos en estado: " + estadoAsiento);
+        }
+        return ResponseEntity.ok(listaEstados);
     }
 
 

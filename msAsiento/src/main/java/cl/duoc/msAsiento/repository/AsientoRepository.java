@@ -1,5 +1,6 @@
 package cl.duoc.msAsiento.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,10 @@ public interface AsientoRepository extends JpaRepository<Asiento, Integer>{
 
     Optional<Asiento> findByNumeroAsiento(String numeroAsiento);
     
+    List<Asiento> findByEstadoAsiento(String estadoAsiento);
+
     //public void deleteByNumeroAsiento(String numeroAsiento);
+
 
 
 } 

@@ -1,5 +1,7 @@
 package cl.duoc.msAsiento.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +21,44 @@ public class ReservaTemporalController {
     @Autowired
     private ReservaTemporalService reservaTemporalService;
 
-    @PostMapping("/{idAsiento}")
-    public ResponseEntity<ReservaTemporal> crearReserva(@PathVariable Integer idAsiento){
-        return ResponseEntity.ok(reservaTemporalService.crearReservaTemporal(idAsiento));
+    @GetMapping
+    public ResponseEntity<?> listarReservasTemporales(){
+        List<ReservaTemporal> listaReservas = reservaTemporalService.listarReservasTemporales();
+        if(listaReservas.isEmpty()){
+            return ResponseEntity.badRequest().body("No hay reservas registradas");
+        }else{
+            return ResponseEntity.ok(listaReservas);
+        }
     }
 
-    @GetMapping("/verificar/{idReserva}")
-    public ResponseEntity<String> verificarPorIdReserva(@PathVariable Integer idReserva){
-        return ResponseEntity.ok(reservaTemporalService.verificarExpiracionPorIdReserva(idReserva));
+    @PostMapping("/{idAsiento}")
+    public ResponseEntity<?> crearReserva(@PathVariable Integer idAsiento){
+        try{
+            return ResponseEntity.ok(reservaTemporalService.crearReservaTemporal(idAsiento));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
+
+
+    @PutMapping("/cancelar/{numeroAsiento}")
+    public ResponseEntity<?> cancelarReserva(@PathVariable String numeroAsiento){
+        try {
+            return ResponseEntity.ok(reservaTemporalService.cancelarReservaPorNumAsiento(numeroAsiento));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/verificar/{idAsiento}")
+    public ResponseEntity<String> verificarPorIdAsiento(@PathVariable Integer idAsiento){
+        try {
+            return ResponseEntity.ok(reservaTemporalService.verificarExpiracionPorIdAsiento(idAsiento));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
 
     @GetMapping("/verificar/numero/{numeroAsiento}")
     public ResponseEntity<String> verificarPorNumAsiento(@PathVariable String numeroAsiento) {

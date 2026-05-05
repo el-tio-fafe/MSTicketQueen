@@ -19,6 +19,10 @@ public class AsientoService {
         return asientoRepository.findAll();
     }
 
+    public List<Asiento> listarPorEstado(String estadoAsiento){
+        return asientoRepository.findByEstadoAsiento(estadoAsiento);
+    }
+
     public Asiento buscarPorId(Integer idAsiento){
         return asientoRepository.findByIdAsiento(idAsiento)
         .orElseThrow ( () -> new 
@@ -43,10 +47,6 @@ public class AsientoService {
         asientoRepository.deleteById(idAsiento);
     }
 
-    // public boolean eliminarPorNumAsiento(String numAsiento){ 
-    //     asientoRepository.eliminarPorNumeroAsiento(numAsiento);
-    //     return true;
-    // }
 
     public void eliminarPorNumAsiento(String numAsiento){
         Asiento asiento = asientoRepository.findByNumeroAsiento(numAsiento).
