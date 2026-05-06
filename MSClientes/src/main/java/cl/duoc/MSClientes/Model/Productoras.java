@@ -1,5 +1,7 @@
 package cl.duoc.MSClientes.Model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,12 +25,18 @@ public class Productoras {
     private String nombreProd;
 
     @Column(nullable = false)
-    private String CorreoProd;
+    private String correoProd; 
 
     @Column(nullable = false)
     private String telefonoProd;
 
-    @ManyToOne
-    @JoinColumn(name = "idMngr", nullable = false)
-    private Manager manager;    
+    @ManyToMany// anteriormente era @OneToMany, pero se cambió a @ManyToMany para reflejar la relación real entre Productoras y Manager 
+               // (ya que una Productora puede tener varios Managers)
+    @JoinTable(name = "productoras_manager",// nombre de la tabla intermedia
+    joinColumns = @JoinColumn(name = "idProd"),// columna que referencia a Productoras
+    inverseJoinColumns = @JoinColumn(name = "idMngr"))// columna que referencia a Manager
+    private List<Manager> managers;
+    
+
 }
+    

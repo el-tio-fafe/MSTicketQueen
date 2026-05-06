@@ -27,4 +27,5 @@ public class Artista {
 
     @Column(nullable = false)
     private String telefonoArt;
+    
 }
