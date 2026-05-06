@@ -1,6 +1,7 @@
 package cl.duoc.msAdministrador.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msAdministrador.dto.AdministradorDTO;
 import cl.duoc.msAdministrador.model.Administrador;
+import cl.duoc.msAdministrador.model.Auditoria;
 import cl.duoc.msAdministrador.service.AdministradorService;
 
 @RestController
@@ -24,14 +27,60 @@ public class AdministradorController {
     private AdministradorService administradorService;
 
     @GetMapping
-    public ResponseEntity<List<Administrador>> listarAdministradores(){
+    public ResponseEntity<List<AdministradorDTO>> listarAdministradores(){
         List<Administrador> listarAdministradores = administradorService.listarAdministradores();
         if (listarAdministradores.isEmpty()){
             return ResponseEntity.noContent().build();
         }else{
-            return ResponseEntity.ok(listarAdministradores);
+            List<AdministradorDTO> listaDTO = listarAdministradores.stream()
+                .map(admin -> new AdministradorDTO(
+                    admin.getIdAdm(),
+                    admin.getNombreAdm(),
+                    admin.getApPatAdm(),
+                    admin.getRutAdm()
+                ))
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
         }
     }
+
+    @GetMapping("/auditorias")
+    public ResponseEntity<?> listarAuditorias() {
+        try {
+            List<Auditoria> lista = administradorService.listarAuditorias();
+            if (lista.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/auditorias/buscar/{idAuditoria}")
+    public ResponseEntity<?> buscarAuditoriaPorId(@PathVariable Integer idAuditoria) {
+        try {
+            return ResponseEntity.ok(administradorService.buscarAuditoriaPorId(idAuditoria));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    //ME FALTA BUSCAR AUDITORIA POR RUT DEL ADM
+
+    @GetMapping("/auditorias/listar/{idAuditoria}")
+    public ResponseEntity<?> listarAuditoriaPorAdm(@PathVariable Integer idAdm) {
+        try {
+            List<Auditoria> lista = administradorService.listarAuditoriasPorAdm(idAdm);
+            if (lista.isEmpty()) {
+                return ResponseEntity.ok(lista);
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     // @GetMapping("/id/{idAdm}")
     // public ResponseEntity<Administrador> buscarPorId(@PathVariable Integer idAdm){

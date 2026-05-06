@@ -23,6 +23,23 @@ public class AdministradorService {
         return administradorRepository.findAll();
     }
 
+    public List<Auditoria> listarAuditorias() {
+        return auditoriaRepository.findAll();
+    }
+
+    public List<Auditoria> listarAuditoriasPorAdm(Integer idAdm) {
+        Administrador administrador = administradorRepository.findById(idAdm)
+            .orElseThrow(() -> new RuntimeException("Administrador con id: " + idAdm + " no encontrado."));
+
+        return auditoriaRepository.findByAdministrador(administrador)
+            .orElseThrow(() -> new RuntimeException("No hay auditorías para el administrador con id: " + idAdm));
+    }
+
+    public Auditoria buscarAuditoriaPorId(Integer idAuditoria) {
+        return auditoriaRepository.findById(idAuditoria)
+            .orElseThrow(() -> new RuntimeException("Auditoría con id: " + idAuditoria + " no encontrada."));
+    }
+
     public Administrador guardarAdministrador(Administrador administrador) {
         if(administradorRepository.findByRutAdm(administrador.getRutAdm()).isPresent()){
             throw new RuntimeException("Ya existe un administrador con el rut: " + administrador.getRutAdm());
