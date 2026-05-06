@@ -21,4 +21,5 @@ public class formaPago {
  private Integer id;
  @Column(nullable = false)
  private String medioDePago;
+ 
 }
