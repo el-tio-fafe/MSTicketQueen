@@ -44,51 +44,76 @@ public class AdministradorController {
     // }
 
     @GetMapping("/id/{idAdm}")
-    public ResponseEntity<Administrador> buscarPorId(@PathVariable Integer idAdm) {
-    Administrador admin = administradorService.buscarPorIdAdm(idAdm);
-    
-    if (admin != null) {
-        return ResponseEntity.ok(admin);
-    } else {
-        // Esto le dirá a Postman: 404 Not Found
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer idAdm) {
+        try {
+            Administrador admin = administradorService.buscarPorIdAdm(idAdm);
+            return ResponseEntity.ok(admin);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-}
 
 
     @GetMapping("/rut/{rutAdm}")
-    public ResponseEntity<Administrador> buscarPorRut(@PathVariable String rutAdm){
+    public ResponseEntity<?> buscarPorRut(@PathVariable String rutAdm){
         try {
             Administrador admin = administradorService.buscarPorRutAdm(rutAdm);
             return ResponseEntity.ok(admin);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PostMapping
-    public ResponseEntity<Administrador> guardar(@RequestBody Administrador administrador){
-        Administrador nuevoAdmministrador = administradorService.guardarAdministrador(administrador);
-        return ResponseEntity.ok(nuevoAdmministrador);
+    public ResponseEntity<?> guardar(@RequestBody Administrador administrador){
+        try {
+            return ResponseEntity.ok(administradorService.guardarAdministrador(administrador));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        
     }
 
-    @DeleteMapping("/{idAdm}")
-    public ResponseEntity<?> eliminar(@PathVariable Integer idAdm){
+    @DeleteMapping("eliminar/id/{idAdm}")
+    public ResponseEntity<?> eliminarPorId(@PathVariable Integer idAdm){
         try {
-            administradorService.eliminarAdministrador(idAdm);
-            return ResponseEntity.noContent().build();
+            administradorService.eliminarPorId(idAdm);
+            return ResponseEntity.ok("Administrador con id: " + idAdm + " eliminado con exito.");
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/{idAdm}")
-    public ResponseEntity<Administrador> actualizar(@PathVariable Integer idAdm, @RequestBody Administrador administrador){
+
+    @DeleteMapping("eliminar/rut/{rutAdm}")
+    public ResponseEntity<?> eliminarPorRut(@PathVariable String rutAdm){
         try {
-            Administrador admActualizado = administradorService.actualizarAdministrador(idAdm, administrador);
+            administradorService.eliminarPorRut(rutAdm);
+            return ResponseEntity.ok("Administrador con rut: " + rutAdm + " eliminado con exito.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PutMapping("actualizar/id/{idAdm}")
+    public ResponseEntity<?> actualizarPorId(@PathVariable Integer idAdm, @RequestBody Administrador administrador){
+        try {
+            Administrador admActualizado = administradorService.actualizarAdmPorId(idAdm, administrador);
             return ResponseEntity.ok(admActualizado);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PutMapping("actualizar/rut/{rutAdm}")
+    public ResponseEntity<?> actualizarPorRut(@PathVariable String rutAdm, @RequestBody Administrador administrador){
+        try {
+            Administrador admActualizado = administradorService.actualizarAdmPorRut(rutAdm, administrador);
+            return ResponseEntity.ok(admActualizado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

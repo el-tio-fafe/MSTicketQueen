@@ -2,6 +2,8 @@ package cl.duoc.msAdministrador.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ public class Administrador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAdm;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String rutAdm;
 
     @Column(nullable = false)
@@ -32,13 +34,14 @@ public class Administrador {
     @Column(nullable = false)
     private String apMatAdm;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String correoAdm;
 
     @Column(nullable = false)
     private String telefonoAdm;
 
     @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Auditoria> auditoria;
     
 }

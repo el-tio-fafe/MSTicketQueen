@@ -2,6 +2,8 @@ package cl.duoc.msAdministrador.model;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +42,7 @@ public class Auditoria {
 
     @ManyToOne
     @JoinColumn(name = "id_administrador")
+    @JsonBackReference
     private Administrador administrador; // Relación con Administrador (opcional)
 
 }
