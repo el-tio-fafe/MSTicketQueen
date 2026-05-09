@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msComprador.dto.ActualizarCorreoDTO;
+import cl.duoc.msComprador.dto.ActualizarTelefonoDTO;
 import cl.duoc.msComprador.model.Comprador;
 import cl.duoc.msComprador.service.CompradorService;
 
@@ -35,7 +38,7 @@ public class CompradorController {
 
 
     @PostMapping
-    public ResponseEntity<?> guardarCliente(Comprador comprador){
+    public ResponseEntity<?> guardarCliente(@RequestBody Comprador comprador){
         try {
             return ResponseEntity.ok(compradorService.guardarComprador(comprador));
         } catch (Exception e) {
@@ -83,6 +86,30 @@ public class CompradorController {
         try {
             Comprador cliAct = compradorService.actualizarCompradorPorRut(rutCliente, comprador);
             return ResponseEntity.ok(cliAct);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    //ACTUALIZAR SOLO EL CORREO DE UN CLIENTE POR RUT (se debe crear un dto con solo el nuevo correo para que se vea mas limpio en el postman)
+    //SI QUISIERA ACTUALIZAR EL CORREO DIRECTO EN LA URL (SIN BODY) TENDRIA QUE USAR UN @RequestParam EN VEZ DE @RequestBody, 
+    // Y EN EL FRONTEND (postman) EN VEZ DE ENVIAR UN OBJETO JSON CON EL NUEVO CORREO, SOLO ENVIARIA EL NUEVO CORREO COMO PARAMETRO
+    // EN LA URL: http://localhost:8083/api/v1/compradores/actualizar/correo/25008098-0?nuevoCorreo=nuevocorreo@gmail.com
+    @PatchMapping("/actualizar/correo/{rutCliente}")
+    public ResponseEntity<?> actualizarCorreoClientePorRut(@PathVariable String rutCliente, @RequestBody ActualizarCorreoDTO correoDto){
+        try {
+            return ResponseEntity.ok(compradorService.actualizarCorreoPorRut(rutCliente, correoDto.getCorreoCliente()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PatchMapping("/actualizar/telefono/{rutCliente}")
+    public ResponseEntity<?> actualizarTelefonoPorRut(@PathVariable String rutCliente, @RequestBody ActualizarTelefonoDTO telefonoDto){
+        try {
+            return ResponseEntity.ok(compradorService.actualizarTelefonoPorRut(rutCliente, telefonoDto.getTelefonoCliente()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

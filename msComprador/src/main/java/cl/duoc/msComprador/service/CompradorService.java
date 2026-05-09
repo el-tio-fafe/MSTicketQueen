@@ -72,6 +72,25 @@ public class CompradorService {
 
         return compradorRepository.save(comprador);
     }
+
+
+    //ACTUALIZAR SOLO EL CORREO DEL CLIENTE POR SU NUMERO DE RUT
+    public Comprador actualizarCorreoPorRut(String rutCliente, String nuevoCorreo){
+        Comprador comprador = compradorRepository.findByRutCliente(rutCliente)
+            .orElseThrow(() -> new RuntimeException("Comprador/Cliente con rut: " + rutCliente + " no encontrado"));
+            comprador.setCorreoCliente(nuevoCorreo);
+        return compradorRepository.save(comprador);
+    }
+
+
+
+    //ACTUALIZAR SOLO EL TELEFONO DEL CLIENTE POR SU RUT
+    public Comprador actualizarTelefonoPorRut(String rutCliente, String nuevoTelefono){
+        Comprador comprador = compradorRepository.findByRutCliente(rutCliente)
+            .orElseThrow(() -> new RuntimeException("Comprador/Cliente con rut: " + rutCliente + " no encontrado"));
+            comprador.setTelefonoCliente(nuevoTelefono);
+        return compradorRepository.save(comprador);
+    }
     
 
     public void eliminarCompradorPorId(Integer idCliente){
