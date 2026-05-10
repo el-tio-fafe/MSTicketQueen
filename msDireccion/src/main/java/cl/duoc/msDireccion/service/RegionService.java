@@ -71,6 +71,18 @@ public class RegionService {
         return ciudadProvinciaRepository.findAll();
     }
 
+    public List<CiudadProvincia> listarCiudadesProvinciasPorIdRegion(Integer idRegion){
+        Region region = regionRepository.findById(idRegion)
+            .orElseThrow(() -> new RuntimeException("Region con id: " + idRegion + " no encontrada"));
+        return region.getCiudadesProvincias();
+    }
+
+    public List<CiudadProvincia> listarCiudadesProvinciasPorNombreRegion(String nombreRegion){
+        Region region = regionRepository.findByNombreRegion(nombreRegion)
+            .orElseThrow(() -> new RuntimeException("Region con id: " + nombreRegion + " no encontrada"));
+        return region.getCiudadesProvincias();
+    }
+
     public CiudadProvincia buscarCiudadProvinciaPorId(Integer idCiudadProvincia){
         return ciudadProvinciaRepository.findById(idCiudadProvincia)
             .orElseThrow(() -> new RuntimeException("Ciudad/Provincia con id: " + idCiudadProvincia + " no encontrada"));

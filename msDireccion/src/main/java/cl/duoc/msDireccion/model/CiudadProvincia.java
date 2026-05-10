@@ -3,7 +3,7 @@ package cl.duoc.msDireccion.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,8 +30,8 @@ public class CiudadProvincia {
     @JsonBackReference
     private Region region;
 
-    @OneToMany(mappedBy = "ciudad", cascade = CascadeType.ALL)
-    @JsonManagedReference("ciudad-comuna")
+    @OneToMany(mappedBy = "ciudadProvincia", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Comuna> comunas;
 
 

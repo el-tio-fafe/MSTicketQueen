@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CiudadProvinciaDTO {
 
-    private Integer idCiudad;
+    private Integer idCiudadProvincia;
 
-    private String nombreCiudad;
+    private String nombreCiudadProvincia;
 }

@@ -26,7 +26,7 @@ public class Region {
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<CiudadProvincia> ciudades;
+    private List<CiudadProvincia> ciudadesProvincias;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
     @JsonManagedReference("region-comuna")

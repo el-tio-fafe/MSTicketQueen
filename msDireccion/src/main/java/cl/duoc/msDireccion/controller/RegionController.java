@@ -93,8 +93,8 @@ public class RegionController {
     
     
     
-    @GetMapping("/ciudades")
-    public ResponseEntity <?> listarCiudadesProvincias(){
+    @GetMapping("/ciudad-provincia/listar")
+    public ResponseEntity <?> listarTodasCiudadesProvincias(){
         List<CiudadProvincia> listarCiudadesProvincias = regionService.listarCiudadesOProvincias();
         if(listarCiudadesProvincias.isEmpty()){
             return ResponseEntity.badRequest().body("No hay ciudades o provincias registradas");
@@ -109,7 +109,45 @@ public class RegionController {
         } 
     }
 
-    @GetMapping("/buscar/ciudad/id/{idCiudadProvincia}")
+    @GetMapping("/ciudad-provincia/listar/id/{idRegion}")
+    public ResponseEntity<?> listarCiudadesProvinciasPorIdRegion(@PathVariable Integer idRegion){
+        try {
+            List<CiudadProvincia> lista = regionService.listarCiudadesProvinciasPorIdRegion(idRegion);
+            if(lista.isEmpty()){
+                return ResponseEntity.badRequest().body("La region no tiene ciudades/provincias registradas");
+            }
+            List<CiudadProvinciaDTO> listaDTO = lista.stream()
+                .map(cp -> new CiudadProvinciaDTO(
+                    cp.getIdCiudadProvincia(),
+                    cp.getNombreCiudadProvincia()
+                ))
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/ciudad-provincia/listar/nombre/{nombreRegion}")
+    public ResponseEntity<?> listarCiudadesProvinciasPorNombreRegion(@PathVariable String nombreRegion){
+        try {
+            List<CiudadProvincia> lista = regionService.listarCiudadesProvinciasPorNombreRegion(nombreRegion);
+            if(lista.isEmpty()){
+                return ResponseEntity.badRequest().body("La region no tiene ciudades/provincias registradas");
+            }
+            List<CiudadProvinciaDTO> listaDTO = lista.stream()
+                .map(cp -> new CiudadProvinciaDTO(
+                    cp.getIdCiudadProvincia(),
+                    cp.getNombreCiudadProvincia()
+                ))
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/buscar/ciudad-provincia/id/{idCiudadProvincia}")
     public ResponseEntity<?> buscarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia){
         try {
             return ResponseEntity.ok(regionService.buscarCiudadProvinciaPorId(idCiudadProvincia));
@@ -118,7 +156,7 @@ public class RegionController {
         }
     }
 
-    @GetMapping("/buscar/ciudad/nombre/{nombreCiudadProvincia}")
+    @GetMapping("/buscar/ciudad-provincia/nombre/{nombreCiudadProvincia}")
     public ResponseEntity<?> buscarCiudadProvinciaPorNombre(@PathVariable String nombreCiudadProvincia){
         try {
             return ResponseEntity.ok(regionService.buscarCiudadProvinciaPorNombre(nombreCiudadProvincia));
@@ -127,7 +165,7 @@ public class RegionController {
         }
     }
 
-    @PostMapping("/guardar/ciudad")
+    @PostMapping("/guardar/ciudad-provincia")
     public ResponseEntity<?> guardarCiudadProvincia(@RequestBody CiudadProvincia ciudadProvincia){
         try {
             return ResponseEntity.ok(regionService.guardarCiudadProvincia(ciudadProvincia));
@@ -136,17 +174,17 @@ public class RegionController {
         }
     }
 
-    @DeleteMapping("/eliminar/ciudad/id/{idCiudadProvincia}")
+    @DeleteMapping("/eliminar/ciudad-provincia/id/{idCiudadProvincia}")
     public ResponseEntity<?> eliminarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia){
         try {
             regionService.eliminarCiudadPorId(idCiudadProvincia);
-            return ResponseEntity.ok("Ciudad con id: " + idCiudadProvincia + " eliminada con exito");
+            return ResponseEntity.ok("Ciudad/Provincia con id: " + idCiudadProvincia + " eliminada con exito");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/actualizar/ciudad/id/{idCiudadProvincia}")
+    @PutMapping("/actualizar/ciudad-provincia/id/{idCiudadProvincia}")
     public ResponseEntity<?> actualizarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia, @RequestBody CiudadProvincia ciudadProvincia){
         try {
             return ResponseEntity.ok(regionService.actualizarCiudadProvinciaPorId(idCiudadProvincia, ciudadProvincia));

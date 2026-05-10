@@ -28,9 +28,9 @@ public class Comuna {
     private Region region;
 
     @ManyToOne
-    @JoinColumn(name = "idCiudad", nullable = false)
+    @JoinColumn(name = "idCiudadProvincia", nullable = false)
     @JsonBackReference("ciudad-comuna")
-    private CiudadProvincia ciudad; 
+    private CiudadProvincia ciudadProvincia; 
 
 
 
