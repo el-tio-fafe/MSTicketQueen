@@ -1,4 +1,4 @@
-package cl.duoc.MSClientes;
+package cl.duoc.msGestionArtistica;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
