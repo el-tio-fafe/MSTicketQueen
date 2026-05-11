@@ -13,41 +13,46 @@ public class BancoService {
 
     @Autowired
     private bancoRepository bancoRepository;
-
+// listar bancos 
     public List<banco> listarBancos() {
         return bancoRepository.findAll();
     }
-
+// guardar bancos
     public banco guardarBanco(banco banco) {
         if (banco.getNombre() == null || banco.getNombre().isBlank()) {
             throw new RuntimeException("El nombre del banco no puede estar vacío.");
         }
         return bancoRepository.save(banco);
     }
-
+// Buscar banco por id
     public banco buscarBancoPorId(Integer id) {
         return bancoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Banco con id " + id + " no encontrado."));
     }
-
+// Buscar Banco por nombre 
     public banco buscarBancoPorNombre(String nombre) {
         return bancoRepository.findByNombre(nombre)
             .orElseThrow(() -> new RuntimeException("Banco con nombre \"" + nombre + "\" no encontrado."));
     }
-
+// Actualizar bancos
     public banco actualizarBanco(Integer id, banco bancoActualizado) {
         banco bancoExistente = buscarBancoPorId(id);
         bancoExistente.setNombre(bancoActualizado.getNombre());
         return bancoRepository.save(bancoExistente);
     }
-
+// eliminar banco por id 
     public void eliminarBancoPorId(Integer id) {
         buscarBancoPorId(id);
         bancoRepository.deleteById(id);
     }
-
+// Eliminar banco por nombre 
     public void eliminarBancoPorNombre(String nombre) {
         banco bancoExistente = buscarBancoPorNombre(nombre);
         bancoRepository.deleteById(bancoExistente.getId());
     }
+// emitir comprobantes 
+// anular comprobantes 
+// obtener historial por cliente 
+// genera resumen diario
+//validar disponibilidad de pago
 }
