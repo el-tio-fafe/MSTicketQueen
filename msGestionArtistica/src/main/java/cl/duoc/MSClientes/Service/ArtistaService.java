@@ -1,12 +1,12 @@
-package cl.duoc.MSClientes.Service;
+package cl.duoc.msGestionArtistica.Service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cl.duoc.MSClientes.Model.Artista;
-import cl.duoc.MSClientes.Repository.ArtistaRepository;
+import cl.duoc.msGestionArtistica.Model.Artista;
+import cl.duoc.msGestionArtistica.Repository.ArtistaRepository;
 
 @Service
 public class ArtistaService {
@@ -43,8 +43,22 @@ public class ArtistaService {
         return artistaRepository.save(artista);//si no hay coincidencias, guarda el artista en la base de datos
     }
 
+    public Artista updateArtista(Integer id, Artista artista) {// Método para actualizar un artista existente por su ID
+        Artista ArtistaCambiar = artistaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Artista con id: " + id + " no encontrado. No se puede actualizar."));//mensaje de error
+        ArtistaCambiar.setRutArt(artista.getRutArt());           //actualiza el rut del artista a cambiar con el nuevo valor
+        ArtistaCambiar.setNombreArt(artista.getNombreArt());     //actualiza el nombre del artista a cambiar con el nuevo valor
+        ArtistaCambiar.setCorreoArt(artista.getCorreoArt());     //actualiza el correo del artista a cambiar con el nuevo valor
+        ArtistaCambiar.setTelefonoArt(artista.getTelefonoArt()); //actualiza el teléfono del artista a cambiar con el nuevo valor
+        return artistaRepository.save(ArtistaCambiar);           //guarda los cambios en la base de datos y devuelve el artista actualizado
+    }
+
+    public void deleteArtista(Integer id) {// Método para eliminar un artista por su ID
+        if (!artistaRepository.existsById(id)) {// Verificar si el artista existe antes de eliminarlo, si no existe tira error
+            throw new RuntimeException("Artista con id: " + id + " no encontrado. No se puede eliminar.");//mensaje de error
+        }
+        artistaRepository.deleteById(id);//si el artista existe, lo elimina de la base de datos
+    }
     
-    
-    //actualizar()
-    //eliminar()
+
 }
