@@ -1,10 +1,10 @@
-package cl.duoc.MSClientes.Repository;
+package cl.duoc.msGestionArtistica.Repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import cl.duoc.MSClientes.Model.Manager;
+import cl.duoc.msGestionArtistica.Model.Manager;
 
 public interface ManagerRepository extends JpaRepository<Manager, Integer> {
 

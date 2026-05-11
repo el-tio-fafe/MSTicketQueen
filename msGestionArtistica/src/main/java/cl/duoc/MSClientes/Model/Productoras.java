@@ -1,4 +1,4 @@
-package cl.duoc.MSClientes.Model;
+package cl.duoc.msGestionArtistica.Model;
 
 import java.util.List;
 

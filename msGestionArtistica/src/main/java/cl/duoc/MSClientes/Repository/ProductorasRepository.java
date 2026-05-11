@@ -1,10 +1,10 @@
-package cl.duoc.MSClientes.Repository;
+package cl.duoc.msGestionArtistica.Repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import cl.duoc.MSClientes.Model.Productoras;
+import cl.duoc.msGestionArtistica.Model.Productoras;
 
 public interface ProductorasRepository extends JpaRepository<Productoras, Integer> {
 

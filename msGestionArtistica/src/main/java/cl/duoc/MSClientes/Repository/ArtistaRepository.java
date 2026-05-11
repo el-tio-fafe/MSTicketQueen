@@ -1,10 +1,10 @@
-package cl.duoc.MSClientes.Repository;
+package cl.duoc.msGestionArtistica.Repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import cl.duoc.MSClientes.Model.Artista;
+import cl.duoc.msGestionArtistica.Model.Artista;
 
 public interface ArtistaRepository extends JpaRepository<Artista, Integer> {    
     Optional<Artista> findByRutArt(String rutArt);
