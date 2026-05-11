@@ -1,12 +1,12 @@
-package cl.duoc.msGestionArtistica.Service;
+package cl.duoc.msGestionArtistica.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cl.duoc.msGestionArtistica.Model.Artista;
-import cl.duoc.msGestionArtistica.Repository.ArtistaRepository;
+import cl.duoc.msGestionArtistica.model.Artista;
+import cl.duoc.msGestionArtistica.repository.ArtistaRepository;
 
 @Service
 public class ArtistaService {

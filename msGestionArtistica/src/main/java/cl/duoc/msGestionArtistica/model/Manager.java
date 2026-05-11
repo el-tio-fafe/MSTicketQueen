@@ -1,5 +1,6 @@
-package cl.duoc.msGestionArtistica.Model;
+package cl.duoc.msGestionArtistica.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -36,10 +37,10 @@ public class Manager {
     @Column(nullable = false)
     private String telefonoMngr;
 
-    @ManyToMany// antertiormente era @OneToMany, pero se cambió a @ManyToMany para reflejar la relación real entre Manager y Artista 
-               // (ya que un Manager puede manejar a varios Artistas) 
-    @JoinTable(name = "manager_artista",// nombre de la tabla intermedia
-    joinColumns = @JoinColumn(name = "idMngr"),// columna que referencia a Manager
-    inverseJoinColumns = @JoinColumn(name = "idArt"))// columna que referencia a Artista
-    private List<Artista> artistas;
+    @ManyToMany                                         // antertiormente era @OneToMany, pero se cambió a @ManyToMany para reflejar la relación real entre Manager y Artista 
+                                                        // (ya que un Manager puede manejar a varios Artistas) 
+    @JoinTable(name = "manager_artista",                // nombre de la tabla intermedia
+    joinColumns = @JoinColumn(name = "idMngr"),         // columna que referencia a Manager
+    inverseJoinColumns = @JoinColumn(name = "idArt"))   // columna que referencia a Artista
+    private List<Artista> artistas = new ArrayList<>(); // lista que guardara los artistas asociados a cada manager, es decir, los artistas que maneja cada manager
 }

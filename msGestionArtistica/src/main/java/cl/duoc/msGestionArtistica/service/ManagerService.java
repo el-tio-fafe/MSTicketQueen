@@ -1,15 +1,22 @@
-package cl.duoc.msGestionArtistica.Service;
+package cl.duoc.msGestionArtistica.service;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cl.duoc.msGestionArtistica.Repository.ManagerRepository;
+import cl.duoc.msGestionArtistica.repository.ArtistaRepository;
+import cl.duoc.msGestionArtistica.repository.ManagerRepository;
+import cl.duoc.msGestionArtistica.model.Artista;
+import cl.duoc.msGestionArtistica.model.Manager;
 
 @Service
 public class ManagerService {
 
     @Autowired
     private ManagerRepository managerRepository;
+    @Autowired
+    private ArtistaRepository artistaRepository;
 
     public List<Manager> getAllManagers() {//metodo para obtener todos los managers
         return managerRepository.findAll();
@@ -46,8 +53,8 @@ public class ManagerService {
                 .orElseThrow(() -> new RuntimeException("Manager con id: " + id + " no encontrado. No se puede actualizar."));
         managerCambiar.setRutMngr(manager.getRutMngr());              //actualiza el rut del manager a cambiar con el nuevo valor
         managerCambiar.setNombreMngr(manager.getNombreMngr());        //actualiza el nombre del manager a cambiar con el nuevo valor
-        managerCambiar.setapPaternoMngr(manager.getApPaternoMngr());  //actualiza el apellido paterno del manager a cambiar con el nuevo valor
-        managerCambiar.setapMaternoMngr(manager.getApMaternoMngr());  //actualiza el apellido materno del manager a cambiar con el nuevo valor
+        managerCambiar.setApPaternoMngr(manager.getApPaternoMngr());  //actualiza el apellido paterno del manager a cambiar con el nuevo valor
+        managerCambiar.setApMaternoMngr(manager.getApMaternoMngr());  //actualiza el apellido materno del manager a cambiar con el nuevo valor
         managerCambiar.setCorreoMngr(manager.getCorreoMngr());        //actualiza el correo del manager a cambiar con el nuevo valor
         managerCambiar.setTelefonoMngr(manager.getTelefonoMngr());    //actualiza el teléfono del manager a cambiar con el nuevo valor
         return managerRepository.save(managerCambiar);
@@ -60,4 +67,19 @@ public class ManagerService {
         managerRepository.deleteById(id);
     }
 
+    public Manager asignarArtista(Integer idManager, Integer idArtista) {
+        Manager manager = managerRepository.findById(idManager)// busca el manager por su ID
+                .orElseThrow(() -> new RuntimeException("Manager con id: " + idManager + " no encontrado. No se puede asignar artista."));
+
+        Artista agregArtista = artistaRepository.findById(idArtista)// busca el artista por su ID
+                .orElseThrow(() -> new RuntimeException("Artista con id: " + idArtista + " no encontrado. No se puede asignar al manager."));
+
+        if (manager.getArtistas().contains(agregArtista)) {// Verificar si el artista ya está asignado al manager, si lo está tira error
+            throw new RuntimeException("El artista con id: " + idArtista + " ya está asignado al manager con id: " + idManager + ".");   
+        }
+
+        manager.getArtistas().add(agregArtista);// una vez verificado que el artista no está asignado al manager, se agrega el artista a la lista de artistas del manager
+        
+        return managerRepository.save(manager);
+    }
 }

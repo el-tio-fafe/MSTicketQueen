@@ -1,4 +1,4 @@
-package cl.duoc.msGestionArtistica.Model;
+package cl.duoc.msGestionArtistica.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
