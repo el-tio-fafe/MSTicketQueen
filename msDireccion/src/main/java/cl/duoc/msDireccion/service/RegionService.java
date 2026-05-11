@@ -24,6 +24,9 @@ public class RegionService {
     @Autowired 
     private ComunaRepository comunaRepository;
 
+
+    //REGIONES
+
     public List<Region> listarRegiones(){
         return regionRepository.findAll();
     }
@@ -66,6 +69,9 @@ public class RegionService {
         return regionRepository.save(region);
     }
 
+
+
+    //CIUDADES PROVINCIAS
 
     public List<CiudadProvincia> listarCiudadesOProvincias(){
         return ciudadProvinciaRepository.findAll();
@@ -115,8 +121,17 @@ public class RegionService {
     }
 
 
+
+    //COMUNAS
+
     public List<Comuna> listarComunas(){
         return comunaRepository.findAll();
+    }
+
+     public List<Comuna> listarComunasPorIdCiudadProvin(Integer idCiudadProvincia){
+        Region region = regionRepository.findById(idCiudadProvincia)
+            .orElseThrow(() -> new RuntimeException("Ciudad/Provincia con id: " + idCiudadProvincia + " no encontrada"));
+        return region.getComunas();
     }
 
     public Comuna buscarComunaPorId(Integer idComuna){

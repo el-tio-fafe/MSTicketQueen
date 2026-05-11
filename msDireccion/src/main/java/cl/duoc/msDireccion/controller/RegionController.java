@@ -29,6 +29,9 @@ public class RegionController {
     @Autowired
     private RegionService regionService;
 
+
+    //REGIONES
+
     @GetMapping("/regiones")
     public ResponseEntity <?> listarRegiones(){
         List<Region> listarRegiones = regionService.listarRegiones();
@@ -91,6 +94,9 @@ public class RegionController {
         }
     }
     
+
+
+    //CIUDADES PROVINCIAS
     
     
     @GetMapping("/ciudad-provincia/listar")
@@ -195,6 +201,7 @@ public class RegionController {
     
 
 
+    //COMUNAS
 
     @GetMapping("/comunas")
     public ResponseEntity<?> listarComunas(){
@@ -209,6 +216,25 @@ public class RegionController {
                 ))
                 .collect(Collectors.toList());
             return ResponseEntity.ok(listaComunaDTO);
+        }
+    }
+
+    @GetMapping("/comuna/listar/id/{idCiudadProvincia}")
+    public ResponseEntity<?> listarComunasPorIdCiudadProvincia(@PathVariable Integer idCiudadProvincia){
+        try {
+            List<Comuna> lista = regionService.listarComunasPorIdCiudadProvin(idCiudadProvincia);
+            if(lista.isEmpty()){
+                return ResponseEntity.badRequest().body("La Ciudad / Provincia: " + idCiudadProvincia + " no tiene comunas registradas");
+            }
+            List<ComunaDTO> listaDTO = lista.stream()
+                .map(cp -> new ComunaDTO(
+                    cp.getIdComuna(),
+                    cp.getNombreComuna()
+                ))
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
