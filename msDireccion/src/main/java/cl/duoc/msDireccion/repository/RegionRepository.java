@@ -11,4 +11,6 @@ public interface RegionRepository extends JpaRepository<Region, Integer>{
 
     Optional <Region> findByNombreRegion(String nombreRegion);
 
+    
+
 }

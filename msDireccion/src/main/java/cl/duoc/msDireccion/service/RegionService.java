@@ -5,6 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
+import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
+import cl.duoc.msDireccion.dto.RegionDTO;
+import cl.duoc.msDireccion.dto.RegionUpdateDTO;
 import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
 import cl.duoc.msDireccion.model.Region;
@@ -25,21 +29,34 @@ public class RegionService {
     private ComunaRepository comunaRepository;
 
 
-    //REGIONES
+//REGIONES
 
     public List<Region> listarRegiones(){
         return regionRepository.findAll();
     }
 
-    public Region buscarRegionPorId(Integer idRegion){
+    public Region buscarRegionCompletaPorId(Integer idRegion){
         return regionRepository.findById(idRegion)
             .orElseThrow(() -> new RuntimeException("Region con id: " + idRegion + " no encontrada"));
     }
 
-    public Region buscarRegionPorNombre(String nombreRegion){
-        return regionRepository.findByNombreRegion(nombreRegion)
-            .orElseThrow(() -> new RuntimeException("Region: " + nombreRegion + " no encontrada"));
+    public RegionDTO buscarRegionPorId(Integer idRegion){
+        Region region = regionRepository.findById(idRegion)
+            .orElseThrow(() -> new RuntimeException("Region con id: " + idRegion + " no encontrada"));
+            return new RegionDTO(region.getIdRegion() , region.getNombreRegion());
     }
+
+    public RegionDTO buscarRegionPorNombre(String nombreRegion){
+        Region region = regionRepository.findByNombreRegion(nombreRegion)
+            .orElseThrow(() -> new RuntimeException("Region: " + nombreRegion + " no encontrada"));
+            return new RegionDTO(region.getIdRegion(), region.getNombreRegion());
+    }
+
+    //ESTE METODO DEVUELVE LA REGION COMPLETA
+    // public Region buscarRegionCompletaPorNombre(String nombreRegion){
+    //     return regionRepository.findByNombreRegion(nombreRegion)
+    //         .orElseThrow(() -> new RuntimeException("Region: " + nombreRegion + " no encontrada"));
+    // }
 
     public Region guardarRegion(Region region){
         if(regionRepository.findByNombreRegion(region.getNombreRegion()).isPresent()){
@@ -48,30 +65,35 @@ public class RegionService {
         return regionRepository.save(region);
     }
 
-    public void eliminarRegionPorId(Integer idRegion){
-        if(!regionRepository.existsById(idRegion)){
-            throw new RuntimeException("Region con id: " + idRegion + " no encontrada");
-        }
-        regionRepository.deleteById(idRegion);
-    }
 
-    public void eliminarRegionPorNombre(String nombreRegion){
-        Region region = regionRepository.findByNombreRegion(nombreRegion)
-            .orElseThrow(() -> new RuntimeException("Region: " + nombreRegion + " no encontrada"));
-        regionRepository.deleteById(region.getIdRegion());        
-    }
-
-
-    public Region actualizarRegionPorId(Integer idRegion, Region regionActualizada){
+    //USO ESTE METODO PARA QUE AL ACTUALIZAR UNA REGION NO ME DEVUELVA LA REGION MAS LA LISTA 
+    //COMPLETA DE CIUDADES O PROVINCIAS QUE TIENE ESA REGION.
+    public RegionUpdateDTO actualizarRegionPorId(Integer idRegion, Region regionActualizada){
         Region region = regionRepository.findById(idRegion)
             .orElseThrow(() -> new RuntimeException("Region con id: " + idRegion + " no encontrada"));
         region.setNombreRegion(regionActualizada.getNombreRegion());
-        return regionRepository.save(region);
+        Region regionGuardada = regionRepository.save(region);
+        return new RegionUpdateDTO(regionGuardada.getNombreRegion());
     }
 
+    //SOLO PARA EFECTOS DE APRENDIZAJE Y HACER PRUEBAS EN POSTMAN HICE ESTE METODO Y FUNCIONÓ .. :)
+    // public void eliminarRegionPorId(Integer idRegion){
+    //     if(!regionRepository.existsById(idRegion)){
+    //         throw new RuntimeException("Region con id: " + idRegion + " no encontrada");
+    //     }
+    //     regionRepository.deleteById(idRegion);
+    // }
+
+    // public void eliminarRegionPorNombre(String nombreRegion){
+    //     Region region = regionRepository.findByNombreRegion(nombreRegion)
+    //         .orElseThrow(() -> new RuntimeException("Region: " + nombreRegion + " no encontrada"));
+    //     regionRepository.deleteById(region.getIdRegion());        
+    // }
 
 
-    //CIUDADES PROVINCIAS
+//********************************************************************************************************/
+
+//CIUDADES PROVINCIAS
 
     public List<CiudadProvincia> listarCiudadesOProvincias(){
         return ciudadProvinciaRepository.findAll();
@@ -85,7 +107,7 @@ public class RegionService {
 
     public List<CiudadProvincia> listarCiudadesProvinciasPorNombreRegion(String nombreRegion){
         Region region = regionRepository.findByNombreRegion(nombreRegion)
-            .orElseThrow(() -> new RuntimeException("Region con id: " + nombreRegion + " no encontrada"));
+            .orElseThrow(() -> new RuntimeException("Region con nombre: " + nombreRegion + " no encontrada"));
         return region.getCiudadesProvincias();
     }
 
@@ -103,35 +125,47 @@ public class RegionService {
         if(ciudadProvinciaRepository.findByNombreCiudadProvincia(ciudadProvincia.getNombreCiudadProvincia()).isPresent()){
             throw new RuntimeException("Ya existe la ciudad/provincia: " + ciudadProvincia.getNombreCiudadProvincia());
         }
+        Integer idRegion = ciudadProvincia.getRegion().getIdRegion();
+        regionRepository.findById(idRegion)
+            .orElseThrow(() -> new RuntimeException("No se puede guardar la Ciudad/Provincia: " 
+                                                    + ciudadProvincia.getNombreCiudadProvincia() 
+                                                    + " porque la región con id: " + idRegion + " no existe"));
         return ciudadProvinciaRepository.save(ciudadProvincia);
     }
 
-    public void eliminarCiudadPorId(Integer idCiudadProvincia){
-        if(!ciudadProvinciaRepository.existsById(idCiudadProvincia)){
-            throw new RuntimeException("Ciudad/Provincia con id: " + idCiudadProvincia + " no encontrada");
-        }
-        ciudadProvinciaRepository.deleteById(idCiudadProvincia);
-    }
-
-    public CiudadProvincia actualizarCiudadProvinciaPorId(Integer idCiudadProvincia, CiudadProvincia ciudadProvinciaActualizada){
+    public CiudadProvincia actualizarCiudadProvinciaPorId(Integer idCiudadProvincia, CiudadProvinciaUpdateDTO ciuProvUpdateDTO){
         CiudadProvincia ciudadProvincia = ciudadProvinciaRepository.findById(idCiudadProvincia)
             .orElseThrow(() -> new RuntimeException("Ciudad/Provincia con id: " + idCiudadProvincia + " no encontrada"));
-        ciudadProvincia.setNombreCiudadProvincia(ciudadProvinciaActualizada.getNombreCiudadProvincia());
+        ciudadProvincia.setNombreCiudadProvincia(ciuProvUpdateDTO.getNombreCiudadProvincia());
         return ciudadProvinciaRepository.save(ciudadProvincia);
     }
 
+    //SOLO PARA EFECTOS DE APRENDIZAJE Y HACER PRUEBAS EN POSTMAN HICE ESTE METODO Y FUNCIONÓ .. :)
+    // public void eliminarCiudadPorId(Integer idCiudadProvincia){
+    //     if(!ciudadProvinciaRepository.existsById(idCiudadProvincia)){
+    //         throw new RuntimeException("Ciudad/Provincia con id: " + idCiudadProvincia + " no encontrada");
+    //     }
+    //     ciudadProvinciaRepository.deleteById(idCiudadProvincia);
+    // }
 
-
-    //COMUNAS
+//*******************************************************************************************************************/
+    
+//COMUNAS
 
     public List<Comuna> listarComunas(){
         return comunaRepository.findAll();
     }
 
-     public List<Comuna> listarComunasPorIdCiudadProvin(Integer idCiudadProvincia){
-        Region region = regionRepository.findById(idCiudadProvincia)
+    public List<Comuna> listarComunasPorIdCiudadProvin(Integer idCiudadProvincia){
+        CiudadProvincia ciudadProvincia = ciudadProvinciaRepository.findById(idCiudadProvincia)
             .orElseThrow(() -> new RuntimeException("Ciudad/Provincia con id: " + idCiudadProvincia + " no encontrada"));
-        return region.getComunas();
+        return ciudadProvincia.getComunas();
+    }
+
+    public List<Comuna> listarComunasPorNombreCiudadProvin(String nombreCiudadProvincia){
+        CiudadProvincia ciudadProvincia = ciudadProvinciaRepository.findByNombreCiudadProvincia(nombreCiudadProvincia)
+            .orElseThrow(() -> new RuntimeException("Ciudad/Provincia con nombre: " + nombreCiudadProvincia + " no encontrada"));
+        return ciudadProvincia.getComunas();
     }
 
     public Comuna buscarComunaPorId(Integer idComuna){
@@ -148,23 +182,35 @@ public class RegionService {
         if(comunaRepository.findByNombreComuna(comuna.getNombreComuna()).isPresent()){
             throw new RuntimeException("Ya existe la comuna: " + comuna.getNombreComuna());
         }
+        Integer idRegion = comuna.getRegion().getIdRegion();
+        regionRepository.findById(idRegion)
+            .orElseThrow(() -> new RuntimeException("No se puede guardar la Comuna: " 
+                                                    + comuna.getNombreComuna()
+                                                    + " porque la región con id: " + idRegion + " no existe"));
+
+        Integer idCiudadProvincia = comuna.getCiudadProvincia().getIdCiudadProvincia();
+        ciudadProvinciaRepository.findById(idCiudadProvincia)
+            .orElseThrow(() -> new RuntimeException("No se puede guardar la Comuna: " 
+                                                    + comuna.getNombreComuna()
+                                                    + " porque la Ciudad/Provincia con id: " + idCiudadProvincia + " no existe"));
+
         return comunaRepository.save(comuna);
     }
 
-    public void eliminarComunaPorId(Integer idComuna){
-        if(!comunaRepository.existsById(idComuna)){
-            throw new RuntimeException("Comuna con id: " + idComuna + " no encontrada");
-        }
-        comunaRepository.deleteById(idComuna);
-    }
-
-    public Comuna actualizarComunaPorId(Integer idComuna, Comuna comunaActualizada){
+    public Comuna actualizarComunaPorId(Integer idComuna, ComunaUpdateDTO comunaUpdDTOActualizada){
         Comuna comuna = comunaRepository.findById(idComuna)
             .orElseThrow(() -> new RuntimeException("Comuna con id: " + idComuna + " no encontrada"));
-        comuna.setNombreComuna(comunaActualizada.getNombreComuna());
+        comuna.setNombreComuna(comunaUpdDTOActualizada.getNombreComuna());
         return comunaRepository.save(comuna);
     }
 
+    //SOLO PARA EFECTOS DE APRENDIZAJE Y HACER PRUEBAS EN POSTMAN HICE ESTE METODO Y FUNCIONÓ .. :)
+    // public void eliminarComunaPorId(Integer idComuna){
+    //     if(!comunaRepository.existsById(idComuna)){
+    //         throw new RuntimeException("Comuna con id: " + idComuna + " no encontrada");
+    //     }
+    //     comunaRepository.deleteById(idComuna);
+    // }
 
 
 }

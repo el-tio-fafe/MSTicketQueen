@@ -31,7 +31,7 @@ public class CiudadProvincia {
     private Region region;
 
     @OneToMany(mappedBy = "ciudadProvincia", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonIgnore   
     private List<Comuna> comunas;
 
 

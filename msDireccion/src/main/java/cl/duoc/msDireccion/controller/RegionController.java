@@ -5,8 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+//import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msDireccion.dto.CiudadProvinciaDTO;
+import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
 import cl.duoc.msDireccion.dto.ComunaDTO;
+import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
 import cl.duoc.msDireccion.dto.RegionDTO;
 import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
@@ -30,7 +33,7 @@ public class RegionController {
     private RegionService regionService;
 
 
-    //REGIONES
+//REGIONES
 
     @GetMapping("/regiones")
     public ResponseEntity <?> listarRegiones(){
@@ -48,7 +51,16 @@ public class RegionController {
         }
     }
 
-    @GetMapping("/buscar/region/id/{idRegion}")
+    @GetMapping("/buscar/region-completa/id/{idRegion}")
+    public ResponseEntity<?> buscarRegionPorIdCompleto(@PathVariable Integer idRegion){
+        try {
+            return ResponseEntity.ok(regionService.buscarRegionCompletaPorId(idRegion));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/buscar/region-resumida/id/{idRegion}")
     public ResponseEntity<?> buscarRegionPorId(@PathVariable Integer idRegion){
         try {
             return ResponseEntity.ok(regionService.buscarRegionPorId(idRegion));
@@ -58,13 +70,23 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/region/nombre/{nombreRegion}")
-    public ResponseEntity<?> buscarRegionPorNombre(@PathVariable String nombreRegion){
+    public ResponseEntity<?> buscarRegionResumidaPorNombre(@PathVariable String nombreRegion){
         try {
             return ResponseEntity.ok(regionService.buscarRegionPorNombre(nombreRegion));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //ESTE METODO QUE VIENE DEL SERVICE DEVUELVE LA REGION COMPLETA
+    // @GetMapping("/buscar/region/nombre/{nombreRegion}")
+    // public ResponseEntity<?> buscarRegionPorNombre(@PathVariable String nombreRegion){
+    //     try {
+    //         return ResponseEntity.ok(regionService.buscarRegionCompletaPorNombre(nombreRegion));
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
 
     @PostMapping("/guardar/region")
     public ResponseEntity<?> guardarRegion(@RequestBody Region region){
@@ -74,18 +96,8 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    @DeleteMapping("/eliminar/region/id/{idRegion}")
-    public ResponseEntity<?> eliminarRegionPorId(@PathVariable Integer idRegion){
-        try {
-            regionService.eliminarRegionPorId(idRegion);
-            return ResponseEntity.ok("Region con id: " + idRegion + " eliminada con exito");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/actualizar/region/id/{idRegion}")
+    
+    @PutMapping("/actualizar/region/id/{idRegion}")   //con el @PutMapping se actualizan todos los atributos
     public ResponseEntity<?> actualizarRegionPorId(@PathVariable Integer idRegion, @RequestBody Region region){
         try {
             return ResponseEntity.ok(regionService.actualizarRegionPorId(idRegion, region));
@@ -93,10 +105,22 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //SOLO PARA EFECTOS DE APRENDIZAJE Y HACER PRUEBAS EN POSTMAN HICE ESTE METODO Y FUNCIONÓ .. :)
+    // @DeleteMapping("/eliminar/region/id/{idRegion}")
+    // public ResponseEntity<?> eliminarRegionPorId(@PathVariable Integer idRegion){
+    //     try {
+    //         regionService.eliminarRegionPorId(idRegion);
+    //         return ResponseEntity.ok("Region con id: " + idRegion + " eliminada con exito");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
     
 
+//**************************************************************************************************************************//
 
-    //CIUDADES PROVINCIAS
+//CIUDADES PROVINCIAS
     
     
     @GetMapping("/ciudad-provincia/listar")
@@ -180,28 +204,30 @@ public class RegionController {
         }
     }
 
-    @DeleteMapping("/eliminar/ciudad-provincia/id/{idCiudadProvincia}")
-    public ResponseEntity<?> eliminarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia){
+    @PatchMapping("/actualizar/ciudad-provincia/id/{idCiudadProvincia}")
+    public ResponseEntity<?> actualizarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia, @RequestBody CiudadProvinciaUpdateDTO ciudadProvinciaUpdate){
         try {
-            regionService.eliminarCiudadPorId(idCiudadProvincia);
-            return ResponseEntity.ok("Ciudad/Provincia con id: " + idCiudadProvincia + " eliminada con exito");
+            return ResponseEntity.ok(regionService.actualizarCiudadProvinciaPorId(idCiudadProvincia, ciudadProvinciaUpdate));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/actualizar/ciudad-provincia/id/{idCiudadProvincia}")
-    public ResponseEntity<?> actualizarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia, @RequestBody CiudadProvincia ciudadProvincia){
-        try {
-            return ResponseEntity.ok(regionService.actualizarCiudadProvinciaPorId(idCiudadProvincia, ciudadProvincia));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+    //SOLO PARA EFECTOS DE APRENDIZAJE Y HACER PRUEBAS EN POSTMAN HICE ESTE METODO Y FUNCIONÓ .. :)
+    // @DeleteMapping("/eliminar/ciudad-provincia/id/{idCiudadProvincia}")
+    // public ResponseEntity<?> eliminarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia){
+    //     try {
+    //         regionService.eliminarCiudadPorId(idCiudadProvincia);
+    //         return ResponseEntity.ok("Ciudad/Provincia con id: " + idCiudadProvincia + " eliminada con exito");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
     
 
-
-    //COMUNAS
+//***************************************************************************************************************/
+    
+//COMUNAS
 
     @GetMapping("/comunas")
     public ResponseEntity<?> listarComunas(){
@@ -238,6 +264,26 @@ public class RegionController {
         }
     }
 
+    @GetMapping("/comuna/listar/nombre/{nombreCiudadProvincia}")
+    public ResponseEntity<?> listarComunasPorNombreCiudadProvincia(@PathVariable String nombreCiudadProvincia){
+        try {
+            List<Comuna> lista = regionService.listarComunasPorNombreCiudadProvin(nombreCiudadProvincia);
+            if(lista.isEmpty()){
+                return ResponseEntity.badRequest().body("La Ciudad / Provincia: " + nombreCiudadProvincia + " no tiene comunas registradas");
+            }
+            List<ComunaDTO> listaDTO = lista.stream()
+                .map(cp -> new ComunaDTO(
+                    cp.getIdComuna(),
+                    cp.getNombreComuna()
+                ))
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
     @GetMapping("/buscar/comuna/id/{idComuna}")
     public ResponseEntity <?> buscarComunaPorId(@PathVariable Integer idComuna){
         try {
@@ -265,22 +311,23 @@ public class RegionController {
         }
     }
 
-    @DeleteMapping("/eliminar/comuna/id/{idComuna}")
-    public ResponseEntity<?> eliminarComunaPorId(@PathVariable Integer idComuna){
+    @PatchMapping("/actualizar/comuna/id/{idComuna}")
+    public ResponseEntity<?> actualizarComunaPorId(@PathVariable Integer idComuna, @RequestBody ComunaUpdateDTO comunaUpdateDTO){
         try {
-            regionService.eliminarComunaPorId(idComuna);
-            return ResponseEntity.ok("Comuna con id: " + idComuna + " eliminada con exito");
+            return ResponseEntity.ok(regionService.actualizarComunaPorId(idComuna, comunaUpdateDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/actualizar/comuna/id/{idComuna}")
-    public ResponseEntity<?> actualizarComunaPorId(@PathVariable Integer idComuna, @RequestBody Comuna comuna){
-        try {
-            return ResponseEntity.ok(regionService.actualizarComunaPorId(idComuna, comuna));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+    //SOLO PARA EFECTOS DE APRENDIZAJE Y HACER PRUEBAS EN POSTMAN HICE ESTE METODO Y FUNCIONÓ .. :)
+    // @DeleteMapping("/eliminar/comuna/id/{idComuna}")
+    // public ResponseEntity<?> eliminarComunaPorId(@PathVariable Integer idComuna){
+    //     try {
+    //         regionService.eliminarComunaPorId(idComuna);
+    //         return ResponseEntity.ok("Comuna con id: " + idComuna + " eliminada con exito");
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
 }
