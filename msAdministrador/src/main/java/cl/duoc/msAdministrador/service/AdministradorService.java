@@ -40,6 +40,10 @@ public class AdministradorService {
             .orElseThrow(() -> new RuntimeException("Auditoría con id: " + idAuditoria + " no encontrada."));
     }
 
+    public List<Auditoria> buscarAuditoriaPorRutAdm(String rutAdm){
+        return auditoriaRepository.findByAdministrador_RutAdm(rutAdm);
+    }
+
     public Administrador guardarAdministrador(Administrador administrador) {
         if(administradorRepository.findByRutAdm(administrador.getRutAdm()).isPresent()){
             throw new RuntimeException("Ya existe un administrador con el rut: " + administrador.getRutAdm());

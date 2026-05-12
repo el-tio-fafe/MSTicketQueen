@@ -14,4 +14,6 @@ public interface AuditoriaRepository extends JpaRepository<Auditoria, Integer>  
 
     Optional<List<Auditoria>> findByAdministrador(Administrador administrador);
 
+     List<Auditoria> findByAdministrador_RutAdm(String rutAdm);
+
 }

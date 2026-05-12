@@ -66,7 +66,22 @@ public class AdministradorController {
         }
     }
 
+    @GetMapping("/auditorias/buscar/rut/{rutAdm}")
+    public ResponseEntity<?> buscarAuditoriasPorAdm(@PathVariable String rutAdm){
+        try {
+            List<Auditoria> lista = administradorService.buscarAuditoriaPorRutAdm(rutAdm);
+            if(lista.isEmpty()){
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     //ME FALTA BUSCAR AUDITORIA POR RUT DEL ADM
+
+
 
     @GetMapping("/auditorias/listar/{idAuditoria}")
     public ResponseEntity<?> listarAuditoriaPorAdm(@PathVariable Integer idAdm) {

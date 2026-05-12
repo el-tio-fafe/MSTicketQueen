@@ -29,8 +29,14 @@ public class Dataloader {
             bancoRepo.save(banco2);
             bancoRepo.save(banco3);
 
+            //CARGAR DATOS DE COMPROBANTE
 
 
+            //CARGAR DATOS DE FORMA DE PAGO
+
+
+
+            System.out.println("Datos cargados con exito a la base de datos");
          }
 
    };
