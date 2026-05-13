@@ -23,7 +23,7 @@ public class BancoController {
     @Autowired
     private BancoService bancoService;
 
-    @GetMapping
+    @GetMapping("/listarBancos")
     public ResponseEntity<List<banco>> listarBancos() {
         List<banco> bancos = bancoService.listarBancos();
         if (bancos.isEmpty()) {
@@ -50,7 +50,7 @@ public class BancoController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/crearBanco")
     public ResponseEntity<Object> crearBanco(@RequestBody banco banco) {
         try {
             return ResponseEntity.status(201).body(bancoService.guardarBanco(banco));

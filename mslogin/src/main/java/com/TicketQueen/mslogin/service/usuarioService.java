@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.TicketQueen.mslogin.model.usuario;
 import com.TicketQueen.mslogin.repository.usuarioRepository;
+
 @Service
 
 public class usuarioService {
@@ -58,4 +59,5 @@ public class usuarioService {
         }
         return false;
     }
+
 }
