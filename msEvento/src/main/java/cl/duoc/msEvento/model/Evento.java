@@ -15,18 +15,36 @@ import lombok.NoArgsConstructor;
 
     public class Evento {
 
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer idEvento;
 
+        @Column(nullable = false, unique = true)
         private String codigoEvento;
 
+        @Column(nullable = false)
         private String nombreEvento;
 
+        @Column(nullable = false)
         private LocalDateTime fechaEvento;
 
+        @Column(nullable = false)
         private LocalDateTime horaEvento;
 
 
+        
 
-        private Calle calle;
+        private Recinto recinto;
+
+        private TipoEvento tipoEvento;
+
+
+
+        //necesita estos dos:
+        //private Productora
+
+
+        //private Administrador
 
 }
