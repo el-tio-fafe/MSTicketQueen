@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msAdministrador.dto.AdministradorDTO;
+import cl.duoc.msAdministrador.dto.AdministradorEmailDTO;
 import cl.duoc.msAdministrador.model.Administrador;
 import cl.duoc.msAdministrador.model.Auditoria;
 import cl.duoc.msAdministrador.service.AdministradorService;
@@ -37,7 +39,8 @@ public class AdministradorController {
                     admin.getIdAdm(),
                     admin.getNombreAdm(),
                     admin.getApPatAdm(),
-                    admin.getRutAdm()
+                    admin.getRutAdm(),
+                    admin.getCorreoAdm()
                 ))
                 .collect(Collectors.toList());
             return ResponseEntity.ok(listaDTO);
@@ -79,16 +82,14 @@ public class AdministradorController {
         }
     }
 
-    //ME FALTA BUSCAR AUDITORIA POR RUT DEL ADM
 
 
-
-    @GetMapping("/auditorias/listar/{idAuditoria}")
+    @GetMapping("/auditorias/listar/{idAdm}")
     public ResponseEntity<?> listarAuditoriaPorAdm(@PathVariable Integer idAdm) {
         try {
             List<Auditoria> lista = administradorService.listarAuditoriasPorAdm(idAdm);
             if (lista.isEmpty()) {
-                return ResponseEntity.ok(lista);
+                return ResponseEntity.noContent().build();
             }
             return ResponseEntity.ok(lista);
         } catch (Exception e) {
@@ -176,6 +177,26 @@ public class AdministradorController {
         try {
             Administrador admActualizado = administradorService.actualizarAdmPorRut(rutAdm, administrador);
             return ResponseEntity.ok(admActualizado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PatchMapping("actualizar/email/id/{idAdm}")
+    public ResponseEntity<?> actualizarEmailPorId(@PathVariable Integer idAdm, @RequestBody AdministradorEmailDTO emailDTO){
+        try {
+            return ResponseEntity.ok(administradorService.actualizarEmailAdm(idAdm, emailDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/auditorias/guardar")
+    public ResponseEntity<?> guardarAuditoria(@RequestBody Auditoria auditoria){
+        try {
+            return ResponseEntity.ok(administradorService.guardarAuditoria(auditoria));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

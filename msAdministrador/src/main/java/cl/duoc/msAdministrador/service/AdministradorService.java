@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msAdministrador.dto.AdministradorDTO;
+import cl.duoc.msAdministrador.dto.AdministradorEmailDTO;
 import cl.duoc.msAdministrador.model.Administrador;
 import cl.duoc.msAdministrador.model.Auditoria;
 import cl.duoc.msAdministrador.repository.AdministradorRepository;
@@ -161,5 +163,28 @@ public class AdministradorService {
 
         return actualizado;
     }
+
+
+    public AdministradorDTO actualizarEmailAdm(Integer idAdm, AdministradorEmailDTO emailDTO){
+        Administrador administrador = administradorRepository.findById(idAdm)
+            .orElseThrow(() -> new RuntimeException("Administrador con id: " + idAdm + " no encontrado"));
+        administrador.setCorreoAdm(emailDTO.getCorreoAdm());
+        Administrador correoAdmActual = administradorRepository.save(administrador);
+        return new AdministradorDTO(
+            correoAdmActual.getIdAdm(),
+            correoAdmActual.getNombreAdm(),
+            correoAdmActual.getApPatAdm(),
+            correoAdmActual.getRutAdm(),
+            correoAdmActual.getCorreoAdm()
+        );
+    }
+
+    public Auditoria guardarAuditoria(Auditoria auditoria){
+        Administrador administrador = administradorRepository.findById(auditoria.getAdministrador().getIdAdm())
+            .orElseThrow(()-> new RuntimeException("Administrador con id: " + auditoria.getAdministrador().getIdAdm() + " no se encuentra o no existe"));
+        auditoria.setAdministrador(administrador);
+        return auditoriaRepository.save(auditoria);
+    }
+
 
 }
