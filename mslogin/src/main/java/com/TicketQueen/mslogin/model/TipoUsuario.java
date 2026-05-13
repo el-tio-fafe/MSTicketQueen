@@ -1,4 +1,4 @@
-package com.TicketQueen.mslogin.model;
+package com.TicketQueen.msLogin.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ public class TipoUsuario {
     @Column(nullable = false)
     private String nombreTipoUsuario;
 
-    
+
     @OneToOne
     private Usuario usuario;
     
