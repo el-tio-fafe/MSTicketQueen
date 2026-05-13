@@ -16,18 +16,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "usuario")
-public class usuario {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Integer id;
-@Column(unique = true , nullable = false)
-private String nombreUsuario;
-@Column(unique = true , nullable = false)
-private String email;
-@Column(nullable = false)
-private String password;
+public class Usuario {
 
-@OneToOne
-@JoinColumn(name = "tipo_usuario_id")
-private TipoUsuario tipoUsuario;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+
+    @Column(unique = true , nullable = false)
+    private String nombreUsuario;
+
+
+    @Column(unique = true , nullable = false)
+    private String email;
+
+
+    @Column(nullable = false)
+    private String password;
+
+
+    @OneToOne
+    @JoinColumn(name = "tipo_usuario_id")
+    private TipoUsuario tipoUsuario;
+    
 }

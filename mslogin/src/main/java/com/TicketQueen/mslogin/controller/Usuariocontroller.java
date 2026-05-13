@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.TicketQueen.mslogin.model.usuario;
+import com.TicketQueen.mslogin.model.Usuario;
 import com.TicketQueen.mslogin.service.usuarioService;
 
 @RestController
@@ -25,13 +25,13 @@ public class Usuariocontroller {
     private usuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<usuario>> listarUsuarios() {
+    public ResponseEntity<List<Usuario>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
     @GetMapping("/email/{correo}")
-    public ResponseEntity<usuario> obtenerUsuarioPorCorreo(@PathVariable String correo) {
-        usuario usuario = usuarioService.buscarUsuarioPorCorreo(correo);
+    public ResponseEntity<Usuario> obtenerUsuarioPorCorreo(@PathVariable String correo) {
+        Usuario usuario = usuarioService.buscarUsuarioPorCorreo(correo);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
@@ -39,8 +39,8 @@ public class Usuariocontroller {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<usuario> obtenerUsuarioPorId(@PathVariable Integer id) {
-        usuario usuario = usuarioService.buscarUsuarioPorId(id);
+    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Integer id) {
+        Usuario usuario = usuarioService.buscarUsuarioPorId(id);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
@@ -48,14 +48,14 @@ public class Usuariocontroller {
     }
 
     @PostMapping
-    public ResponseEntity<usuario> crearUsuario(@RequestBody usuario nuevoUsuario) {
-        usuario creado = usuarioService.crearUsuario(nuevoUsuario);
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario nuevoUsuario) {
+        Usuario creado = usuarioService.crearUsuario(nuevoUsuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<usuario> actualizarUsuario(@PathVariable Integer id, @RequestBody usuario usuarioActualizado) {
-        usuario actualizado = usuarioService.actualizarUsuario(id, usuarioActualizado);
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Integer id, @RequestBody Usuario usuarioActualizado) {
+        Usuario actualizado = usuarioService.actualizarUsuario(id, usuarioActualizado);
         if (actualizado == null) {
             return ResponseEntity.notFound().build();
         }
@@ -69,7 +69,7 @@ public class Usuariocontroller {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody usuario credenciales) {
+    public ResponseEntity<String> login(@RequestBody Usuario credenciales) {
         boolean valido = usuarioService.verificarCredenciales(credenciales.getEmail(), credenciales.getPassword());
         if (valido) {
             return ResponseEntity.ok("Credenciales válidas");

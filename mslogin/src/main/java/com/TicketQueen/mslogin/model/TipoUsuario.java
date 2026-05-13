@@ -17,13 +17,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tipo_usuario")
 public class TipoUsuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+
     @Column(nullable = false)
     private String nombreTipoUsuario;
+
+    
     @OneToOne
-    private usuario usuario;
+    private Usuario usuario;
     
 
 }
