@@ -50,9 +50,27 @@ public class BancoService {
         banco bancoExistente = buscarBancoPorNombre(nombre);
         bancoRepository.deleteById(bancoExistente.getId());
     }
+
 // emitir comprobantes 
+public void emitirComprobante() {
+    
+    
+   
+}
 // anular comprobantes 
-// obtener historial por cliente 
+public void anularComprobante (){
+
+}
+// obtener historial por cliente
+public void obtenerHistorialPorCliente() {
+
+} 
 // genera resumen diario
+public void generarResumenDiario() {
+
+}
 //validar disponibilidad de pago
+public void validarDisponibilidadDePago() {
+
+}
 }
