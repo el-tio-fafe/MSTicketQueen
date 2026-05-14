@@ -30,7 +30,7 @@ public class Recinto {
     private String nombreRecinto;
     
     @Column(nullable = false)
-    private String capacidadRecinto;
+    private Integer capacidadRecinto;
     
     @Column(nullable = false, unique = true)
     private String telefonoRecinto;

@@ -5,13 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msDireccion.dto.CalleUpdateDTO;
 import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
 import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
 import cl.duoc.msDireccion.dto.RegionDTO;
 import cl.duoc.msDireccion.dto.RegionUpdateDTO;
+import cl.duoc.msDireccion.model.Calle;
 import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
 import cl.duoc.msDireccion.model.Region;
+import cl.duoc.msDireccion.repository.CalleRepository;
 import cl.duoc.msDireccion.repository.CiudadProvinciaRepository;
 import cl.duoc.msDireccion.repository.ComunaRepository;
 import cl.duoc.msDireccion.repository.RegionRepository;
@@ -27,6 +30,9 @@ public class RegionService {
 
     @Autowired 
     private ComunaRepository comunaRepository;
+
+    @Autowired
+    private CalleRepository calleRepository;
 
 
 //REGIONES
@@ -211,6 +217,40 @@ public class RegionService {
     //     }
     //     comunaRepository.deleteById(idComuna);
     // }
+
+
+
+//*************************************************************************************************/
+//CALLE
+
+    public List<Calle> listarCalles() {
+        return calleRepository.findAll();
+    }
+
+    public Calle buscarCallePorId(Integer idCalle) {
+        return calleRepository.findById(idCalle)
+            .orElseThrow(() -> new RuntimeException("Calle con id: " + idCalle + " no encontrada."));
+    }
+
+    public List<Calle> listarCallesPorComuna(Integer idComuna) {
+        comunaRepository.findById(idComuna)
+            .orElseThrow(() -> new RuntimeException("Comuna con id: " + idComuna + " no encontrada."));
+        return calleRepository.findByComuna_IdComuna(idComuna);
+    }
+
+    public Calle guardarCalle(Calle calle) {
+        Integer idComuna = calle.getComuna().getIdComuna();
+        comunaRepository.findById(idComuna)
+            .orElseThrow(() -> new RuntimeException("No se puede guardar la calle porque la comuna con id: " + idComuna + " no existe."));
+        return calleRepository.save(calle);
+    }
+
+    public Calle actualizarNombreCalle(Integer idCalle, CalleUpdateDTO calleUpdateDTO) {
+        Calle calle = calleRepository.findById(idCalle)
+            .orElseThrow(() -> new RuntimeException("Calle con id: " + idCalle + " no encontrada."));
+        calle.setNombreCalle(calleUpdateDTO.getNombreCalle());
+        return calleRepository.save(calle);
+    }
 
 
 }

@@ -3,6 +3,9 @@ package cl.duoc.msDireccion.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 
@@ -15,21 +18,21 @@ public class Calle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer numeroCalle;
+    private Integer idCalle;
 
     @Column(nullable = false)
-    private String nombre;
+    private String nombreCalle;
+
+    @Column(nullable = false)
+    private String numeroCalle;
+
+    @Column(nullable = true)
+    private String numeroDepto;
     
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idComuna", nullable = false)
+    @JsonBackReference("comuna-calle")
     private Comuna comuna;
 
-    @OneToOne
-    @JoinColumn(name = "idCiudadProvincia", nullable = false)
-    private CiudadProvincia ciudadProvincia;
-
-    @OneToOne
-    @JoinColumn(name = "idRegion", nullable = false)
-    private Region region;
     
 }

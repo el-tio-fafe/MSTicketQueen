@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msDireccion.dto.CalleUpdateDTO;
 import cl.duoc.msDireccion.dto.CiudadProvinciaDTO;
 import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
 import cl.duoc.msDireccion.dto.ComunaDTO;
 import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
 import cl.duoc.msDireccion.dto.RegionDTO;
+import cl.duoc.msDireccion.model.Calle;
 import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
 import cl.duoc.msDireccion.model.Region;
@@ -330,4 +332,61 @@ public class RegionController {
     //         return ResponseEntity.badRequest().body(e.getMessage());
     //     }
     // }
+
+
+//******************************************************************************************************************/
+//CALLE
+
+    @GetMapping("/calles")
+    public ResponseEntity<?> listarCalles() {
+        List<Calle> lista = regionService.listarCalles();
+        if (lista.isEmpty()) {
+            return ResponseEntity.badRequest().body("No hay calles registradas");
+        }
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/buscar/calle/id/{idCalle}")
+    public ResponseEntity<?> buscarCallePorId(@PathVariable Integer idCalle) {
+        try {
+            return ResponseEntity.ok(regionService.buscarCallePorId(idCalle));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/calle/listar/comuna/{idComuna}")
+    public ResponseEntity<?> listarCallesPorComuna(@PathVariable Integer idComuna) {
+        try {
+            List<Calle> lista = regionService.listarCallesPorComuna(idComuna);
+            if (lista.isEmpty()) {
+                return ResponseEntity.badRequest().body("La comuna no tiene calles registradas");
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/guardar/calle")
+    public ResponseEntity<?> guardarCalle(@RequestBody Calle calle) {
+        try {
+            return ResponseEntity.ok(regionService.guardarCalle(calle));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/actualizar/calle/id/{idCalle}")
+    public ResponseEntity<?> actualizarNombreCalle(@PathVariable Integer idCalle, @RequestBody CalleUpdateDTO calleUpdateDTO) {
+        try {
+            return ResponseEntity.ok(regionService.actualizarNombreCalle(idCalle, calleUpdateDTO));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
+
 }
