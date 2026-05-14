@@ -27,7 +27,10 @@ public class EventoController {
     @Autowired
     private EventoService eventoService;
 
-    @GetMapping
+
+//EVENTO
+
+    @GetMapping("/listartodos")
     public ResponseEntity<?> listarEventos(){
         try {
             List<Evento> lista = eventoService.listarEventos();
@@ -42,7 +45,7 @@ public class EventoController {
     }
 
 
-    @GetMapping("/id/{idEvento}")
+    @GetMapping("buscar/id/{idEvento}")
     public ResponseEntity<?> buscarEventoPorId(@PathVariable Integer idEvento){
         try {
             return ResponseEntity.ok(eventoService.buscarEventoPorId(idEvento));
@@ -52,7 +55,7 @@ public class EventoController {
     }
 
 
-    @GetMapping("/estado/{estadoEvento}")
+    @GetMapping("listar/estado/{estadoEvento}")  //PENDIENTE, APROBADO O RECHAZADO
     public ResponseEntity<?> listarEventosPorEstado(@PathVariable String estadoEvento){
         try {
             List<Evento> lista = eventoService.listarEventosPorEstado(estadoEvento);
@@ -66,7 +69,7 @@ public class EventoController {
         }
     }
 
-     @GetMapping
+    @GetMapping("/listar-eventos/por-productora/id/{idProd}")
     public ResponseEntity<?> listarEventosPorProductora(@PathVariable Integer idProd){
         try {
             List<Evento> lista = eventoService.listarEventosPorProductora(idProd);
@@ -81,7 +84,7 @@ public class EventoController {
     }
 
 
-    @PostMapping
+    @PostMapping("/crear")
     public ResponseEntity<?> crearEvento(@RequestBody Evento evento){
         try {
             return ResponseEntity.ok(eventoService.crearEvento(evento));
@@ -138,7 +141,7 @@ public class EventoController {
     }
 
 
-    @GetMapping("/tiposEvento/buscar/id/{idTipoEvento")
+    @GetMapping("/tiposEvento/buscar/id/{idTipoEvento}")
     public ResponseEntity<?> buscarTiposEvento(@PathVariable Integer idTipoEvento){
         try {
             return ResponseEntity.ok(eventoService.buscarEventoPorId(idTipoEvento));
@@ -179,7 +182,7 @@ public class EventoController {
 
 //RECINTO
 
-    @GetMapping("/recintos")
+    @GetMapping("/recinto/listar")
     public ResponseEntity<?> listarRecintos(){
         try {
             List<Recinto> lista = eventoService.listarRecintos();
@@ -193,7 +196,7 @@ public class EventoController {
     }
 
 
-    @GetMapping("/recinto/buscar/id/{idRecinto")
+    @GetMapping("/recinto/buscar/id/{idRecinto}")
     public ResponseEntity<?> buscarRecintoPorId(@PathVariable Integer idRecinto){
         try {
             return ResponseEntity.ok(eventoService.buscarRecintoPorId(idRecinto));
@@ -203,7 +206,7 @@ public class EventoController {
     } 
 
 
-    @GetMapping("/recinto/buscar/nombre/{nombreRecinto")
+    @GetMapping("/recinto/buscar/nombre/{nombreRecinto}")
     public ResponseEntity<?> buscarRecintoPorNombre(@PathVariable String nombreRecinto){
         try {
             return ResponseEntity.ok(eventoService.buscarRecintoPorNombre(nombreRecinto));
@@ -212,7 +215,7 @@ public class EventoController {
         }
     } 
 
-    @PostMapping("/recinto")
+    @PostMapping("/recinto/guardar")
     public ResponseEntity<?> guardarRecinto(@RequestBody Recinto recinto){
         try {
             return ResponseEntity.ok(eventoService.guardarRecinto(recinto));
@@ -221,7 +224,7 @@ public class EventoController {
         }
     }
 
-    @PatchMapping("tipoEvento/id/{idTipoEvento}")
+    @PatchMapping("/recinto/actualizar/id/{idRecinto}")
     public ResponseEntity<?> actualizarRecinto(@PathVariable Integer idRecinto, @RequestBody Recinto recinto){
         try {
             return ResponseEntity.ok(eventoService.actualizarRecinto(idRecinto, recinto));
@@ -230,7 +233,7 @@ public class EventoController {
         }
     }
 
-    @DeleteMapping("/tipoEvento/id/{idTipoEvento}")
+    @DeleteMapping("/recinto/eliminar/id/{idRecinto}")
     public ResponseEntity<?> eliminarRecinto(@PathVariable Integer idRecinto){
         try {
             eventoService.eliminarRecinto(idRecinto);;
