@@ -20,7 +20,7 @@ public class Ubicacion {
     private String nombreUbi;
 
     @Column(nullable = false)
-    private String precioUbi;
+    private Double precioUbi;
 
     @Column(nullable = false)
     private Integer capacidadUbi;
@@ -28,5 +28,6 @@ public class Ubicacion {
     @Column(nullable = false)
     private Integer stockDisponibleUbi;
 
-    
+    @Column(nullable = false)
+    private Boolean tieneAsiento;
 }
