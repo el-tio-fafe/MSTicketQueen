@@ -15,4 +15,11 @@ import lombok.NoArgsConstructor;
 
 public class Ticket {
 
+    private Integer idTicket;
+
+
+    private String codigoQr;
+
+    
+
 }
