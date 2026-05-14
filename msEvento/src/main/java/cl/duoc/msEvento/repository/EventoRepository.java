@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import cl.duoc.msEvento.model.Evento;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -16,4 +17,6 @@ public interface EventoRepository extends JpaRepository<Evento, Integer>{
 
     List<Evento> findByIdAdministrador(Integer idAdministrador);
 
+
+    Optional<Evento> findByCodigoEvento(String codigoEvento);
 }

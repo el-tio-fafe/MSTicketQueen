@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msEvento.model.Evento;
+import cl.duoc.msEvento.model.Recinto;
+import cl.duoc.msEvento.model.TipoEvento;
 import cl.duoc.msEvento.service.EventoService;
 
 
@@ -118,6 +120,126 @@ public class EventoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+//TIPO EVENTO
+
+    @GetMapping("/tiposEvento")
+    public ResponseEntity<?> listarTiposEvento(){
+        try {
+            List<TipoEvento> lista = eventoService.listarTiposEvento();
+            if(lista.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/tiposEvento/buscar/id/{idTipoEvento")
+    public ResponseEntity<?> buscarTiposEvento(@PathVariable Integer idTipoEvento){
+        try {
+            return ResponseEntity.ok(eventoService.buscarEventoPorId(idTipoEvento));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    } 
+
+    @PostMapping("/tiposEvento")
+    public ResponseEntity<?> guardarTiposEvento(@RequestBody TipoEvento tipoEvento){
+        try {
+            return ResponseEntity.ok(eventoService.guardarTipoEvento(tipoEvento));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("tipoEvento/id/{idTipoEvento}")
+    public ResponseEntity<?> actualizarTiposEvento(@PathVariable Integer idTipoEvento, @RequestBody TipoEvento tipoEvento){
+        try {
+            return ResponseEntity.ok(eventoService.actualizarTipoEvento(idTipoEvento, tipoEvento));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/tipoEvento/id/{idTipoEvento}")
+    public ResponseEntity<?> eliminarTiposEvento(@PathVariable Integer idTipoEvento){
+        try {
+            eventoService.eliminarEvento(idTipoEvento);
+            return ResponseEntity.ok("Tipo de Evento con id: " + idTipoEvento + " eliminado con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
+//RECINTO
+
+    @GetMapping("/recintos")
+    public ResponseEntity<?> listarRecintos(){
+        try {
+            List<Recinto> lista = eventoService.listarRecintos();
+            if(lista.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/recinto/buscar/id/{idRecinto")
+    public ResponseEntity<?> buscarRecintoPorId(@PathVariable Integer idRecinto){
+        try {
+            return ResponseEntity.ok(eventoService.buscarRecintoPorId(idRecinto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    } 
+
+
+    @GetMapping("/recinto/buscar/nombre/{nombreRecinto")
+    public ResponseEntity<?> buscarRecintoPorNombre(@PathVariable String nombreRecinto){
+        try {
+            return ResponseEntity.ok(eventoService.buscarRecintoPorNombre(nombreRecinto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    } 
+
+    @PostMapping("/recinto")
+    public ResponseEntity<?> guardarRecinto(@RequestBody Recinto recinto){
+        try {
+            return ResponseEntity.ok(eventoService.guardarRecinto(recinto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("tipoEvento/id/{idTipoEvento}")
+    public ResponseEntity<?> actualizarRecinto(@PathVariable Integer idRecinto, @RequestBody Recinto recinto){
+        try {
+            return ResponseEntity.ok(eventoService.actualizarRecinto(idRecinto, recinto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/tipoEvento/id/{idTipoEvento}")
+    public ResponseEntity<?> eliminarRecinto(@PathVariable Integer idRecinto){
+        try {
+            eventoService.eliminarRecinto(idRecinto);;
+            return ResponseEntity.ok("Recinto con id: " + idRecinto + " eliminado con éxito");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
 
 
