@@ -101,7 +101,7 @@ public class BancoService {
     // anular comprobante por numero de comprobante dejando el numero de comprobante con el estado anulado
     public Comprobante anularComprobantePorNumero(String numeroComprobante) {
         Comprobante comprobanteExistente = buscarComprobantePorNumero(numeroComprobante);
-        comprobanteExistente.setEstado("Anulado");
+        comprobanteExistente.setEstadopago(false);
         return comprobanteRepository.save(comprobanteExistente);
     }
 // filtrar comprobantes por fecha de emision
