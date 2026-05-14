@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,9 @@ public class Comprobante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer idComprobante;
+    @Column(nullable = false, unique = true)
+    private String numeroComprobante;
     @Column(nullable = false)
     private Date fechaEmision;
     @Column(nullable = false)
@@ -29,9 +32,13 @@ public class Comprobante {
     private String metodopago;
     @Column(nullable = false)
     private boolean estadopago;
-    @OneToOne
+    @OneToMany
     private formaPago formaPago;
     @OneToOne
     private banco banco;
+    public void setEstado(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setEstado'");
+    }
     
 }

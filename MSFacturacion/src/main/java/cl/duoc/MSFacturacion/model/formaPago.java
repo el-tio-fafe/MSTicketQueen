@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class formaPago {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Integer id;
+ private Integer idFormapago;
  @Column(nullable = false)
  private String medioDePago;
  @OneToOne

@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 public class banco {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Integer idBanco;
     @Column(nullable = false)
-    private String nombre;
+    private String nombreBanco;
     @OneToOne
     private Comprobante comprobante;
 
