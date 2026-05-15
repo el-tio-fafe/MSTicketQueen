@@ -26,17 +26,27 @@ public class EventoService {
         return eventoRepository.findAll();
     }
 
+    public List<Evento> listarEventosPorEstado(String estadoEvento){
+        List<String> estadosValidos = List.of("PENDIENTE", "APROBADO", "RECHAZADO");
+        if(!estadosValidos.contains(estadoEvento.toUpperCase())){
+            throw new RuntimeException("Estado: " + estadoEvento + " no válido. Use PENDIENTE, APROBADO O RECHAZADO");
+        }
+        return eventoRepository.findByEstadoEvento(estadoEvento.toUpperCase());
+    }
+
     public Evento buscarEventoPorId(Integer idEvento){
         return eventoRepository.findById(idEvento)
             .orElseThrow(() -> new RuntimeException("Evento con id: " + idEvento + " no encontrado"));
     }
 
-    public List<Evento> listarEventosPorEstado(String estado){
-        return eventoRepository.findByEstadoEvento(estado);
-    }
+    
 
     public List<Evento> listarEventosPorProductora(Integer idProd){
-        return eventoRepository.findByIdProd(idProd);
+        List<Evento> eventos = eventoRepository.findByIdProd(idProd);
+        if(eventos.isEmpty()){
+            throw new RuntimeException("No se encontraron eventos para la productora con id: " + idProd);
+        }
+        return eventos;
     }
 
     //AL CREAR UN EVENTO SIEMPRE COMIENZA CON EL ESTADO PENDIENTE PORQUE NECESITA LA APROBACION DEL ADM
@@ -44,7 +54,21 @@ public class EventoService {
         if(eventoRepository.findByCodigoEvento(evento.getCodigoEvento()).isPresent()){
             throw new RuntimeException("Ya existe un evento con código: " + evento.getCodigoEvento());
         }
+        //BUSCAMOS EL RECINTO PRIMERO, SI EXISTE PODEMOS CREAR
+        Recinto recinto = recintoRepository.findById(evento.getRecinto().getIdRecinto())
+            .orElseThrow(() -> new RuntimeException("Recinto con id: " 
+                + evento.getRecinto().getIdRecinto() + " no encontrado."));
+
+        //BUSCAMOS EL TIPO DE EVENTO PARA ASIGNARLO, Y SI EXISTE LO CREAMOS
+        TipoEvento tipoEvento = tipoEventoRepository.findById(evento.getTipoEvento().getIdTipoEvento())
+            .orElseThrow(() -> new RuntimeException("TipoEvento con id: " 
+                + evento.getTipoEvento().getIdTipoEvento() + " no encontrado."));
+
+        evento.setRecinto(recinto);
+        evento.setTipoEvento(tipoEvento);
+
         evento.setEstadoEvento("PENDIENTE");
+
         return eventoRepository.save(evento);
     }
 
@@ -69,7 +93,7 @@ public class EventoService {
             .orElseThrow(() -> new RuntimeException("Evento con id: " + idEvento + " no encontrado"));
         
         if(!evento.getEstadoEvento().equals("PENDIENTE")){
-            throw new RuntimeException("Solo se pueden aprobar eventos en estado PENDIENTE");
+            throw new RuntimeException("Solo se pueden rechazar eventos en estado PENDIENTE");
         }
 
         evento.setEstadoEvento("RECHAZADO");
@@ -104,14 +128,14 @@ public class EventoService {
 
     public TipoEvento actualizarTipoEvento(Integer idTipoEvento, TipoEvento tipoEventoActualizado){
         TipoEvento tipoEvento = tipoEventoRepository.findById(idTipoEvento)
-            .orElseThrow(() -> new RuntimeException("Tipo de Evento con id: " + idTipoEvento + "No encontrado"));
+            .orElseThrow(() -> new RuntimeException("Tipo de Evento con id: " + idTipoEvento + " no encontrado"));
         tipoEvento.setDescripcion(tipoEventoActualizado.getDescripcion());
         return tipoEventoRepository.save(tipoEvento);
     }
 
     public void eliminarTipoEvento(Integer idTipoEvento){
         tipoEventoRepository.findById(idTipoEvento)
-            .orElseThrow(() -> new RuntimeException("Tipo de Evento con id: " + idTipoEvento + "No encontrado"));
+            .orElseThrow(() -> new RuntimeException("Tipo de Evento con id: " + idTipoEvento + " no encontrado"));
         tipoEventoRepository.deleteById(idTipoEvento);
     }
 

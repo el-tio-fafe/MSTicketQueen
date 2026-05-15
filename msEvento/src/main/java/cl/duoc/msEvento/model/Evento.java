@@ -57,10 +57,6 @@ import lombok.NoArgsConstructor;
 
 
 
-        //necesita estos dos:
-        //private Productora
-
-
-        //private Administrador
+        
 
 }

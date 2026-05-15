@@ -1,6 +1,7 @@
 package cl.duoc.msEvento.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msEvento.dto.EventoListarDTO;
 import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
 import cl.duoc.msEvento.model.TipoEvento;
@@ -29,20 +31,87 @@ public class EventoController {
 
 
 //EVENTO
+    //CON ESTE METODO ME TIRABA TODOS LOS DATOS CON LAS LISTAS DE RECINTOS Y LAS LISTAS DEL TIPO DE EVENTO
+    // @GetMapping("/listartodos")
+    // public ResponseEntity<?> listarEventos(){
+    //     try {
+    //         List<Evento> lista = eventoService.listarEventos();
+    //         if(lista.isEmpty()){
+    //             return ResponseEntity.noContent().build();
+    //         }
+    //         return ResponseEntity.ok(lista);
+
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
 
     @GetMapping("/listartodos")
-    public ResponseEntity<?> listarEventos(){
-        try {
-            List<Evento> lista = eventoService.listarEventos();
-            if(lista.isEmpty()){
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(lista);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<List<EventoListarDTO>> listarEventos(){
+        List<Evento> listarEventos = eventoService.listarEventos();
+        if (listarEventos.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else{
+            List<EventoListarDTO> listaDTO = listarEventos.stream()
+                .map(even -> new EventoListarDTO(
+                    even.getIdEvento(),
+                    even.getNombreEvento(),
+                    even.getFechaEvento(),
+                    even.getEstadoEvento(),
+                    even.getIdProd(),
+                    even.getIdAdministrador()
+                ))
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(listaDTO);
         }
     }
+
+    @GetMapping("listar/estado/{estadoEvento}")  //PENDIENTE, APROBADO O RECHAZADO
+    public ResponseEntity<List<EventoListarDTO>> listarEventosPorEstado(@PathVariable String estadoEvento){
+        try {
+            List<Evento> lista = eventoService.listarEventosPorEstado(estadoEvento);
+            if(lista.isEmpty()){
+                return ResponseEntity.noContent().build();
+            } else{
+                List<EventoListarDTO> listaDTO = lista.stream()
+                .map(even -> new EventoListarDTO(
+                    even.getIdEvento(),
+                    even.getNombreEvento(),
+                    even.getFechaEvento(),
+                    even.getEstadoEvento(),
+                    even.getIdProd(),
+                    even.getIdAdministrador()
+                )).collect(Collectors.toList());
+                return ResponseEntity.ok(listaDTO);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/listar-eventos/por-productora/id/{idProd}")
+    public ResponseEntity<List<EventoListarDTO>> listarEventosPorProductora(@PathVariable Integer idProd){
+        try {
+            List<Evento> lista = eventoService.listarEventosPorProductora(idProd);
+            if(lista.isEmpty()){
+                return ResponseEntity.noContent().build();
+            } else {
+                List<EventoListarDTO> listaDTO = lista.stream()
+                .map(even -> new EventoListarDTO(
+                even.getIdEvento(),
+                even.getNombreEvento(),
+                even.getFechaEvento(),
+                even.getEstadoEvento(),
+                even.getIdProd(),
+                even.getIdAdministrador()
+                )).collect(Collectors.toList());
+                return ResponseEntity.ok(listaDTO);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
 
 
     @GetMapping("buscar/id/{idEvento}")
@@ -55,33 +124,7 @@ public class EventoController {
     }
 
 
-    @GetMapping("listar/estado/{estadoEvento}")  //PENDIENTE, APROBADO O RECHAZADO
-    public ResponseEntity<?> listarEventosPorEstado(@PathVariable String estadoEvento){
-        try {
-            List<Evento> lista = eventoService.listarEventosPorEstado(estadoEvento);
-            if(lista.isEmpty()){
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(lista);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/listar-eventos/por-productora/id/{idProd}")
-    public ResponseEntity<?> listarEventosPorProductora(@PathVariable Integer idProd){
-        try {
-            List<Evento> lista = eventoService.listarEventosPorProductora(idProd);
-            if(lista.isEmpty()){
-                return ResponseEntity.noContent().build();
-            }
-            return ResponseEntity.ok(lista);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+   
 
 
     @PostMapping("/crear")
@@ -144,7 +187,7 @@ public class EventoController {
     @GetMapping("/tiposEvento/buscar/id/{idTipoEvento}")
     public ResponseEntity<?> buscarTiposEvento(@PathVariable Integer idTipoEvento){
         try {
-            return ResponseEntity.ok(eventoService.buscarEventoPorId(idTipoEvento));
+            return ResponseEntity.ok(eventoService.buscarTipoEventoPorId(idTipoEvento));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -159,7 +202,7 @@ public class EventoController {
         }
     }
 
-    @PatchMapping("tipoEvento/id/{idTipoEvento}")
+    @PatchMapping("tiposEvento/id/{idTipoEvento}")
     public ResponseEntity<?> actualizarTiposEvento(@PathVariable Integer idTipoEvento, @RequestBody TipoEvento tipoEvento){
         try {
             return ResponseEntity.ok(eventoService.actualizarTipoEvento(idTipoEvento, tipoEvento));
@@ -168,10 +211,10 @@ public class EventoController {
         }
     }
 
-    @DeleteMapping("/tipoEvento/id/{idTipoEvento}")
+    @DeleteMapping("/tiposEvento/id/{idTipoEvento}")
     public ResponseEntity<?> eliminarTiposEvento(@PathVariable Integer idTipoEvento){
         try {
-            eventoService.eliminarEvento(idTipoEvento);
+            eventoService.eliminarTipoEvento(idTipoEvento);
             return ResponseEntity.ok("Tipo de Evento con id: " + idTipoEvento + " eliminado con éxito");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
