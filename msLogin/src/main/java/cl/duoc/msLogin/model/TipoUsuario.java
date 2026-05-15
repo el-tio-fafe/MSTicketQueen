@@ -23,9 +23,6 @@ public class TipoUsuario {
     private String nombreTipoUsuario;
 
 
-    @OneToOne
-    private Usuario usuario;
-
 
 
 

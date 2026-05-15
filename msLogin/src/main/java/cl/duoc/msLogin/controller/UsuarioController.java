@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msLogin.model.TipoUsuario;
 import cl.duoc.msLogin.model.Usuario;
 import cl.duoc.msLogin.service.UsuarioService;
 
@@ -24,6 +26,8 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+//USUARIO
 
      @GetMapping
     public ResponseEntity<?> listarUsuarios() {
@@ -97,6 +101,52 @@ public class UsuarioController {
         }
     }
 
+
+
+//TIPO USUARIO
+
+    @GetMapping("/tipo-usuario")
+    public ResponseEntity<?> listarTiposUsuario() {
+        try {
+            List<TipoUsuario> lista = usuarioService.listarTiposUsuario();
+            if (lista.isEmpty()) {
+                return ResponseEntity.badRequest().body("No hay tipos de usuario registrados");
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/tipo-usuario/{id}")
+    public ResponseEntity<?> buscarTipoUsuarioPorId(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(usuarioService.buscarTipoUsuarioPorId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+//METODO COMENTADO PORQUE LA API TRABAJA SOLO CON 3 USUARIOS (ADM, PROD Y CLIEN)
+    // @PostMapping("/tipo-usuario")
+    // public ResponseEntity<?> guardarTipoUsuario(@RequestBody TipoUsuario tipoUsuario) {
+    //     try {
+    //         return ResponseEntity.ok(usuarioService.guardarTipoUsuario(tipoUsuario));
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
+    // }
+    
+
+    @PatchMapping("/tipo-usuario/{id}")
+    public ResponseEntity<?> actualizarTipoUsuario(@PathVariable Integer id, @RequestBody TipoUsuario tipoUsuario) {
+        try {
+            return ResponseEntity.ok(usuarioService.actualizarTipoUsuario(id, tipoUsuario));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
 

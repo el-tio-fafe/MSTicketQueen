@@ -21,9 +21,9 @@ public class DataLoader {
 
          }else{
             
-            TipoUsuario tipoUsuario1 = new TipoUsuario(null, "Administrador", null);
-            TipoUsuario tipoUsuario2 = new TipoUsuario(null, "Cliente", null);
-            TipoUsuario tipoUsuario3 = new TipoUsuario(null, "Productora", null);
+            TipoUsuario tipoUsuario1 = new TipoUsuario(null, "Administrador");
+            TipoUsuario tipoUsuario2 = new TipoUsuario(null, "Cliente");
+            TipoUsuario tipoUsuario3 = new TipoUsuario(null, "Productora");
 
             tipoUsuariorepo.save(tipoUsuario1); 
             tipoUsuariorepo.save(tipoUsuario2);
