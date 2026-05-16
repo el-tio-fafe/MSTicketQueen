@@ -211,23 +211,11 @@ public class BancoController {
     }
 
 
-    @GetMapping("/formas-pago/banco/buscar/nombre/{nombreBanco}")
-    public ResponseEntity<?> buscarFormaPagoPorNombreBanco(@PathVariable String nombreBanco) {
-        try {
-            List<FormaPago> lista = bancoService.buscarFormaPagoPorNombreBanco(nombreBanco);
-            if(lista.isEmpty()){
-            return ResponseEntity.badRequest().body("No hay formas de pago para el banco: " + nombreBanco);
-            }
-            return ResponseEntity.ok(lista);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
-    @GetMapping("/formas-pago/buscar/id/{id}")
-    public ResponseEntity<?> buscarFormaPagoPorId(@PathVariable Integer idFormaPago) {
+    @GetMapping("/formas-pago/buscar/id/{idFormaPago}")
+    public ResponseEntity<?> buscarFormaPagoPorSuId(@PathVariable Integer idFormaPago) {
         try {
-            return ResponseEntity.ok(bancoService.buscarFormaPagoPorId(idFormaPago));
+            return ResponseEntity.ok(bancoService.buscarFormaPagoPorSuId(idFormaPago));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -251,7 +239,7 @@ public class BancoController {
         }
     }
 
-    @PatchMapping("/formas-pago/actualizar/id/{id}")
+    @PatchMapping("/formas-pago/actualizar/id/{idFormaPago}")
     public ResponseEntity<?> actualizarFormaPago(@PathVariable Integer idFormaPago, @RequestBody FormaPago formaPago) {
         try {
             return ResponseEntity.ok(bancoService.actualizarFormaPago(idFormaPago, formaPago));
@@ -260,7 +248,7 @@ public class BancoController {
         }
     }
 
-    @DeleteMapping("/formas-pago/eliminar/id/{id}")
+    @DeleteMapping("/formas-pago/eliminar/id/{idFormaPago}")
     public ResponseEntity<?> eliminarFormaPago(@PathVariable Integer idFormaPago) {
         try {
             bancoService.eliminarFormaPago(idFormaPago);

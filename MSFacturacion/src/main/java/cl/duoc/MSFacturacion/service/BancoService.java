@@ -138,7 +138,7 @@ public class BancoService {
 
 
 
-    public FormaPago buscarFormaPagoPorId(Integer idFormaPago){
+    public FormaPago buscarFormaPagoPorSuId(Integer idFormaPago){
         return formaPagoRepository.findById(idFormaPago)
             .orElseThrow(() -> new RuntimeException("Forma de pago con id: " + idFormaPago + " no encontrada"));
     }
@@ -148,16 +148,7 @@ public class BancoService {
             .orElseThrow(() -> new RuntimeException("Forma de pago: " + medioDePago + " no encontrada."));
     }
 
-    public List<FormaPago> buscarFormaPagoPorNombreBanco(String nombreBanco) {
-        Banco banco = buscarBancoPorNombre(nombreBanco);
-        List<Comprobante> comprobantes = comprobanteRepository.findByBanco(banco);
-        if(comprobantes.isEmpty()){
-            throw new RuntimeException("No hay comprobantes para el banco: " + nombreBanco);
-        }
-        return comprobantes.stream()
-            .map(Comprobante::getFormaPago)
-            .distinct().toList();
-    }
+
 
     public FormaPago guardarFormaPago(FormaPago formaPago) {
         if (formaPagoRepository.findByMedioDePago(formaPago.getMedioDePago()).isPresent()) {
@@ -167,13 +158,13 @@ public class BancoService {
     }
 
     public FormaPago actualizarFormaPago(Integer idFormaPago, FormaPago formaPagoActualizado) {
-        FormaPago formaPago = buscarFormaPagoPorId(idFormaPago);
+        FormaPago formaPago = buscarFormaPagoPorSuId(idFormaPago);
         formaPago.setMedioDePago(formaPagoActualizado.getMedioDePago());
         return formaPagoRepository.save(formaPago);
     }
 
     public void eliminarFormaPago(Integer idFormaPago) {
-        buscarFormaPagoPorId(idFormaPago);
+        buscarFormaPagoPorSuId(idFormaPago);
         formaPagoRepository.deleteById(idFormaPago);
     }
 
