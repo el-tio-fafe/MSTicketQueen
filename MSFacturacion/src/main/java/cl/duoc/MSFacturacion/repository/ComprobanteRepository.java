@@ -1,6 +1,6 @@
 package cl.duoc.MSFacturacion.repository;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +17,5 @@ public interface ComprobanteRepository extends JpaRepository<Comprobante, Intege
     
     List<Comprobante> findByBanco(Banco banco);
 
-    List<Comprobante> findByBancoAndFechaEmision(Banco banco, Date fechaEmision);
+    List<Comprobante> findByBancoAndFechaEmision(Banco banco, LocalDateTime fechaEmision);
 }

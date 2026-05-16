@@ -1,6 +1,6 @@
 package cl.duoc.MSFacturacion.service;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,34 +30,34 @@ public class BancoService {
         return bancoRepository.findAll();
     }
 
-    public Banco buscarBancoPorId(Integer id) {
-        return bancoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Banco con id: " + id + " no encontrado."));
+    public Banco buscarBancoPorId(Integer idBanco) {
+        return bancoRepository.findById(idBanco)
+            .orElseThrow(() -> new RuntimeException("Banco con id: " + idBanco + " no encontrado."));
     }
 
-    public Banco buscarBancoPorNombre(String nombre) {
-        return bancoRepository.findByNombreBanco(nombre)
-            .orElseThrow(() -> new RuntimeException("Banco con nombre: " + nombre + " no encontrado."));
+    public Banco buscarBancoPorNombre(String nombreBanco) {
+        return bancoRepository.findByNombreBanco(nombreBanco)
+            .orElseThrow(() -> new RuntimeException("Banco con nombre: " + nombreBanco + " no encontrado."));
     }
 
-    public Banco guardarBanco(Banco nuevoBanco) {
-        if (bancoRepository.findByNombreBanco(nuevoBanco.getNombreBanco()).isPresent()) {
-            throw new RuntimeException("Ya existe un banco con el nombre: " + nuevoBanco.getNombreBanco() + ".");
+    public Banco guardarBanco(Banco banco) {
+        if (bancoRepository.findByNombreBanco(banco.getNombreBanco()).isPresent()) {
+            throw new RuntimeException("Ya existe un banco con el nombre: " + banco.getNombreBanco() + ".");
         }
-        return bancoRepository.save(nuevoBanco);
+        return bancoRepository.save(banco);
     }
 
 
-    public Banco actualizarBanco(Integer id, Banco bancoActualizado) {
-        Banco bancoExistente = buscarBancoPorId(id);
+    public Banco actualizarBanco(Integer idBanco, Banco bancoActualizado) {
+        Banco bancoExistente = buscarBancoPorId(idBanco);
         bancoExistente.setNombreBanco(bancoActualizado.getNombreBanco());
         return bancoRepository.save(bancoExistente);
     }
 
 
-    public void eliminarBancoPorId(Integer id) {
-        buscarBancoPorId(id);
-        bancoRepository.deleteById(id);
+    public void eliminarBancoPorId(Integer idBanco) {
+        buscarBancoPorId(idBanco);
+        bancoRepository.deleteById(idBanco);
     }
 
 
@@ -75,9 +75,9 @@ public class BancoService {
         return comprobanteRepository.findAll();
     }
    
-    public List<Comprobante> listarComprobantesPorBanco(Integer idBanco) {
-        Banco bancoExistente = buscarBancoPorId(idBanco);
-        return comprobanteRepository.findByBanco(bancoExistente);
+    public List<Comprobante> listarComprobantesPorBanco(Integer idComprobante) {
+        Banco banco = buscarBancoPorId(idComprobante);
+        return comprobanteRepository.findByBanco(banco);
     }
 
 
@@ -104,7 +104,7 @@ public class BancoService {
     }
 
     // filtrar comprobantes por fecha de emision
-    public List<Comprobante> filtrarComprobantesPorFechaEmision(Integer idBanco, Date fechaEmision) {
+    public List<Comprobante> filtrarComprobantesPorFechaEmision(Integer idBanco, LocalDateTime fechaEmision) {
         Banco banco = buscarBancoPorId(idBanco);
         return comprobanteRepository.findByBancoAndFechaEmision(banco, fechaEmision);
                 
@@ -166,15 +166,15 @@ public class BancoService {
         return formaPagoRepository.save(formaPago);
     }
 
-    public FormaPago actualizarFormaPago(Integer id, FormaPago formaPagoActualizado) {
-        FormaPago formaPago = buscarFormaPagoPorId(id);
+    public FormaPago actualizarFormaPago(Integer idFormaPago, FormaPago formaPagoActualizado) {
+        FormaPago formaPago = buscarFormaPagoPorId(idFormaPago);
         formaPago.setMedioDePago(formaPagoActualizado.getMedioDePago());
         return formaPagoRepository.save(formaPago);
     }
 
-    public void eliminarFormaPago(Integer id) {
-        buscarFormaPagoPorId(id);
-        formaPagoRepository.deleteById(id);
+    public void eliminarFormaPago(Integer idFormaPago) {
+        buscarFormaPagoPorId(idFormaPago);
+        formaPagoRepository.deleteById(idFormaPago);
     }
 
 

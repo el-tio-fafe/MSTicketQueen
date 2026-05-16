@@ -1,6 +1,6 @@
 package cl.duoc.MSFacturacion.controller;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.MSFacturacion.model.Banco;
@@ -43,9 +44,9 @@ public class BancoController {
     }
 
     @GetMapping("/bancos/id/{idBanco}")
-    public ResponseEntity<?> obtenerBancoPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> obtenerBancoPorId(@PathVariable Integer idBanco) {
         try {
-            return ResponseEntity.ok(bancoService.buscarBancoPorId(id));
+            return ResponseEntity.ok(bancoService.buscarBancoPorId(idBanco));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -70,19 +71,19 @@ public class BancoController {
     }
 
     @PutMapping("/bancos/id/{idBanco}")
-    public ResponseEntity<?> actualizarBanco(@PathVariable Integer id, @RequestBody Banco banco) {
+    public ResponseEntity<?> actualizarBanco(@PathVariable Integer idBanco, @RequestBody Banco banco) {
         try {
-            return ResponseEntity.ok(bancoService.actualizarBanco(id, banco));
+            return ResponseEntity.ok(bancoService.actualizarBanco(idBanco, banco));
         } catch (Exception e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/bancos/eliminar/id/{id}")
-    public ResponseEntity<?> eliminarBancoPorId(@PathVariable Integer id) {
+    @DeleteMapping("/bancos/eliminar/id/{idBanco}")
+    public ResponseEntity<?> eliminarBancoPorId(@PathVariable Integer idBanco) {
         try {
-            bancoService.eliminarBancoPorId(id);
-            return ResponseEntity.ok("Banco con id: " + id + " eliminado con éxito!");
+            bancoService.eliminarBancoPorId(idBanco);
+            return ResponseEntity.ok("Banco con id: " + idBanco + " eliminado con éxito!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -136,8 +137,8 @@ public class BancoController {
         }
     }
 
-    @GetMapping("/comprobantes/banco/id/{idBanco}/fecha/{fechaEmision}")
-    public ResponseEntity<?> filtrarComprobantesPorFecha(@PathVariable Integer idBanco, @PathVariable Date fechaEmision) {
+    @GetMapping("/comprobantes/banco/id/{idBanco}/fecha")
+    public ResponseEntity<?> filtrarComprobantesPorFecha(@PathVariable Integer idBanco, @RequestParam LocalDateTime fechaEmision) {
         try {
             List<Comprobante> lista = bancoService.filtrarComprobantesPorFechaEmision(idBanco, fechaEmision);
             if (lista.isEmpty()) return ResponseEntity.noContent().build();
@@ -156,7 +157,7 @@ public class BancoController {
         }
     }
 
-    @PatchMapping("/comprobantes/anular/{numeroComprobante}")
+    @PatchMapping("/comprobantes/anular/{numeroComprobante}") //ESTE METODO CAMBIA EL ESTADO DE UN COMPROBANTE
     public ResponseEntity<?> anularComprobante(@PathVariable String numeroComprobante) {
         try {
             return ResponseEntity.ok(bancoService.anularComprobantePorNumero(numeroComprobante));
@@ -224,9 +225,9 @@ public class BancoController {
     }
 
     @GetMapping("/formas-pago/buscar/id/{id}")
-    public ResponseEntity<?> buscarFormaPagoPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> buscarFormaPagoPorId(@PathVariable Integer idFormaPago) {
         try {
-            return ResponseEntity.ok(bancoService.buscarFormaPagoPorId(id));
+            return ResponseEntity.ok(bancoService.buscarFormaPagoPorId(idFormaPago));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -251,19 +252,19 @@ public class BancoController {
     }
 
     @PatchMapping("/formas-pago/actualizar/id/{id}")
-    public ResponseEntity<?> actualizarFormaPago(@PathVariable Integer id, @RequestBody FormaPago formaPago) {
+    public ResponseEntity<?> actualizarFormaPago(@PathVariable Integer idFormaPago, @RequestBody FormaPago formaPago) {
         try {
-            return ResponseEntity.ok(bancoService.actualizarFormaPago(id, formaPago));
+            return ResponseEntity.ok(bancoService.actualizarFormaPago(idFormaPago, formaPago));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/formas-pago/eliminar/id/{id}")
-    public ResponseEntity<?> eliminarFormaPago(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarFormaPago(@PathVariable Integer idFormaPago) {
         try {
-            bancoService.eliminarFormaPago(id);
-            return ResponseEntity.ok("Forma de pago con id: " + id + " eliminada con éxito.");
+            bancoService.eliminarFormaPago(idFormaPago);
+            return ResponseEntity.ok("Forma de pago con id: " + idFormaPago + " eliminada con éxito.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

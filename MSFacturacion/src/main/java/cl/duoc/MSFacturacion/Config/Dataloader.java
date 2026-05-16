@@ -25,8 +25,8 @@ public class Dataloader {
          }else{
 
             Banco banco1 = new Banco(null, "Estado", null);
-            Banco banco2 = new Banco(null, "Santander", null);
-            Banco banco3 = new Banco(null, "Falabella", null);
+            Banco banco2 = new Banco(null, "Falabella", null);
+            Banco banco3 = new Banco(null, "Santander", null);
 
             bancoRepo.save(banco1);
             bancoRepo.save(banco2);
