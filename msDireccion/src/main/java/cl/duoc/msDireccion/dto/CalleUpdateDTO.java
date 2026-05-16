@@ -10,5 +10,9 @@ import lombok.NoArgsConstructor;
 public class CalleUpdateDTO {
 
     private String nombreCalle;
+    private Integer numeroCalle;
+    private Integer numeroDepto;
+    private String letraDepto;
+    
 
 }

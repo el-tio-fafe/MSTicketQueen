@@ -377,7 +377,7 @@ public class RegionController {
         }
     }
 
-    @PatchMapping("/actualizar/calle/id/{idCalle}")
+    @PutMapping("/actualizar/calle/id/{idCalle}")
     public ResponseEntity<?> actualizarNombreCalle(@PathVariable Integer idCalle, @RequestBody CalleUpdateDTO calleUpdateDTO) {
         try {
             return ResponseEntity.ok(regionService.actualizarNombreCalle(idCalle, calleUpdateDTO));

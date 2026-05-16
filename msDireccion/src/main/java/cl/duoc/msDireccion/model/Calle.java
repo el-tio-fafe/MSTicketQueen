@@ -24,10 +24,13 @@ public class Calle {
     private String nombreCalle;
 
     @Column(nullable = false)
-    private String numeroCalle;
+    private Integer numeroCalle;
 
     @Column(nullable = true)
-    private String numeroDepto;
+    private Integer numeroDepto;
+
+    @Column(nullable = true)
+    private String letraDepto;
     
     @ManyToOne
     @JoinColumn(name = "idComuna", nullable = false)
