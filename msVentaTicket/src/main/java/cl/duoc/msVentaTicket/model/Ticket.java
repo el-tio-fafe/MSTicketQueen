@@ -31,8 +31,12 @@ public class Ticket {
     @Column(nullable = false)
     private Integer idEvento;
 
-    @Column(nullable = false)
-    private Integer isAsiento;
+
+    @Column(nullable = true)
+    private String numeroAsiento;
+
+    @Column(nullable = true)
+    private String nombreUbicacion; //ESTE EL NOMBRE DE LA ZONA POR EJ: CANCHA VIP, CANCHA GENERAL, PLATEA, PALCO, TRIBUNA ETC
 
     @PrePersist
     public void prePersist(){

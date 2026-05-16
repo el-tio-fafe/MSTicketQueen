@@ -21,7 +21,7 @@ public class Boleta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idBoleta;
 
-    @Column(nullable = false)
+    @Column(nullable = true, unique = true)
     private Integer numeroBoleta;
 
     @Column(nullable = false)
@@ -30,13 +30,18 @@ public class Boleta {
     @Column(nullable = false)
     private LocalTime horaEmision;
     
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer totalBoleta;  //SE CALCULA AUTOMATICAMENTE
 
+    //REFENCIA CON msComprador
     @Column(nullable = false)
     private Integer idComprador;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    //REFERENCIA CON msFacturacion
+    @Column(nullable = true)
+    private Integer idComprobante;
+
+    @OneToMany
     @JoinColumn(name = "id_boleta")
     private List<Detalle> detalles;
 

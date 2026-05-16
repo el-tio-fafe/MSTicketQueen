@@ -13,9 +13,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer>{
 
     Optional<Ticket> findByCodigoQR(String codigoQR);
 
+    Optional<Ticket> findByNumeroAsiento(String numeroAsiento);
+
     List<Ticket> findByIdEvento(Integer idEvento);
 
-    List<Ticket> findByIdAsiento(Integer idAsiento);
+    List<Ticket> findByNombreUbicacion(String nombreUbicacion);
 
 }
 
