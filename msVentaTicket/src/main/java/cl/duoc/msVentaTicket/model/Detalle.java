@@ -31,10 +31,10 @@ public class Detalle {
     private Integer cantidad;
 
     @Column(nullable = false)
-    private int precioUnitario;
+    private Integer precioUnitario;
     
     @Column(nullable = false)
-    private int descuento;
+    private Integer descuento;
 
     @Column(nullable = false)
     private Integer subTotal;

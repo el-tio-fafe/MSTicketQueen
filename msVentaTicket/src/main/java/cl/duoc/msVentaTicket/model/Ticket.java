@@ -35,7 +35,7 @@ public class Ticket {
     private Integer isAsiento;
 
     @PrePersist
-    private void prePersist(){
+    public void prePersist(){
         this.codigoQR = java.util.UUID.randomUUID().toString();
     }
 

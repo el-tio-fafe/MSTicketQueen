@@ -4,16 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +22,7 @@ public class Boleta {
     private Integer idBoleta;
 
     @Column(nullable = false)
-    private String numeroBoleta;
+    private Integer numeroBoleta;
 
     @Column(nullable = false)
     private LocalDate fechaEmision;
@@ -40,7 +31,7 @@ public class Boleta {
     private LocalTime horaEmision;
     
     @Column(nullable = false)
-    private int totalBoleta;  //SE CALCULA AUTOMATICAMENTE
+    private Integer totalBoleta;  //SE CALCULA AUTOMATICAMENTE
 
     @Column(nullable = false)
     private Integer idComprador;
@@ -56,8 +47,6 @@ public class Boleta {
         this.horaEmision = LocalTime.now();
 
         this.totalBoleta = detalles.stream().mapToInt(Detalle :: getSubTotal).sum();
-
-        this.numeroBoleta = "BOL -" + java.util.UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 
 
