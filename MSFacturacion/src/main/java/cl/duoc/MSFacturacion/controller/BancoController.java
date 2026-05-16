@@ -1,11 +1,13 @@
 package cl.duoc.MSFacturacion.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,78 +15,260 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cl.duoc.MSFacturacion.model.banco;
+import cl.duoc.MSFacturacion.model.Banco;
+import cl.duoc.MSFacturacion.model.Comprobante;
+import cl.duoc.MSFacturacion.model.FormaPago;
 import cl.duoc.MSFacturacion.service.BancoService;
 
 @RestController
-@RequestMapping("/api/v1/bancos")
+@RequestMapping("/api/v1/facturacion")
 public class BancoController {
 
     @Autowired
     private BancoService bancoService;
 
+//BANCOS
+
     @GetMapping("/listarBancos")
-    public ResponseEntity<List<banco>> listarBancos() {
-        List<banco> bancos = bancoService.listarBancos();
-        if (bancos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(bancos);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> obtenerBancoPorId(@PathVariable Integer id) {
+    public ResponseEntity<?> listarBancos() {
         try {
-            return ResponseEntity.ok(bancoService.buscarBancoPorId(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/nombre/{nombre}")
-    public ResponseEntity<Object> obtenerBancoPorNombre(@PathVariable String nombre) {
-        try {
-            return ResponseEntity.ok(bancoService.buscarBancoPorNombre(nombre));
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/crearBanco")
-    public ResponseEntity<Object> crearBanco(@RequestBody banco banco) {
-        try {
-            return ResponseEntity.status(201).body(bancoService.guardarBanco(banco));
+            List<Banco> lista = bancoService.listarBancos();
+            if(lista.isEmpty()){
+                return ResponseEntity.badRequest().body("No hay bancos registrados");
+            }
+            return ResponseEntity.ok(lista);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> actualizarBanco(@PathVariable Integer id, @RequestBody banco bancoActualizado) {
+    @GetMapping("/bancos/id/{idBanco}")
+    public ResponseEntity<?> obtenerBancoPorId(@PathVariable Integer id) {
         try {
-            return ResponseEntity.ok(bancoService.actualizarBanco(id, bancoActualizado));
+            return ResponseEntity.ok(bancoService.buscarBancoPorId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/bancos/nombre/{nombreBanco}")
+    public ResponseEntity<?> obtenerBancoPorNombre(@PathVariable String nombreBanco) {
+        try {
+            return ResponseEntity.ok(bancoService.buscarBancoPorNombre(nombreBanco));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/crearBanco")
+    public ResponseEntity<?> crearBanco(@RequestBody Banco banco) {
+        try {
+            return ResponseEntity.ok(bancoService.guardarBanco(banco));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/bancos/id/{idBanco}")
+    public ResponseEntity<?> actualizarBanco(@PathVariable Integer id, @RequestBody Banco banco) {
+        try {
+            return ResponseEntity.ok(bancoService.actualizarBanco(id, banco));
         } catch (Exception e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> eliminarBanco(@PathVariable Integer id) {
+    @DeleteMapping("/bancos/eliminar/id/{id}")
+    public ResponseEntity<?> eliminarBancoPorId(@PathVariable Integer id) {
         try {
             bancoService.eliminarBancoPorId(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Banco con id: " + id + " eliminado con éxito!");
         } catch (Exception e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/nombre/{nombre}")
-    public ResponseEntity<Object> eliminarBancoPorNombre(@PathVariable String nombre) {
+
+
+    @DeleteMapping("/bancos/eliminar/nombre/{nombreBanco}")
+    public ResponseEntity<?> eliminarBancoPorNombre(@PathVariable String nombreBanco) {
         try {
-            bancoService.eliminarBancoPorNombre(nombre);
-            return ResponseEntity.noContent().build();
+            bancoService.eliminarBancoPorNombre(nombreBanco);
+            return ResponseEntity.ok("Banco con nombre: " + nombreBanco + " eliminado con éxito!");
         } catch (Exception e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+
+//COMPROBANTE
+
+    @GetMapping("/comprobantes")
+    public ResponseEntity<?> listarComprobantes() {
+        try {
+            List<Comprobante> lista = bancoService.listarTodosComprobantes();
+            if (lista.isEmpty()) return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/comprobantes/banco/id/{idBanco}")
+    public ResponseEntity<?> listarComprobantesPorBanco(@PathVariable Integer idBanco) {
+        try {
+            List<Comprobante> lista = bancoService.listarComprobantesPorBanco(idBanco);
+            if (lista.isEmpty()) return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/comprobantes/numero/{numeroComprobante}")
+    public ResponseEntity<?> buscarComprobantePorNumero(@PathVariable String numeroComprobante) {
+        try {
+            return ResponseEntity.ok(bancoService.buscarComprobantePorNumero(numeroComprobante));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/comprobantes/banco/id/{idBanco}/fecha/{fechaEmision}")
+    public ResponseEntity<?> filtrarComprobantesPorFecha(@PathVariable Integer idBanco, @PathVariable Date fechaEmision) {
+        try {
+            List<Comprobante> lista = bancoService.filtrarComprobantesPorFechaEmision(idBanco, fechaEmision);
+            if (lista.isEmpty()) return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/comprobantes")
+    public ResponseEntity<?> generarComprobante(@RequestBody Comprobante comprobante) {
+        try {
+            return ResponseEntity.ok(bancoService.generarComprobante(comprobante));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/comprobantes/anular/{numeroComprobante}")
+    public ResponseEntity<?> anularComprobante(@PathVariable String numeroComprobante) {
+        try {
+            return ResponseEntity.ok(bancoService.anularComprobantePorNumero(numeroComprobante));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
+
+//FORMA DE PAGO
+
+    @GetMapping("/formas-pago")
+    public ResponseEntity<?> listarTodasFormasDePago() {
+        try {
+            List<FormaPago> lista = bancoService.listarTodasFormasPago();
+            if (lista.isEmpty()) {
+                return ResponseEntity.badRequest().body("No hay formas de pago registradas");
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/formas-pago/banco/id/{idBanco}")
+    public ResponseEntity<?> listarFormasDePagoPorIdBanco(@PathVariable Integer idBanco) {
+        try {
+            List<FormaPago> lista = bancoService.listarFormasDePagoPorIdBanco(idBanco);
+            if (lista.isEmpty()){
+                return ResponseEntity.badRequest().body("No hay formas de pago para el banco id: " + idBanco);
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/formas-pago/banco/nombre/{nombreBanco}")
+    public ResponseEntity<?> listarFormasDePagoPorNombreBanco(@PathVariable String nombreBanco) {
+        try {
+            List<FormaPago> lista = bancoService.listarFormasDePagoPorNombreBanco(nombreBanco);
+            if (lista.isEmpty()){
+                return ResponseEntity.badRequest().body("No hay formas de pago para el banco: " + nombreBanco);
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/formas-pago/banco/buscar/nombre/{nombreBanco}")
+    public ResponseEntity<?> buscarFormaPagoPorNombreBanco(@PathVariable String nombreBanco) {
+        try {
+            List<FormaPago> lista = bancoService.buscarFormaPagoPorNombreBanco(nombreBanco);
+            if(lista.isEmpty()){
+            return ResponseEntity.badRequest().body("No hay formas de pago para el banco: " + nombreBanco);
+            }
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/formas-pago/buscar/id/{id}")
+    public ResponseEntity<?> buscarFormaPagoPorId(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(bancoService.buscarFormaPagoPorId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/formas-pago/medio/{medioDePago}")
+    public ResponseEntity<?> buscarFormaPagoPorMedio(@PathVariable String medioDePago) {
+        try {
+            return ResponseEntity.ok(bancoService.buscarFormaPagoPorMedio(medioDePago));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/formas-pago/guardar")
+    public ResponseEntity<?> guardarFormaPago(@RequestBody FormaPago formaPago) {
+        try {
+            return ResponseEntity.ok(bancoService.guardarFormaPago(formaPago));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/formas-pago/actualizar/id/{id}")
+    public ResponseEntity<?> actualizarFormaPago(@PathVariable Integer id, @RequestBody FormaPago formaPago) {
+        try {
+            return ResponseEntity.ok(bancoService.actualizarFormaPago(id, formaPago));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/formas-pago/eliminar/id/{id}")
+    public ResponseEntity<?> eliminarFormaPago(@PathVariable Integer id) {
+        try {
+            bancoService.eliminarFormaPago(id);
+            return ResponseEntity.ok("Forma de pago con id: " + id + " eliminada con éxito.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
 }

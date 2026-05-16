@@ -1,11 +1,10 @@
 package cl.duoc.MSFacturacion.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
 
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,16 +16,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "banco")
-public class banco {
-    @Id
-    @GeneratedValue
-    private Integer idBanco;
-    @Column(nullable = false)
-    private String nombreBanco;
-    @OneToMany
-    @JoinColumn(name = "idBanco", nullable = false)
-    private Comprobante comprobante;
 
-    
+public class Banco {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idBanco;
+
+    @Column(nullable = false, unique = true)
+    private String nombreBanco;
+
+    @OneToMany(mappedBy = "banco", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Comprobante> comprobantes;
 
 }
