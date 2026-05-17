@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cl.duoc.msVentaTicket.model.Boleta;
+import cl.duoc.msVentaTicket.model.Detalle;
 import cl.duoc.msVentaTicket.repository.BoletaRepository;
+import cl.duoc.msVentaTicket.repository.DetalleRepository;
 
 @Service
 
@@ -14,6 +16,9 @@ public class BoletaService {
 
     @Autowired
     private BoletaRepository boletaRepository;
+
+    @Autowired
+    private DetalleRepository detalleRepository;
 
     public List<Boleta> listarBoletas(){
         return boletaRepository.findAll();
@@ -41,6 +46,21 @@ public class BoletaService {
         if(boleta.getDetalles() == null || boleta.getDetalles().isEmpty()){
             throw new RuntimeException("La boleta debe tener al menos una compra");
         }
+        
+        //BUSCA CADA DETALLE EN LA BD
+        List<Detalle> detalleCompleto = boleta.getDetalles().stream()
+            .map(d -> detalleRepository.findById(d.getIdDetalle())
+            .orElseThrow(() -> new RuntimeException("Detalle con id: " + d.getIdDetalle() + " no encontrado")))
+            .toList();
+
+
+        //CALCULAMOS EL TOTAL DE LA BOLETA CON LOS DATOS COMPLETOS
+        Integer total = detalleCompleto.stream()
+            .mapToInt(d -> (d.getPrecioUnitario() - d.getDescuento()) * d.getCantidad()).sum();
+
+        boleta.setDetalles(detalleCompleto);
+        boleta.setTotalBoleta(total);
+
         Boleta boletaGuardada = boletaRepository.save(boleta);
         boletaGuardada.setNumeroBoleta(boletaGuardada.getIdBoleta());
         return boletaRepository.save(boletaGuardada);

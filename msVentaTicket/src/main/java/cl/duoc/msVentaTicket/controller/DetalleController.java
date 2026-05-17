@@ -19,7 +19,7 @@ public class DetalleController {
     @Autowired
     private DetalleService detalleService;
 
-    @GetMapping("/id/idDetalle")
+    @GetMapping
     public ResponseEntity<?> listarDetalles(){
         try {
             List<Detalle> lista = detalleService.listarDetalles();

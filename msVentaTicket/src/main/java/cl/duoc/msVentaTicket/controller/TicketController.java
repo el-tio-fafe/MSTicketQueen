@@ -41,7 +41,7 @@ public class TicketController {
         }
     }
 
-    @GetMapping("/listar-ticket/evento/id/{idEvento}")
+    @GetMapping("/listar/evento/id/{idEvento}")
     public ResponseEntity<?> listarTicketPorIdEvento(@PathVariable Integer idEvento){
         try {
             List<Ticket> lista = ticketService.listarTicketPorEvento(idEvento);
@@ -52,7 +52,7 @@ public class TicketController {
     }
 
 
-    @GetMapping("/listar-ticket/ubicaion/nombre/{nombreUbicacion}")
+    @GetMapping("/listar/ubicacion/nombre/{nombreUbicacion}")
     public ResponseEntity<?> listarTicketsPorUbicacion(@PathVariable String nombreUbicacion){
         try {
             List<Ticket> lista = ticketService.listarTicketsPorUbicacion(nombreUbicacion);
@@ -63,7 +63,7 @@ public class TicketController {
     }
 
 
-    @GetMapping("/asiento/{numeroAsiento}")
+    @GetMapping("/buscar/asiento/{numeroAsiento}")
     public ResponseEntity<?> buscarTicketPorNumAsiento(@PathVariable String numeroAsiento) {
         try {
             return ResponseEntity.ok(ticketService.buscarTicketPorNumeroAsiento(numeroAsiento));

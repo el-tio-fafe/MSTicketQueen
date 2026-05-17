@@ -51,7 +51,6 @@ public class Boleta {
         this.fechaEmision = LocalDate.now();
         this.horaEmision = LocalTime.now();
 
-        this.totalBoleta = detalles.stream().mapToInt(Detalle :: getSubTotal).sum();
     }
 
 
