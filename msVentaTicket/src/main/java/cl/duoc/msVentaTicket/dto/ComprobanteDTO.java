@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion.dto;
+package cl.duoc.msVentaTicket.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class ComprobanteDTO {
 
     private Integer idComprobante;
@@ -17,4 +16,5 @@ public class ComprobanteDTO {
     private int montoTotal;
 
     private boolean estadoPago;
+
 }

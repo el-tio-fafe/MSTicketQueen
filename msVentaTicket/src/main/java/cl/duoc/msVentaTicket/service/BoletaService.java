@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import cl.duoc.msVentaTicket.client.AsientoClient;
 import cl.duoc.msVentaTicket.client.CompradorClient;
 import cl.duoc.msVentaTicket.client.EventoClient;
+import cl.duoc.msVentaTicket.client.FacturacionClient;
 import cl.duoc.msVentaTicket.dto.BoletaDTO;
 import cl.duoc.msVentaTicket.dto.CompradorDTO;
 import cl.duoc.msVentaTicket.dto.EventoDTO;
@@ -34,6 +35,9 @@ public class BoletaService {
 
     @Autowired
     AsientoClient asientoClient;
+
+    @Autowired
+    FacturacionClient facturacionClient;
 
     public List<Boleta> listarBoletas(){
         return boletaRepository.findAll();
@@ -143,6 +147,15 @@ public class BoletaService {
         if(boleta.getIdComprobante() != null){
             throw new RuntimeException("La boleta ya tiene un comprobante asociado");
         }
+
+        //VALIDAMOS QUE EL COMPROBANTE EXISTA EN EL MSFACTURACION
+        try {
+            facturacionClient.buscarComprobanteDTOPorId(idComprobante);
+        } catch (Exception e) {
+            throw new RuntimeException("No se puede asociar porque el comprobante con id: "
+                + idComprobante + " no existe.");
+        }
+
         boleta.setIdComprobante(idComprobante);
         return boletaRepository.save(boleta);
     }

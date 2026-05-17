@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msGestionArtistica.dto.ProductoraDTO;
 import cl.duoc.msGestionArtistica.model.Productoras;
 import cl.duoc.msGestionArtistica.service.ProductorasService;
 
@@ -121,4 +122,16 @@ public class ProductorasController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
+    //CONECCION CON MSEVENTO
+    @GetMapping("/dto/{idProd}")
+    public ResponseEntity<ProductoraDTO> buscarDTO(@PathVariable Integer idProd) {
+        try {
+            return ResponseEntity.ok(productorasService.buscarProductoraDTOPorId(idProd));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msGestionArtistica.dto.ProductoraDTO;
 import cl.duoc.msGestionArtistica.model.Manager;
 import cl.duoc.msGestionArtistica.model.Productoras;
 import cl.duoc.msGestionArtistica.repository.ManagerRepository;
@@ -80,4 +81,20 @@ public class ProductorasService {
 
         return productorasRepository.save(productora);
     }
+
+
+    //CONECCION CON MS EVENTO
+    public ProductoraDTO buscarProductoraDTOPorId(Integer idProd) {
+        Productoras productora = productorasRepository.findById(idProd)
+            .orElseThrow(() -> new RuntimeException("Productora con id: " + idProd + " no encontrada."));
+
+        ProductoraDTO dto = new ProductoraDTO();
+        dto.setIdProd(productora.getIdProd());
+        dto.setNombreProd(productora.getNombreProd());
+        dto.setCorreoProd(productora.getCorreoProd());
+
+        return dto;
+    }
+
+
 }

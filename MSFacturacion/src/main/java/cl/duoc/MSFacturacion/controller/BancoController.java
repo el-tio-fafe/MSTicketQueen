@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.MSFacturacion.dto.ComprobanteDTO;
 import cl.duoc.MSFacturacion.model.Banco;
 import cl.duoc.MSFacturacion.model.Comprobante;
 import cl.duoc.MSFacturacion.model.FormaPago;
@@ -259,5 +260,14 @@ public class BancoController {
     }
 
 
+    //CONECCION CON OTRO MS
+    @GetMapping("/dto/{idComprobante}")
+    public ResponseEntity<ComprobanteDTO> buscarDTO(@PathVariable Integer idComprobante) {
+        try {
+            return ResponseEntity.ok(bancoService.buscarComprobanteDTOPorId(idComprobante));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

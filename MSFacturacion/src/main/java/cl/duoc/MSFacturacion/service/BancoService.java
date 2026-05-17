@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.MSFacturacion.dto.ComprobanteDTO;
 import cl.duoc.MSFacturacion.model.Banco;
 import cl.duoc.MSFacturacion.repository.BancoRepository;
 import cl.duoc.MSFacturacion.repository.ComprobanteRepository;
@@ -166,6 +167,22 @@ public class BancoService {
     public void eliminarFormaPago(Integer idFormaPago) {
         buscarFormaPagoPorSuId(idFormaPago);
         formaPagoRepository.deleteById(idFormaPago);
+    }
+
+
+
+    //COMUNICACION CON OTRO MS
+    public ComprobanteDTO buscarComprobanteDTOPorId(Integer idComprobante) {
+        Comprobante comprobante = comprobanteRepository.findById(idComprobante)
+            .orElseThrow(() -> new RuntimeException("Comprobante con id: " + idComprobante + " no encontrado."));
+
+        ComprobanteDTO dto = new ComprobanteDTO();
+        dto.setIdComprobante(comprobante.getIdComprobante());
+        dto.setNumeroComprobante(comprobante.getNumeroComprobante());
+        dto.setMontoTotal(comprobante.getMontoTotal());
+        dto.setEstadoPago(comprobante.isEstadoPago());
+
+        return dto;
     }
 
 

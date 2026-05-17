@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msEvento.client.ProductoraClient;
 import cl.duoc.msEvento.dto.EventoDTO;
 import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
@@ -22,6 +23,11 @@ public class EventoService {
     @Autowired TipoEventoRepository tipoEventoRepository;
 
     @Autowired RecintoRepository recintoRepository;
+
+    @Autowired
+    ProductoraClient productoraClient;
+
+
 
     public List<Evento> listarEventos(){
         return eventoRepository.findAll();
@@ -68,6 +74,15 @@ public class EventoService {
         if(eventoRepository.findByCodigoEvento(evento.getCodigoEvento()).isPresent()){
             throw new RuntimeException("Ya existe un evento con código: " + evento.getCodigoEvento());
         }
+
+        //VALIDAMOS QUE LA PRODUCTORA EXISTE EN EL msGestionArtistica
+        try {
+            productoraClient.buscarProductoraDTO(evento.getIdProd());
+
+        } catch (Exception e) {
+            throw new RuntimeException("No se puede crear el evento porque la productora id: " + evento.getIdProd() + " No existe" );
+        }
+
         //BUSCAMOS EL RECINTO PRIMERO, SI EXISTE PODEMOS CREAR
         Recinto recinto = recintoRepository.findById(evento.getRecinto().getIdRecinto())
             .orElseThrow(() -> new RuntimeException("Recinto con id: " 
