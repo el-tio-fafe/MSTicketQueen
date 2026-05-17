@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import cl.duoc.msVentaTicket.client.AsientoClient;
 import cl.duoc.msVentaTicket.client.CompradorClient;
 import cl.duoc.msVentaTicket.client.EventoClient;
+import cl.duoc.msVentaTicket.dto.BoletaDTO;
+import cl.duoc.msVentaTicket.dto.CompradorDTO;
+import cl.duoc.msVentaTicket.dto.EventoDTO;
 import cl.duoc.msVentaTicket.model.Boleta;
 import cl.duoc.msVentaTicket.model.Detalle;
 import cl.duoc.msVentaTicket.repository.BoletaRepository;
@@ -34,6 +37,25 @@ public class BoletaService {
 
     public List<Boleta> listarBoletas(){
         return boletaRepository.findAll();
+    }
+
+    //CONECCION CON OTRO MS POR EL DTO
+    public BoletaDTO mostrarDetalleBoleta(Integer idBoleta){
+        Boleta boleta = boletaRepository.findById(idBoleta).orElseThrow(() -> new RuntimeException("Boleta id: " + idBoleta + "no encontrada"));
+        
+        CompradorDTO comprador = compradorClient.buscarCompradorPorId(boleta.getIdComprador());
+        List<EventoDTO> eventos = boleta.getDetalles().stream().map(d -> eventoClient.buscarEventoPorId(d.getTicket().getIdEvento()))
+            .distinct().toList();
+
+        BoletaDTO dto = new BoletaDTO();
+        dto.setNumeroBoleta(boleta.getNumeroBoleta());
+        dto.setFecha(boleta.getFechaEmision());
+        dto.setTotalBoleta(boleta.getTotalBoleta());
+        dto.setComprador(comprador);
+        dto.setEventos(eventos);
+
+        return dto;
+
     }
 
     public Boleta buscarBoletaPorId(Integer idBoleta) {

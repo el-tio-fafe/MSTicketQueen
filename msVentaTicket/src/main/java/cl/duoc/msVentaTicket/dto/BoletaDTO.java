@@ -1,6 +1,7 @@
 package cl.duoc.msVentaTicket.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +16,6 @@ public class BoletaDTO {
     private LocalDate fecha;
     private Integer totalBoleta;
     private CompradorDTO comprador;
-    private EventoDTO evento;
-
-
-    
+    private List<EventoDTO> eventos;
 
 }

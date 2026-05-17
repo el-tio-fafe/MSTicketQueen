@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DetalleDTO {
 
-    private Integer idDetalle;
+    private Integer cantidad;
 
 }

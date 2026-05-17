@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msVentaTicket.dto.BoletaDTO;
 import cl.duoc.msVentaTicket.model.Boleta;
 import cl.duoc.msVentaTicket.service.BoletaService;
 
@@ -35,6 +36,20 @@ public class BoletaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    //CONECCION CON OTRO MS POR EL DTO
+    @GetMapping("detalle/{idBoleta}")
+    public ResponseEntity<?> mostarDetalleBoleta(@PathVariable Integer idBoleta){
+        try {
+            BoletaDTO boletaDTO = boletaService.mostrarDetalleBoleta(idBoleta);
+            return ResponseEntity.ok(boletaDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
 
     @GetMapping("/id/{idBoleta}")
     public ResponseEntity<?> buscarBoletaPorId(@PathVariable Integer idBoleta) {
