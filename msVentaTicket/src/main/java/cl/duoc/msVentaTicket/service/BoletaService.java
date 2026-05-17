@@ -9,6 +9,7 @@ import cl.duoc.msVentaTicket.client.AsientoClient;
 import cl.duoc.msVentaTicket.client.CompradorClient;
 import cl.duoc.msVentaTicket.client.EventoClient;
 import cl.duoc.msVentaTicket.client.FacturacionClient;
+import cl.duoc.msVentaTicket.dto.AsientoDTO;
 import cl.duoc.msVentaTicket.dto.BoletaDTO;
 import cl.duoc.msVentaTicket.dto.CompradorDTO;
 import cl.duoc.msVentaTicket.dto.EventoDTO;
@@ -107,26 +108,31 @@ public class BoletaService {
             } catch (Exception e) {
                 throw new RuntimeException("No se puede crear la boleta porque el evento con id: " + d.getTicket().getIdEvento() + " no existe");
             }
-        
-        //VALIDAR QUE EXISTA EL NUMERO DE ASIENTO O LA UBICACION
-        String numeroAsiento = d.getTicket().getNumeroAsiento();
-        String nombreUbicacion = d.getTicket().getNombreUbicacion();
 
-        //SI NO TIENE ASIENTO NI UBICACION, SE CAE
-        if(numeroAsiento == null && (nombreUbicacion == null || nombreUbicacion.isBlank())){
-            throw new RuntimeException("El Ticket debe tener un número de asiento o una ubicación válida");
-        }
-
-        //SI EL EVENTO TIENE ASIENTOS ENUMERADOS, SE VALIDA CON EL MS
-        if(numeroAsiento != null){
+         // VALIDAR Y RESERVAR EL ASIENTO SI TIENE NUMERO
+        if (d.getTicket().getNumeroAsiento() != null) {
             try {
-                asientoClient.buscarAsientoPorNum(numeroAsiento);
+                AsientoDTO asiento = asientoClient.buscarAsientoPorNum(d.getTicket().getNumeroAsiento());
+                
+                //VERIFICAR QUE EL ASIENTO ESTA DISPONIBLE
+                if (!asiento.getEstadoAsiento().equals("DISPONIBLE")) {
+                    throw new RuntimeException("El asiento: " + d.getTicket().getNumeroAsiento() 
+                        + " no está disponible.");
+                }
+                
+                //CREAR RESERVA TEMPORAL
+                asientoClient.crearReservaTemporal(asiento.getIdAsiento());
+                
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
-                throw new RuntimeException("No se puede crear la boleta porque el asiento: " + d.getTicket().getNumeroAsiento() + " no existe");
+                throw new RuntimeException("No se puede crear la boleta porque el asiento: "
+                    + d.getTicket().getNumeroAsiento() + " no existe.");
             }
         }
-        //SI NO TIENE ASIENTO, NO ENTRA AL IF ANTERIOR, PERO QUEDA ASEGURADO QUE TIENE UBICACION
-        });
+    });
+        
+        
 
         //CALCULAMOS EL TOTAL DE LA BOLETA CON LOS DATOS COMPLETOS
         Integer total = detalleCompleto.stream()
@@ -155,6 +161,18 @@ public class BoletaService {
             throw new RuntimeException("No se puede asociar porque el comprobante con id: "
                 + idComprobante + " no existe.");
         }
+
+        //CONFIRMAR COMPRA DE CADA ASIENTO
+        boleta.getDetalles().forEach(d -> {
+            if (d.getTicket().getNumeroAsiento() != null) {
+                try {
+                    asientoClient.confirmarCompra(d.getTicket().getNumeroAsiento());
+                } catch (Exception e) {
+                    throw new RuntimeException("No se pudo confirmar la compra del asiento: "
+                        + d.getTicket().getNumeroAsiento());
+                }
+            }
+        });
 
         boleta.setIdComprobante(idComprobante);
         return boletaRepository.save(boleta);
