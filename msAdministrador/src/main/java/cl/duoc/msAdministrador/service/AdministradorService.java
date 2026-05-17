@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msAdministrador.client.EventoClient;
 import cl.duoc.msAdministrador.dto.AdministradorDTO;
 import cl.duoc.msAdministrador.dto.AdministradorEmailDTO;
+import cl.duoc.msAdministrador.dto.EventoDTO;
 import cl.duoc.msAdministrador.model.Administrador;
 import cl.duoc.msAdministrador.model.Auditoria;
 import cl.duoc.msAdministrador.repository.AdministradorRepository;
@@ -20,6 +22,9 @@ public class AdministradorService {
 
     @Autowired
     private AuditoriaRepository auditoriaRepository;
+
+    @Autowired
+    EventoClient eventoClient;
 
     public List<Administrador> listarAdministradores() {
         return administradorRepository.findAll();
@@ -41,6 +46,8 @@ public class AdministradorService {
         return auditoriaRepository.findById(idAuditoria)
             .orElseThrow(() -> new RuntimeException("Auditoría con id: " + idAuditoria + " no encontrada."));
     }
+
+
 
     public List<Auditoria> buscarAuditoriaPorRutAdm(String rutAdm){
         return auditoriaRepository.findByAdministrador_RutAdm(rutAdm);
@@ -64,10 +71,27 @@ public class AdministradorService {
 
     }
 
+
     public Administrador buscarPorIdAdm(Integer idAdm){
         return administradorRepository.findById(idAdm)
         .orElseThrow(() -> new RuntimeException("Administrador con id: " + idAdm + " no encontrado."));
     }
+
+
+    //METODO QUE SE COMUNICA CON OTRO MS
+    public AdministradorDTO buscarAdministradorDTOPorId(Integer idAdm) {
+        Administrador administrador = administradorRepository.findById(idAdm)
+            .orElseThrow(() -> new RuntimeException("Administrador con id: " + idAdm + " no encontrado."));
+
+        return new AdministradorDTO(
+            administrador.getIdAdm(),
+            administrador.getNombreAdm(),
+            administrador.getApPatAdm(),
+            administrador.getRutAdm(),
+            administrador.getCorreoAdm()
+        );
+    }
+
 
     public Administrador buscarPorRutAdm(String rutAdm){
         return administradorRepository.findByRutAdm(rutAdm)
@@ -184,6 +208,35 @@ public class AdministradorService {
             .orElseThrow(()-> new RuntimeException("Administrador con id: " + auditoria.getAdministrador().getIdAdm() + " no se encuentra o no existe"));
         auditoria.setAdministrador(administrador);
         return auditoriaRepository.save(auditoria);
+    }
+
+
+
+    //METODO QUE SE COMUNICA CON EL msEvento PARA QUE EL ADMINISTRADOR PUEDA REVISAR LOS EVENTOS
+    public EventoDTO buscarEventoDTO(Integer idEvento) {
+        try {
+            return eventoClient.buscarEventoDTO(idEvento);
+        } catch (Exception e) {
+            throw new RuntimeException("No se encontró el evento con id: " + idEvento);
+        }
+    }
+
+
+    //METODO QUE PERMITE AL ADMINISTRADOR REVISAR LOS EVENTOS
+    public List<EventoDTO> listarEventos() {
+        try {
+            return eventoClient.listarEventos();
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudieron obtener los eventos.");
+        }
+    }
+
+    public List<EventoDTO> listarEventosPendientes() {
+        try {
+            return eventoClient.listarEventosPorEstado("PENDIENTE");
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudieron obtener los eventos pendientes.");
+        }
     }
 
 

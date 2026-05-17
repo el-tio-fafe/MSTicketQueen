@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msEvento.client.AdministradorClient;
 import cl.duoc.msEvento.client.ProductoraClient;
 import cl.duoc.msEvento.dto.EventoDTO;
 import cl.duoc.msEvento.model.Evento;
@@ -26,6 +27,9 @@ public class EventoService {
 
     @Autowired
     ProductoraClient productoraClient;
+
+    @Autowired
+    AdministradorClient administradorClient;
 
 
 
@@ -110,6 +114,13 @@ public class EventoService {
             throw new RuntimeException("Solo se pueden aprobar eventos en estado PENDIENTE");
         }
 
+        //VALIDAMOS QUE EL ADM EXISTE EN EL msAdministrador
+        try {
+            administradorClient.buscarAdministradorDTO(idAdministrador);
+        } catch (Exception e) {
+            throw new RuntimeException("No se puede aprobar el evento porque el administrador con id: " + idAdministrador + " no existe.");
+        }
+
         evento.setEstadoEvento("APROBADO");
         evento.setIdAdministrador(idAdministrador);
         return eventoRepository.save(evento);
@@ -123,6 +134,12 @@ public class EventoService {
         
         if(!evento.getEstadoEvento().equals("PENDIENTE")){
             throw new RuntimeException("Solo se pueden rechazar eventos en estado PENDIENTE");
+        }
+
+        try {
+            administradorClient.buscarAdministradorDTO(idAdministrador);
+        } catch (Exception e) {
+            throw new RuntimeException("No se puede rechazar el evento porque el administrador con id: " + idAdministrador + " no existe.");
         }
 
         evento.setEstadoEvento("RECHAZADO");

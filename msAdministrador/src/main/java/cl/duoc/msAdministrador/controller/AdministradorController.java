@@ -119,6 +119,19 @@ public class AdministradorController {
     }
 
 
+    //METODO QUE SE COMUNICA CON OTRO MS
+    @GetMapping("/dto/{idAdm}")
+    public ResponseEntity<AdministradorDTO> buscarDTO(@PathVariable Integer idAdm) {
+        try {
+            return ResponseEntity.ok(administradorService.buscarAdministradorDTOPorId(idAdm));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+
     @GetMapping("/rut/{rutAdm}")
     public ResponseEntity<?> buscarPorRut(@PathVariable String rutAdm){
         try {
@@ -197,6 +210,34 @@ public class AdministradorController {
     public ResponseEntity<?> guardarAuditoria(@RequestBody Auditoria auditoria){
         try {
             return ResponseEntity.ok(administradorService.guardarAuditoria(auditoria));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/eventos")
+    public ResponseEntity<?> listarEventos() {
+        try {
+            return ResponseEntity.ok(administradorService.listarEventos());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/eventos/pendientes")
+    public ResponseEntity<?> listarEventosPendientes() {
+        try {
+            return ResponseEntity.ok(administradorService.listarEventosPendientes());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/eventos/id/{idEvento}")
+    public ResponseEntity<?> buscarEventoDTO(@PathVariable Integer idEvento) {
+        try {
+            return ResponseEntity.ok(administradorService.buscarEventoDTO(idEvento));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

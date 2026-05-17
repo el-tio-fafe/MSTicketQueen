@@ -1,12 +1,12 @@
-package cl.duoc.msEvento.dto;
+package cl.duoc.msAdministrador.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class EventoDTO {
 
     private Integer idEvento;
@@ -16,7 +16,5 @@ public class EventoDTO {
     private String nombreEvento;
 
     private String estadoEvento;
-
-
 
 }
