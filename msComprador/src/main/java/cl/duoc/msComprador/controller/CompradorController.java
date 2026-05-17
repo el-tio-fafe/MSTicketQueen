@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msComprador.dto.ActualizarCorreoDTO;
 import cl.duoc.msComprador.dto.ActualizarTelefonoDTO;
+import cl.duoc.msComprador.dto.CompradorDTO;
 import cl.duoc.msComprador.model.Comprador;
 import cl.duoc.msComprador.service.CompradorService;
 
@@ -54,6 +55,17 @@ public class CompradorController {
             return ResponseEntity.ok(comprador);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    //METODO QUE SE COMUNICA CON OTRO MS
+    @GetMapping("/dto/{idCliente}")
+    public ResponseEntity<CompradorDTO> buscarDTO(@PathVariable Integer idCliente){
+        try {
+            return ResponseEntity.ok(compradorService.buscarCompradorDTOPorId(idCliente));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 

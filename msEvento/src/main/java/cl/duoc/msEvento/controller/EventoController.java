@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msEvento.dto.EventoDTO;
 import cl.duoc.msEvento.dto.EventoListarDTO;
 import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
@@ -120,6 +121,17 @@ public class EventoController {
             return ResponseEntity.ok(eventoService.buscarEventoPorId(idEvento));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    //METODO QUE SE COMUNICA CON OTRO MS
+    @GetMapping("/dto/{idEvento}")
+    public ResponseEntity<EventoDTO> buscarDTO(@PathVariable Integer idEvento){
+        try {
+            return ResponseEntity.ok(eventoService.buscarEventoDTOPorId(idEvento));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 

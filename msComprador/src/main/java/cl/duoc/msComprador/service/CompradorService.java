@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msComprador.dto.CompradorDTO;
 import cl.duoc.msComprador.model.Comprador;
 import cl.duoc.msComprador.repository.CompradorRepository;
 
@@ -30,6 +31,21 @@ public class CompradorService {
     public Comprador buscarCompradorPorId(Integer idCliente){
         return compradorRepository.findById(idCliente)
             .orElseThrow(() -> new RuntimeException("Comprador/Cliente) con id: " + idCliente + " no encontrado."));
+    }
+
+
+
+    //METODO CON EL COMPRADOR DTO PARA LLAMARLO EN OTRO MS
+    public CompradorDTO buscarCompradorDTOPorId(Integer idCliente){
+        Comprador comprador = buscarCompradorPorId(idCliente);
+
+        CompradorDTO dto = new CompradorDTO();
+        dto.setRutCliente(comprador.getRutCliente());
+        dto.setNombreCliente(comprador.getNombreCliente());
+        dto.setApPaternoCliente(comprador.getApPaternoCliente());
+        dto.setCorreoCliente(comprador.getCorreoCliente());
+
+        return dto;
     }
 
 

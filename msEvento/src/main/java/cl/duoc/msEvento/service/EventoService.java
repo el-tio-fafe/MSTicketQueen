@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msEvento.dto.EventoDTO;
 import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
 import cl.duoc.msEvento.model.TipoEvento;
@@ -37,6 +38,19 @@ public class EventoService {
     public Evento buscarEventoPorId(Integer idEvento){
         return eventoRepository.findById(idEvento)
             .orElseThrow(() -> new RuntimeException("Evento con id: " + idEvento + " no encontrado"));
+    }
+
+
+    //METODO CON EL EVENTO DTO PARA LLAMARLO EN OTRO MS
+    public EventoDTO buscarEventoDTOPorId(Integer idEvento){
+        Evento evento = buscarEventoPorId(idEvento);
+
+        EventoDTO dto = new EventoDTO();
+        dto.setIdEvento(evento.getIdEvento());
+        dto.setCodigoEvento(evento.getCodigoEvento());
+        dto.setNombreEvento(evento.getNombreEvento());
+
+        return dto;
     }
 
     

@@ -51,6 +51,19 @@ public class AsientoController {
         }
     }
 
+
+    //METODO QUE SE COMUNICA CON OTRO MS
+    @GetMapping("/dto/id/{id}")
+    public ResponseEntity<AsientoDTO> buscarDTOPorId(@PathVariable Integer id){
+        try {
+            return ResponseEntity.ok(asientoService.buscarAsientoDTOPorId(id));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
     @GetMapping("numero/{numAsiento}")
     public ResponseEntity<Asiento> buscarPorNumero(@PathVariable String numAsiento) {
         try {
@@ -59,6 +72,18 @@ public class AsientoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    //METODO QUE SE COMUNICA CON OTRO MS
+    @GetMapping("/dto/numero/{numAsiento}")
+    public ResponseEntity<AsientoDTO> buscarDTOPorNum(@PathVariable String numAsiento){
+        try {
+            return ResponseEntity.ok(asientoService.buscarAsientoDTOPorNumAsiento(numAsiento));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody Asiento asiento) {
@@ -80,7 +105,7 @@ public class AsientoController {
     //     }
     // }
 
-    @GetMapping("/dto/{id}")
+    @GetMapping("/obtener/dto/id/{id}")
     public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable("id") Integer idAsiento) {
     Asiento asiento = asientoService.buscarPorId(idAsiento);
     AsientoDTO dto = new AsientoDTO(

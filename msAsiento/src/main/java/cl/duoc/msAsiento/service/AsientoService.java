@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msAsiento.dto.AsientoDTO;
 import cl.duoc.msAsiento.model.Asiento;
 import cl.duoc.msAsiento.repository.AsientoRepository;
 
@@ -30,11 +31,38 @@ public class AsientoService {
     }
 
 
+    //METODO CON EL ASIENTO DTO PARA LLAMARLO EN OTRO MS
+    public AsientoDTO buscarAsientoDTOPorId(Integer idAsiento){
+        Asiento asiento = buscarPorId(idAsiento);
+
+        AsientoDTO dto = new AsientoDTO();
+        dto.setIdAsiento(asiento.getIdAsiento());
+        dto.setNumeroAsiento(asiento.getNumeroAsiento());
+        dto.setEstadoAsiento(asiento.getEstadoAsiento());
+
+        return dto;
+    }
+
+
     public Asiento buscarPorNumAsiento(String numAsiento){
         return asientoRepository.findByNumeroAsiento(numAsiento)
         .orElseThrow ( () -> new
         RuntimeException("Asiento numero: " + numAsiento + " no encontrado"));
     }
+
+
+    //METODO CON EL ASIENTO DTO PARA LLAMARLO EN OTRO MS
+    public AsientoDTO buscarAsientoDTOPorNumAsiento(String numAsiento){
+        Asiento asiento = buscarPorNumAsiento(numAsiento);
+
+        AsientoDTO dto = new AsientoDTO();
+        dto.setIdAsiento(asiento.getIdAsiento());
+        dto.setNumeroAsiento(asiento.getNumeroAsiento());
+        dto.setEstadoAsiento(asiento.getEstadoAsiento());
+
+        return dto;
+    }
+
 
     public Asiento guardar(Asiento asiento){
         asiento.setNumeroAsiento(asiento.getNumeroAsiento().toUpperCase());

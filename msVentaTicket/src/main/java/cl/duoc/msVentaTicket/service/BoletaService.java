@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msVentaTicket.client.AsientoClient;
+import cl.duoc.msVentaTicket.client.CompradorClient;
+import cl.duoc.msVentaTicket.client.EventoClient;
 import cl.duoc.msVentaTicket.model.Boleta;
 import cl.duoc.msVentaTicket.model.Detalle;
 import cl.duoc.msVentaTicket.repository.BoletaRepository;
@@ -19,6 +22,15 @@ public class BoletaService {
 
     @Autowired
     private DetalleRepository detalleRepository;
+
+    @Autowired
+    EventoClient eventoClient;
+
+    @Autowired
+    CompradorClient compradorClient;
+
+    @Autowired
+    AsientoClient asientoClient;
 
     public List<Boleta> listarBoletas(){
         return boletaRepository.findAll();
@@ -43,6 +55,14 @@ public class BoletaService {
     }
 
     public Boleta crearBoleta(Boleta boleta){
+
+        try {
+            compradorClient.buscarCompradorPorId(boleta.getIdComprador());
+        } catch (Exception e) {
+            throw new RuntimeException("No se puede crear la boleta porque el comprador id: " + boleta.getIdComprador() + " no existe");
+        }
+
+        //VALIDAR DETALLE VACIO
         if(boleta.getDetalles() == null || boleta.getDetalles().isEmpty()){
             throw new RuntimeException("La boleta debe tener al menos una compra");
         }
@@ -53,6 +73,34 @@ public class BoletaService {
             .orElseThrow(() -> new RuntimeException("Detalle con id: " + d.getIdDetalle() + " no encontrado")))
             .toList();
 
+        //VALIDAR QUE CADA TICKET TIENE UN EVENTO VÁLIDO
+        detalleCompleto.forEach(d -> {
+            //VALIDA EL EVENTO
+            try {
+                eventoClient.buscarEventoPorId(d.getTicket().getIdEvento());
+            } catch (Exception e) {
+                throw new RuntimeException("No se puede crear la boleta porque el evento con id: " + d.getTicket().getIdEvento() + " no existe");
+            }
+        
+        //VALIDAR QUE EXISTA EL NUMERO DE ASIENTO O LA UBICACION
+        String numeroAsiento = d.getTicket().getNumeroAsiento();
+        String nombreUbicacion = d.getTicket().getNombreUbicacion();
+
+        //SI NO TIENE ASIENTO NI UBICACION, SE CAE
+        if(numeroAsiento == null && (nombreUbicacion == null || nombreUbicacion.isBlank())){
+            throw new RuntimeException("El Ticket debe tener un número de asiento o una ubicación válida");
+        }
+
+        //SI EL EVENTO TIENE ASIENTOS ENUMERADOS, SE VALIDA CON EL MS
+        if(numeroAsiento != null){
+            try {
+                asientoClient.buscarAsientoPorNum(numeroAsiento);
+            } catch (Exception e) {
+                throw new RuntimeException("No se puede crear la boleta porque el asiento: " + d.getTicket().getNumeroAsiento() + " no existe");
+            }
+        }
+        //SI NO TIENE ASIENTO, NO ENTRA AL IF ANTERIOR, PERO QUEDA ASEGURADO QUE TIENE UBICACION
+        });
 
         //CALCULAMOS EL TOTAL DE LA BOLETA CON LOS DATOS COMPLETOS
         Integer total = detalleCompleto.stream()
@@ -65,6 +113,8 @@ public class BoletaService {
         boletaGuardada.setNumeroBoleta(boletaGuardada.getIdBoleta());
         return boletaRepository.save(boletaGuardada);
     }
+
+
 
     public Boleta asociarComprobante(Integer idBoleta, Integer idComprobante){
         Boleta boleta = buscarBoletaPorId(idBoleta);
