@@ -38,7 +38,7 @@ public class BoletaController {
     }
 
     //CONECCION CON OTRO MS POR EL DTO
-    @GetMapping("detalle/{idBoleta}")
+    @GetMapping("/detalle/{idBoleta}")
     public ResponseEntity<?> mostarDetalleBoleta(@PathVariable Integer idBoleta){
         try {
             BoletaDTO boletaDTO = boletaService.mostrarDetalleBoleta(idBoleta);

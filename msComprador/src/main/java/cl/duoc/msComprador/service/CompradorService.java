@@ -40,6 +40,7 @@ public class CompradorService {
         Comprador comprador = buscarCompradorPorId(idCliente);
 
         CompradorDTO dto = new CompradorDTO();
+        dto.setIdCliente(comprador.getIdCliente());
         dto.setRutCliente(comprador.getRutCliente());
         dto.setNombreCliente(comprador.getNombreCliente());
         dto.setApPaternoCliente(comprador.getApPaternoCliente());
