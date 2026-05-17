@@ -38,8 +38,8 @@ public class Recinto {
     @Column(nullable = false, unique = true)
     private String correoRecinto;
 
-    //el recinto necesita una calle direcion
-    //private Calle calle;
+    @Column(nullable = false)
+    private Integer idCalle;
 
 
 

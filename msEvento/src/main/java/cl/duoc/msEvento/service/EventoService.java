@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cl.duoc.msEvento.client.AdministradorClient;
+import cl.duoc.msEvento.client.DireccionClient;
 import cl.duoc.msEvento.client.ProductoraClient;
+import cl.duoc.msEvento.dto.DireccionDTO;
 import cl.duoc.msEvento.dto.EventoDTO;
+import cl.duoc.msEvento.dto.RecintoDTO;
 import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
 import cl.duoc.msEvento.model.TipoEvento;
@@ -30,6 +33,9 @@ public class EventoService {
 
     @Autowired
     AdministradorClient administradorClient;
+
+    @Autowired
+    DireccionClient direccionClient;
 
 
 
@@ -59,6 +65,30 @@ public class EventoService {
         dto.setIdEvento(evento.getIdEvento());
         dto.setCodigoEvento(evento.getCodigoEvento());
         dto.setNombreEvento(evento.getNombreEvento());
+
+        return dto;
+    }
+
+
+    public RecintoDTO buscarRecintoConDireccion(Integer idRecinto) {
+        Recinto recinto = recintoRepository.findById(idRecinto)
+            .orElseThrow(() -> new RuntimeException("Recinto con id: " + idRecinto + " no encontrado."));
+
+        DireccionDTO direccion;
+        
+            try {
+                direccion = direccionClient.buscarDireccionDTO(recinto.getIdCalle());
+            } catch (Exception e) {
+                throw new RuntimeException("No se pudo obtener la dirección del recinto.");
+            }
+        
+
+        RecintoDTO dto = new RecintoDTO();
+        dto.setIdRecinto(recinto.getIdRecinto());
+        dto.setNombreRecinto(recinto.getNombreRecinto());
+        dto.setCapacidadRecinto(recinto.getCapacidadRecinto());
+        dto.setDireccion(direccion);
+    
 
         return dto;
     }

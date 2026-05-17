@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import cl.duoc.msDireccion.dto.CalleUpdateDTO;
 import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
 import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
+import cl.duoc.msDireccion.dto.DireccionDTO;
 import cl.duoc.msDireccion.dto.RegionDTO;
 import cl.duoc.msDireccion.dto.RegionUpdateDTO;
 import cl.duoc.msDireccion.model.Calle;
@@ -250,6 +251,25 @@ public class RegionService {
             .orElseThrow(() -> new RuntimeException("Calle con id: " + idCalle + " no encontrada."));
         calle.setNombreCalle(calleUpdateDTO.getNombreCalle());
         return calleRepository.save(calle);
+    }
+
+
+
+
+    //DIRECCION DTO QUE SE COMUNICA CON OTROS MS
+   public DireccionDTO buscarDireccionCompletaPorIdCalle(Integer idCalle) {
+        Calle calle = calleRepository.findById(idCalle)
+            .orElseThrow(() -> new RuntimeException("Calle con id: " + idCalle + " no encontrada."));
+
+        return new DireccionDTO(
+            calle.getComuna().getCiudadProvincia().getRegion().getNombreRegion(),
+            calle.getComuna().getCiudadProvincia().getNombreCiudadProvincia(),
+            calle.getComuna().getNombreComuna(),
+            calle.getNombreCalle(),
+            calle.getNumeroCalle(),
+            calle.getNumeroDepto(),
+            calle.getLetraDepto()
+        );
     }
 
 

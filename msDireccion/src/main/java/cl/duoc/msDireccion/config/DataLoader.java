@@ -5,9 +5,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import cl.duoc.msDireccion.model.Calle;
 import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
 import cl.duoc.msDireccion.model.Region;
+import cl.duoc.msDireccion.repository.CalleRepository;
 import cl.duoc.msDireccion.repository.CiudadProvinciaRepository;
 import cl.duoc.msDireccion.repository.ComunaRepository;
 import cl.duoc.msDireccion.repository.RegionRepository;
@@ -16,7 +18,7 @@ import cl.duoc.msDireccion.repository.RegionRepository;
 public class DataLoader {
 
     @Bean
-    CommandLineRunner initDataBase(RegionRepository regionRepository, CiudadProvinciaRepository ciudadProvinciaRepository, ComunaRepository comunaRepository){
+    CommandLineRunner initDataBase(RegionRepository regionRepository, CiudadProvinciaRepository ciudadProvinciaRepository, ComunaRepository comunaRepository, CalleRepository calleRepository){
         return args -> {
             
             if(regionRepository.count() > 0){
@@ -64,6 +66,15 @@ public class DataLoader {
                 comunaRepository.save(com3);
                 comunaRepository.save(com4);
                 comunaRepository.save(com5);
+
+
+                Calle calle1 = new Calle(null, "Av. Grecia", 2001, null, null, com1);
+                Calle calle2 = new Calle(null, "Av. Providencia", 1234, null, null, com1);
+                Calle calle3 = new Calle(null, "Plaza de Armas", 100, null, null, com3);
+
+                calleRepository.save(calle1);
+                calleRepository.save(calle2);
+                calleRepository.save(calle3);
 
 
                 System.out.println("Datos cargados con exito a la base de datos");

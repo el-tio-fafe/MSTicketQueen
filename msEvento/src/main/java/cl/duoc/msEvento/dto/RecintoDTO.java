@@ -15,6 +15,8 @@ public class RecintoDTO {
 
     private Integer capacidadRecinto;
 
+    private DireccionDTO direccion;
+
 
 
 }

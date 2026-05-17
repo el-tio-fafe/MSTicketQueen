@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +19,7 @@ import cl.duoc.msDireccion.dto.CiudadProvinciaDTO;
 import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
 import cl.duoc.msDireccion.dto.ComunaDTO;
 import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
+import cl.duoc.msDireccion.dto.DireccionDTO;
 import cl.duoc.msDireccion.dto.RegionDTO;
 import cl.duoc.msDireccion.model.Calle;
 import cl.duoc.msDireccion.model.CiudadProvincia;
@@ -386,6 +386,17 @@ public class RegionController {
         }
     }
 
+
+
+    //DTO DIRECCIONES
+    @GetMapping("/dto/{idCalle}")
+    public ResponseEntity<DireccionDTO> buscarDireccionDTO(@PathVariable Integer idCalle) {
+    try {
+        return ResponseEntity.ok(regionService.buscarDireccionCompletaPorIdCalle(idCalle));
+    } catch (Exception e) {
+        return ResponseEntity.notFound().build();
+    }
+}
 
 
 

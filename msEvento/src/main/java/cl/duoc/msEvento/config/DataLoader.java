@@ -38,9 +38,9 @@ public class DataLoader {
                 tipoEventoRepository.save(tipo3);
 
                 // RECINTO
-                Recinto recinto1 = new Recinto(null, "76123456-7", "Estadio Nacional", 60000, "+56223456789", "estadionacional@gmail.com");
-                Recinto recinto2 = new Recinto(null, "76234567-8", "Movistar Arena", 15000, "+56223456790", "movistararena@gmail.com");
-                Recinto recinto3 = new Recinto(null, "76345678-9", "Teatro Municipal", 1500, "+56223456791", "teatromunicipal@gmail.com");
+                Recinto recinto1 = new Recinto(null, "76123456-7", "Estadio Nacional", 60000, "+56223456789", "estadionacional@gmail.com", 1);
+                Recinto recinto2 = new Recinto(null, "76234567-8", "Movistar Arena", 15000, "+56223456790", "movistararena@gmail.com", 2);
+                Recinto recinto3 = new Recinto(null, "76345678-9", "Teatro Municipal", 1500, "+56223456791", "teatromunicipal@gmail.com", 3);
 
                 recintoRepository.save(recinto1);
                 recintoRepository.save(recinto2);
