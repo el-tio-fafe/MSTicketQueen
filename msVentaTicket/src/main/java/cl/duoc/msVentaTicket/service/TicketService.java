@@ -45,6 +45,9 @@ public class TicketService {
             .orElseThrow(() -> new RuntimeException("No existe un ticket para el asiento numero: " + numeroAsiento));
     }
 
+    public Ticket crearTicket(Ticket ticket) {
+        return ticketRepository.save(ticket);
+    }
 
 
 

@@ -31,6 +31,9 @@ public class DetalleService {
         return lista;
     }
 
+    public Detalle crearDetalle(Detalle detalle) {
+        return detalleRepository.save(detalle);
+    }
 
 
 
