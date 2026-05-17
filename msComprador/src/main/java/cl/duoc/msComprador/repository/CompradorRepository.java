@@ -11,6 +11,8 @@ import cl.duoc.msComprador.model.Comprador;
 public interface CompradorRepository extends JpaRepository<Comprador, Integer>{
 
     Optional <Comprador> findByRutCliente(String rutCliente);
+    
+    Optional <Comprador> findByCorreoCliente(String correoCliente);
 
     boolean existsByRutCliente(String rutCliente);
 

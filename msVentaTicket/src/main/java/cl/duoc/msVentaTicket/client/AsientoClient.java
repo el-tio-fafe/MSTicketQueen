@@ -15,7 +15,7 @@ public interface AsientoClient {
     AsientoDTO buscarAsientoPorId(@PathVariable("id") Integer id);
 
     @GetMapping("/api/v1/asientos/dto/numero/{numeroAsiento}")
-    AsientoDTO buscarAsientoPorNum(@PathVariable("numAsiento") String numAsiento);
+    AsientoDTO buscarAsientoPorNum(@PathVariable("numeroAsiento") String numAsiento);
 
     @PostMapping("/api/v1/reservas/{idAsiento}")
     Object crearReservaTemporal(@PathVariable Integer idAsiento);

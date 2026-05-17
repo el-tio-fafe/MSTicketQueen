@@ -69,6 +69,15 @@ public class CompradorController {
         }
     }
 
+    @GetMapping("/dto/correo/{correoCliente}")
+    public ResponseEntity<CompradorDTO> buscarDTOPorCorreo(@PathVariable String correoCliente) {
+        try {
+            return ResponseEntity.ok(compradorService.buscarCompradorDTOPorCorreo(correoCliente));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 
     @GetMapping("/rut/{rutCliente}")

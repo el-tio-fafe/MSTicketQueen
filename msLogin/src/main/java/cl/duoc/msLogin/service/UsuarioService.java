@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msLogin.client.CompradorClient;
 import cl.duoc.msLogin.model.TipoUsuario;
 import cl.duoc.msLogin.model.Usuario;
 import cl.duoc.msLogin.repository.TipoUsuarioRepository;
@@ -19,6 +20,9 @@ public class UsuarioService {
 
     @Autowired
     private TipoUsuarioRepository tipoUsuarioRepository;
+
+    @Autowired
+    private CompradorClient compradorClient;
 
 //USUARIO
 
@@ -62,8 +66,15 @@ public class UsuarioService {
     // verificar si la contraseña es correcta y el correo existe
     public boolean verificarCredenciales(String correo, String password) {
         Usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
-        if (usuario != null) {
-            return usuario.getPassword().equals(password);
+        if (usuario != null && usuario.getPassword().equals(password)) {
+
+            //VERIFICAMOA QUE EL COMPRADOR EXISTE EN EL msComprador
+            try {
+                compradorClient.buscarCompradorDTOPorCorreo(correo);
+            } catch (Exception e) {
+                throw new RuntimeException("El comprador con correo: " + correo + " no existe en el sistema");
+            }
+            return true;
         }
         return false;
     }

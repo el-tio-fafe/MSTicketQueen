@@ -41,7 +41,7 @@ public class Boleta {
     @Column(nullable = true)
     private Integer idComprobante;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_boleta")
     private List<Detalle> detalles;
 

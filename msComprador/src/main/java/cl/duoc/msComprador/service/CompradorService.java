@@ -49,6 +49,20 @@ public class CompradorService {
         return dto;
     }
 
+    public CompradorDTO buscarCompradorDTOPorCorreo(String correoCliente) {
+        Comprador comprador = compradorRepository.findByCorreoCliente(correoCliente)
+            .orElseThrow(() -> new RuntimeException("Comprador con correo: " + correoCliente + " no encontrado."));
+
+        CompradorDTO dto = new CompradorDTO();
+        dto.setIdCliente(comprador.getIdCliente());
+        dto.setRutCliente(comprador.getRutCliente());
+        dto.setNombreCliente(comprador.getNombreCliente());
+        dto.setApPaternoCliente(comprador.getApPaternoCliente());
+        dto.setCorreoCliente(comprador.getCorreoCliente());
+
+        return dto;
+    }
+
 
 
     public Comprador buscarCompradorPorRut(String rutCliente){
