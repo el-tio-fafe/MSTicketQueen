@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msUbicacion.dto.UbicacionDTO;
 import cl.duoc.msUbicacion.model.Ubicacion;
 import cl.duoc.msUbicacion.service.UbicacionService;
 
@@ -127,6 +129,38 @@ public class UbicacionController {
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
+
+    //COMUNICACION CON OTROS MS
+
+    @GetMapping("/dto/{idUbi}")
+    public ResponseEntity<UbicacionDTO> buscarDTO(@PathVariable Integer idUbi) {
+        try {
+            return ResponseEntity.ok(ubicacionService.getUbicacionDTOById(idUbi));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @GetMapping("/nombre/{nombreUbi}")
+    public ResponseEntity<?> getUbicacionPorNombre(@PathVariable String nombreUbi) {
+        try {
+            return ResponseEntity.ok(ubicacionService.getUbicacionDTOPorNombre(nombreUbi));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/reducir-stock/{idUbi}")
+    public ResponseEntity<?> reducirStock(@PathVariable Integer idUbi) {
+        try {
+            return ResponseEntity.ok(ubicacionService.reducirStock(idUbi));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

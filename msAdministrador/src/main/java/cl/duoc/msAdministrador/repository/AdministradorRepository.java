@@ -12,6 +12,8 @@ public interface AdministradorRepository extends JpaRepository<Administrador, In
 
     Optional<Administrador> findByRutAdm(String rutAdm);
 
+    Optional<Administrador> findByCorreoAdm(String correoAdm);
+
     boolean existsByRutAdm(String rutAdm);
     
 }

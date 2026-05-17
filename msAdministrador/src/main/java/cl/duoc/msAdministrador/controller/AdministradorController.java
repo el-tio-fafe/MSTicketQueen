@@ -130,6 +130,18 @@ public class AdministradorController {
     }
 
 
+    //METODO QUE SE COMUNICA CON EL smsLogin
+    @GetMapping("/dto/correo/{correoAdm}")
+    public ResponseEntity<AdministradorDTO> buscarDTOPorCorreo(@PathVariable String correoAdm) {
+        try {
+            return ResponseEntity.ok(administradorService.buscarAdministradorDTOPorCorreo(correoAdm));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
 
 
     @GetMapping("/rut/{rutAdm}")

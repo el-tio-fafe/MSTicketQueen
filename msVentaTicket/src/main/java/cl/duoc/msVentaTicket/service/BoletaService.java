@@ -4,15 +4,18 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cl.duoc.msVentaTicket.client.AsientoClient;
 import cl.duoc.msVentaTicket.client.CompradorClient;
 import cl.duoc.msVentaTicket.client.EventoClient;
 import cl.duoc.msVentaTicket.client.FacturacionClient;
+import cl.duoc.msVentaTicket.client.UbicacionClient;
 import cl.duoc.msVentaTicket.dto.AsientoDTO;
 import cl.duoc.msVentaTicket.dto.BoletaDTO;
 import cl.duoc.msVentaTicket.dto.CompradorDTO;
 import cl.duoc.msVentaTicket.dto.EventoDTO;
+import cl.duoc.msVentaTicket.dto.UbicacionDTO;
 import cl.duoc.msVentaTicket.model.Boleta;
 import cl.duoc.msVentaTicket.model.Detalle;
 import cl.duoc.msVentaTicket.repository.BoletaRepository;
@@ -29,16 +32,19 @@ public class BoletaService {
     private DetalleRepository detalleRepository;
 
     @Autowired
-    EventoClient eventoClient;
+    private EventoClient eventoClient;
 
     @Autowired
-    CompradorClient compradorClient;
+    private CompradorClient compradorClient;
 
     @Autowired
-    AsientoClient asientoClient;
+    private AsientoClient asientoClient;
 
     @Autowired
-    FacturacionClient facturacionClient;
+    private FacturacionClient facturacionClient;
+
+    @Autowired
+    private UbicacionClient ubicacionClient;
 
     public List<Boleta> listarBoletas(){
         return boletaRepository.findAll();
@@ -81,60 +87,81 @@ public class BoletaService {
         return lista;
     }
 
-    public Boleta crearBoleta(Boleta boleta){
 
+
+    @Transactional
+    public Boleta crearBoleta(Boleta boleta) {
+
+        // VALIDAR QUE EL COMPRADOR EXISTE
         try {
             compradorClient.buscarCompradorPorId(boleta.getIdComprador());
         } catch (Exception e) {
             throw new RuntimeException("No se puede crear la boleta porque el comprador id: " + boleta.getIdComprador() + " no existe");
         }
 
-        //VALIDAR DETALLE VACIO
-        if(boleta.getDetalles() == null || boleta.getDetalles().isEmpty()){
+        // VALIDAR DETALLE VACIO
+        if (boleta.getDetalles() == null || boleta.getDetalles().isEmpty()) {
             throw new RuntimeException("La boleta debe tener al menos una compra");
         }
-        
-        //BUSCA CADA DETALLE EN LA BD
+
+        // BUSCA CADA DETALLE EN LA BD
         List<Detalle> detalleCompleto = boleta.getDetalles().stream()
             .map(d -> detalleRepository.findById(d.getIdDetalle())
-            .orElseThrow(() -> new RuntimeException("Detalle con id: " + d.getIdDetalle() + " no encontrado")))
+                .orElseThrow(() -> new RuntimeException("Detalle con id: " + d.getIdDetalle() + " no encontrado")))
             .toList();
 
-        //VALIDAR QUE CADA TICKET TIENE UN EVENTO VÁLIDO
+        // VALIDAR CADA DETALLE
         detalleCompleto.forEach(d -> {
-            //VALIDA EL EVENTO
+
+            // 1. VALIDAR EL EVENTO PRIMERO
             try {
                 eventoClient.buscarEventoPorId(d.getTicket().getIdEvento());
             } catch (Exception e) {
                 throw new RuntimeException("No se puede crear la boleta porque el evento con id: " + d.getTicket().getIdEvento() + " no existe");
             }
 
-         // VALIDAR Y RESERVAR EL ASIENTO SI TIENE NUMERO
-        if (d.getTicket().getNumeroAsiento() != null) {
-            try {
-                AsientoDTO asiento = asientoClient.buscarAsientoPorNum(d.getTicket().getNumeroAsiento());
-                
-                //VERIFICAR QUE EL ASIENTO ESTA DISPONIBLE
-                if (!asiento.getEstadoAsiento().equals("DISPONIBLE")) {
-                    throw new RuntimeException("El asiento: " + d.getTicket().getNumeroAsiento() 
-                        + " no está disponible.");
-                }
-                
-                //CREAR RESERVA TEMPORAL
-                asientoClient.crearReservaTemporal(asiento.getIdAsiento());
-                
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new RuntimeException("No se puede crear la boleta porque el asiento: "
-                    + d.getTicket().getNumeroAsiento() + " no existe.");
-            }
-        }
-    });
-        
-        
+            // 2. SI TIENE ASIENTO NUMERADO, VALIDAR Y RESERVAR
+            if (d.getTicket().getNumeroAsiento() != null) {
+                try {
+                    AsientoDTO asiento = asientoClient.buscarAsientoPorNum(d.getTicket().getNumeroAsiento());
 
-        //CALCULAMOS EL TOTAL DE LA BOLETA CON LOS DATOS COMPLETOS
+                    if (!asiento.getEstadoAsiento().equals("DISPONIBLE")) {
+                        throw new RuntimeException("El asiento: " + d.getTicket().getNumeroAsiento() + " no está disponible.");
+                    }
+
+                    asientoClient.crearReservaTemporal(asiento.getIdAsiento());
+
+                } catch (RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new RuntimeException("No se puede crear la boleta porque el asiento: "
+                        + d.getTicket().getNumeroAsiento() + " no existe.");
+                }
+
+            // 3. SI NO TIENE ASIENTO NUMERADO, VALIDAR UBICACION Y STOCK
+            } else {
+                String nombreUbicacion = d.getTicket().getNombreUbicacion();
+                if (nombreUbicacion != null && !nombreUbicacion.isBlank()) {
+                    try {
+                        UbicacionDTO ubicacion = ubicacionClient.buscarUbicacionDTOPorNombre(nombreUbicacion);
+
+                        if (ubicacion.getStockDisponibleUbi() <= 0) {
+                            throw new RuntimeException("No hay stock disponible para la ubicación: " + nombreUbicacion);
+                        }
+
+                        ubicacionClient.reducirStock(ubicacion.getIdUbi());
+
+                    } catch (RuntimeException e) {
+                        throw e;
+                    } catch (Exception e) {
+                        throw new RuntimeException("No se puede crear la boleta porque la ubicación: "
+                            + nombreUbicacion + " no existe.");
+                    }
+                }
+            }
+        });
+
+        // CALCULAMOS EL TOTAL DE LA BOLETA CON LOS DATOS COMPLETOS
         Integer total = detalleCompleto.stream()
             .mapToInt(d -> (d.getPrecioUnitario() - d.getDescuento()) * d.getCantidad()).sum();
 
@@ -148,13 +175,14 @@ public class BoletaService {
 
 
 
-    public Boleta asociarComprobante(Integer idBoleta, Integer idComprobante){
+    public Boleta asociarComprobante(Integer idBoleta, Integer idComprobante) {
         Boleta boleta = buscarBoletaPorId(idBoleta);
-        if(boleta.getIdComprobante() != null){
+
+        if (boleta.getIdComprobante() != null) {
             throw new RuntimeException("La boleta ya tiene un comprobante asociado");
         }
 
-        //VALIDAMOS QUE EL COMPROBANTE EXISTA EN EL MSFACTURACION
+        // VALIDAMOS QUE EL COMPROBANTE EXISTA EN EL MSFACTURACION
         try {
             facturacionClient.buscarComprobanteDTOPorId(idComprobante);
         } catch (Exception e) {
@@ -162,7 +190,7 @@ public class BoletaService {
                 + idComprobante + " no existe.");
         }
 
-        //CONFIRMAR COMPRA DE CADA ASIENTO
+        // CONFIRMAR COMPRA DE CADA ASIENTO
         boleta.getDetalles().forEach(d -> {
             if (d.getTicket().getNumeroAsiento() != null) {
                 try {
@@ -177,7 +205,6 @@ public class BoletaService {
         boleta.setIdComprobante(idComprobante);
         return boletaRepository.save(boleta);
     }
-
-
-
 }
+
+

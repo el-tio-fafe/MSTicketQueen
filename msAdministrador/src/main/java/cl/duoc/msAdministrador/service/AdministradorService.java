@@ -231,6 +231,23 @@ public class AdministradorService {
         }
     }
 
+    //METODO QUE PERMITE CONECTARSE CON EL msLogin
+    public AdministradorDTO buscarAdministradorDTOPorCorreo(String correoAdm) {
+        Administrador administrador = administradorRepository.findByCorreoAdm(correoAdm)
+            .orElseThrow(() -> new RuntimeException("Administrador con correo: " + correoAdm + " no encontrado."));
+
+        return new AdministradorDTO(
+            administrador.getIdAdm(),
+            administrador.getNombreAdm(),
+            administrador.getApPatAdm(),
+            administrador.getRutAdm(),
+            administrador.getCorreoAdm()
+        );
+    }
+
+
+
+
     public List<EventoDTO> listarEventosPendientes() {
         try {
             return eventoClient.listarEventosPorEstado("PENDIENTE");
