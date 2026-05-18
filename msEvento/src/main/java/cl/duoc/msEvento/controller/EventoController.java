@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msEvento.dto.EventoDTO;
+import cl.duoc.msEvento.dto.EventoDetalleDTO;
 import cl.duoc.msEvento.dto.EventoListarDTO;
 import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
@@ -89,6 +90,21 @@ public class EventoController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
+
+    //METODO QUE CONECTA CON EL MS ADMINISTRADOR Y EL GESTION ARTISTICA PARA SACAR LA PRODUCTORA
+    @GetMapping("/mostrar-detalle/idEvento/{idEvento}")
+    public ResponseEntity<EventoDetalleDTO> mostrarDetalleEvento(@PathVariable Integer idEvento){
+        try {
+            EventoDetalleDTO eventoDetalleDTO = eventoService.mostrarDetalleEvento(idEvento);
+            return ResponseEntity.ok(eventoDetalleDTO);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
     @GetMapping("/listar-eventos/por-productora/id/{idProd}")
     public ResponseEntity<List<EventoListarDTO>> listarEventosPorProductora(@PathVariable Integer idProd){

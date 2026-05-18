@@ -53,11 +53,11 @@ public class DataLoader {
 
                 Evento evento2 = new Evento(null, "EVT-002", "Tour Chile Shakira",
                         LocalDate.of(2026, 9, 20), LocalTime.of(21, 0),
-                        "PENDIENTE", 2, null, recinto2, tipo1);
+                        "PENDIENTE", 2, 2, recinto2, tipo1);
 
                 Evento evento3 = new Evento(null, "EVT-003", "Festival de Viña 2027",
                         LocalDate.of(2027, 2, 20), LocalTime.of(22, 0),
-                        "PENDIENTE", 1, null, recinto1, tipo2);
+                        "PENDIENTE", 1, 1, recinto1, tipo2);
 
                 eventoRepository.save(evento1);
                 eventoRepository.save(evento2);

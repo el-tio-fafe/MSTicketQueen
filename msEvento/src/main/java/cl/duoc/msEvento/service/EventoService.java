@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import cl.duoc.msEvento.client.AdministradorClient;
 import cl.duoc.msEvento.client.DireccionClient;
 import cl.duoc.msEvento.client.ProductoraClient;
+import cl.duoc.msEvento.dto.AdministradorDTO;
 import cl.duoc.msEvento.dto.DireccionDTO;
 import cl.duoc.msEvento.dto.EventoDTO;
+import cl.duoc.msEvento.dto.EventoDetalleDTO;
+import cl.duoc.msEvento.dto.ProductoraDTO;
 import cl.duoc.msEvento.dto.RecintoDTO;
 import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
@@ -50,6 +53,28 @@ public class EventoService {
         }
         return eventoRepository.findByEstadoEvento(estadoEvento.toUpperCase());
     }
+
+
+    //METODO QUE CONECTA CON EL MS ADMINISTRADOR Y EL GESTION ARTISTICA PARA SACAR LA PRODUCTORA
+    public EventoDetalleDTO mostrarDetalleEvento(Integer idEvento){
+        Evento evento = eventoRepository.findById(idEvento)
+            .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+
+        ProductoraDTO productora = productoraClient.buscarProductoraDTO(evento.getIdProd());
+        AdministradorDTO administrador = administradorClient.buscarAdministradorDTO(evento.getIdAdministrador());
+
+        EventoDetalleDTO dto = new EventoDetalleDTO();
+        dto.setIdEvento(evento.getIdEvento());
+        dto.setNombreEvento(evento.getNombreEvento());
+        dto.setFechaEvento(evento.getFechaEvento());
+        dto.setEstadoEvento(evento.getEstadoEvento());
+        dto.setProductora(productora);
+        dto.setAdministrador(administrador);
+
+        return dto;
+    }
+
+
 
     public Evento buscarEventoPorId(Integer idEvento){
         return eventoRepository.findById(idEvento)
