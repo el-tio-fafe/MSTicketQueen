@@ -16,5 +16,6 @@ public class EventoDTO {
 
     private String nombreEvento;
 
+    private String estadoEvento;
 
 }

@@ -13,7 +13,7 @@ public interface UbicacionClient {
     @GetMapping("/api/v1/ubicaciones/dto/{idUbi}")
     UbicacionDTO buscarUbicacionDTO(@PathVariable Integer idUbi);
 
-    @GetMapping("/api/v1/ubicaciones/dto/buscar-por-nombre/{nombreUbi}")
+    @GetMapping("/api/v1/ubicaciones/nombre/{nombreUbi}")
     UbicacionDTO buscarUbicacionDTOPorNombre(@PathVariable String nombreUbi);
 
     @PatchMapping("/api/v1/ubicaciones/reducir-stock/{idUbi}")

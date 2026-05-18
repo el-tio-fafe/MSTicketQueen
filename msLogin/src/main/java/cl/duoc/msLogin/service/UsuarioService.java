@@ -71,17 +71,19 @@ public class UsuarioService {
     public boolean verificarCredenciales(String correo, String password) {
         Usuario usuario = usuarioRepository.findByCorreo(correo).orElse(null);
         
-        if (usuario != null && usuario.getPassword().equals(password)) {
+        if (usuario == null || !usuario.getPassword().equals(password)) {
+            return false;
+        }
 
-            String tipoUsuario = usuario.getTipoUsuario().getNombreTipoUsuario();
+        String tipoUsuario = usuario.getTipoUsuario().getNombreTipoUsuario();
 
-            if(tipoUsuario.equals("Admin")){
-                try {
-                    administradorClient.buscarAdministradorDTOPorCorreo(correo);
-                } catch (Exception e) {
-                    throw new RuntimeException("El administrador con correo: " + correo + " no existe en el sistema");
-                }
+        if(tipoUsuario.equals("Administrador")){
+            try {
+                administradorClient.buscarAdministradorDTOPorCorreo(correo);
+            } catch (Exception e) {
+                throw new RuntimeException("El administrador con correo: " + correo + " no existe en el sistema");
             }
+        } else if(tipoUsuario.equals("Cliente")){
 
             //VERIFICAMOA QUE EL COMPRADOR EXISTE EN EL msComprador
             try {
@@ -89,9 +91,8 @@ public class UsuarioService {
             } catch (Exception e) {
                 throw new RuntimeException("El comprador con correo: " + correo + " no existe en el sistema");
             }
-            return true;
         }
-        return false;
+        return true;
     }
 
     

@@ -115,9 +115,18 @@ public class BoletaService {
 
             // 1. VALIDAR EL EVENTO PRIMERO
             try {
-                eventoClient.buscarEventoPorId(d.getTicket().getIdEvento());
+                EventoDTO evento = eventoClient.buscarEventoPorId(d.getTicket().getIdEvento());
+
+                if (!evento.getEstadoEvento().equals("APROBADO")) {
+                    throw new RuntimeException("No se pueden vender tickets para el evento id: "
+                        + d.getTicket().getIdEvento() + " porque no está APROBADO.");
+                }
+
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
-                throw new RuntimeException("No se puede crear la boleta porque el evento con id: " + d.getTicket().getIdEvento() + " no existe");
+                throw new RuntimeException("No se puede crear la boleta porque el evento con id: "
+                    + d.getTicket().getIdEvento() + " no existe");
             }
 
             // 2. SI TIENE ASIENTO NUMERADO, VALIDAR Y RESERVAR

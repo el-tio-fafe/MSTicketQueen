@@ -73,10 +73,6 @@ public class Dataloader {
             comp3.setBanco(banco1);
             comprobanteRepo.save(comp3);
             
-            comprobanteRepo.save(comp1);
-            comprobanteRepo.save(comp2);
-            comprobanteRepo.save(comp3);
-
 
             System.out.println("Datos cargados con exito a la base de datos");
          }
