@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cl.duoc.MSFacturacion.dto.ComprobanteDTO;
 import cl.duoc.MSFacturacion.model.Banco;
 import cl.duoc.MSFacturacion.model.Comprobante;
-import cl.duoc.MSFacturacion.model.Formapago;
+import cl.duoc.MSFacturacion.model.FormaPago;
 import cl.duoc.MSFacturacion.service.BancoService;
 
 @RestController
@@ -175,7 +175,7 @@ public class BancoController {
     @GetMapping("/formas-pago")
     public ResponseEntity<?> listarTodasFormasDePago() {
         try {
-            List<Formapago> lista = bancoService.listarTodasFormasPago();
+            List<FormaPago> lista = bancoService.listarTodasFormasPago();
             if (lista.isEmpty()) {
                 return ResponseEntity.badRequest().body("No hay formas de pago registradas");
             }
@@ -188,7 +188,7 @@ public class BancoController {
     @GetMapping("/formas-pago/banco/id/{idBanco}")
     public ResponseEntity<?> listarFormasDePagoPorIdBanco(@PathVariable Integer idBanco) {
         try {
-            List<Formapago> lista = bancoService.listarFormasDePagoPorIdBanco(idBanco);
+            List<FormaPago> lista = bancoService.listarFormasDePagoPorIdBanco(idBanco);
             if (lista.isEmpty()){
                 return ResponseEntity.badRequest().body("No hay formas de pago para el banco id: " + idBanco);
             }
@@ -201,7 +201,7 @@ public class BancoController {
     @GetMapping("/formas-pago/banco/nombre/{nombreBanco}")
     public ResponseEntity<?> listarFormasDePagoPorNombreBanco(@PathVariable String nombreBanco) {
         try {
-            List<Formapago> lista = bancoService.listarFormasDePagoPorNombreBanco(nombreBanco);
+            List<FormaPago> lista = bancoService.listarFormasDePagoPorNombreBanco(nombreBanco);
             if (lista.isEmpty()){
                 return ResponseEntity.badRequest().body("No hay formas de pago para el banco: " + nombreBanco);
             }
@@ -232,7 +232,7 @@ public class BancoController {
     }
 
     @PostMapping("/formas-pago/guardar")
-    public ResponseEntity<?> guardarFormaPago(@RequestBody Formapago formaPago) {
+    public ResponseEntity<?> guardarFormaPago(@RequestBody FormaPago formaPago) {
         try {
             return ResponseEntity.ok(bancoService.guardarFormaPago(formaPago));
         } catch (Exception e) {
@@ -241,7 +241,7 @@ public class BancoController {
     }
 
     @PatchMapping("/formas-pago/actualizar/id/{idFormaPago}")
-    public ResponseEntity<?> actualizarFormaPago(@PathVariable Integer idFormaPago, @RequestBody Formapago formaPago) {
+    public ResponseEntity<?> actualizarFormaPago(@PathVariable Integer idFormaPago, @RequestBody FormaPago formaPago) {
         try {
             return ResponseEntity.ok(bancoService.actualizarFormaPago(idFormaPago, formaPago));
         } catch (Exception e) {

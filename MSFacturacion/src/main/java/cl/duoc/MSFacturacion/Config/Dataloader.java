@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import cl.duoc.MSFacturacion.model.Comprobante;
 import cl.duoc.MSFacturacion.model.Banco;
-import cl.duoc.MSFacturacion.model.Formapago;
+import cl.duoc.MSFacturacion.model.FormaPago;
 import cl.duoc.MSFacturacion.repository.ComprobanteRepository;
 import cl.duoc.MSFacturacion.repository.FormaPagoRepository;
 import cl.duoc.MSFacturacion.repository.BancoRepository;
@@ -33,9 +33,9 @@ public class Dataloader {
             bancoRepo.save(banco3);
 
             
-            Formapago forma1 = new Formapago(null, "Efectivo", null);
-            Formapago forma2 = new Formapago(null, "Tarjeta de credito", null);
-            Formapago forma3 = new Formapago(null, "Tarjeta Debito", null);
+            FormaPago forma1 = new FormaPago(null, "Efectivo", null);
+            FormaPago forma2 = new FormaPago(null, "Tarjeta de credito", null);
+            FormaPago forma3 = new FormaPago(null, "Tarjeta Debito", null);
             
             formaDePagoRepo.save(forma1);
             formaDePagoRepo.save(forma2);

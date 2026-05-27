@@ -12,7 +12,7 @@ import cl.duoc.MSFacturacion.repository.BancoRepository;
 import cl.duoc.MSFacturacion.repository.ComprobanteRepository;
 import cl.duoc.MSFacturacion.repository.FormaPagoRepository;
 import cl.duoc.MSFacturacion.model.Comprobante;
-import cl.duoc.MSFacturacion.model.Formapago;
+import cl.duoc.MSFacturacion.model.FormaPago;
 
 @Service
 public class BancoService {
@@ -114,11 +114,11 @@ public class BancoService {
 
 //FORMA DE PAGO
 
-    public List<Formapago> listarTodasFormasPago(){
+    public List<FormaPago> listarTodasFormasPago(){
         return formaPagoRepository.findAll();
     }
 
-    public List<Formapago> listarFormasDePagoPorIdBanco(Integer idBanco) {
+    public List<FormaPago> listarFormasDePagoPorIdBanco(Integer idBanco) {
         Banco banco = buscarBancoPorId(idBanco);
         List<Comprobante> comprobantes = comprobanteRepository.findByBanco(banco);
         return comprobantes.stream()
@@ -128,7 +128,7 @@ public class BancoService {
     }
 
 
-    public List<Formapago> listarFormasDePagoPorNombreBanco(String nombreBanco) {
+    public List<FormaPago> listarFormasDePagoPorNombreBanco(String nombreBanco) {
         Banco banco = buscarBancoPorNombre(nombreBanco);
         List<Comprobante> comprobantes = comprobanteRepository.findByBanco(banco);
         return comprobantes.stream()
@@ -139,27 +139,27 @@ public class BancoService {
 
 
 
-    public Formapago buscarFormaPagoPorSuId(Integer idFormaPago){
+    public FormaPago buscarFormaPagoPorSuId(Integer idFormaPago){
         return formaPagoRepository.findById(idFormaPago)
             .orElseThrow(() -> new RuntimeException("Forma de pago con id: " + idFormaPago + " no encontrada"));
     }
 
-    public Formapago buscarFormaPagoPorMedio(String medioDePago) {
+    public FormaPago buscarFormaPagoPorMedio(String medioDePago) {
         return formaPagoRepository.findByMedioDePago(medioDePago)
             .orElseThrow(() -> new RuntimeException("Forma de pago: " + medioDePago + " no encontrada."));
     }
 
 
 
-    public Formapago guardarFormaPago(Formapago formaPago) {
+    public FormaPago guardarFormaPago(FormaPago formaPago) {
         if (formaPagoRepository.findByMedioDePago(formaPago.getMedioDePago()).isPresent()) {
             throw new RuntimeException("Ya existe la forma de pago: " + formaPago.getMedioDePago());
         }
         return formaPagoRepository.save(formaPago);
     }
 
-    public Formapago actualizarFormaPago(Integer idFormaPago, Formapago formaPagoActualizado) {
-        Formapago formaPago = buscarFormaPagoPorSuId(idFormaPago);
+    public FormaPago actualizarFormaPago(Integer idFormaPago, FormaPago formaPagoActualizado) {
+        FormaPago formaPago = buscarFormaPagoPorSuId(idFormaPago);
         formaPago.setMedioDePago(formaPagoActualizado.getMedioDePago());
         return formaPagoRepository.save(formaPago);
     }

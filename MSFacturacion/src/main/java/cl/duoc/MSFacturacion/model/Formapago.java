@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "forma_pago")
 
-public class Formapago {
+public class FormaPago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
