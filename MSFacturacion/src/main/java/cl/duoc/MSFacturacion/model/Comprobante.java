@@ -37,7 +37,7 @@ public class Comprobante {
 
     @ManyToOne
     @JoinColumn(name = "id_forma_pago", nullable = false)
-    private FormaPago formaPago;
+    private Formapago formaPago;
 
     @ManyToOne
     @JoinColumn(name = "id_banco", nullable = false)

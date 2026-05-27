@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import cl.duoc.MSFacturacion.model.FormaPago;
+import cl.duoc.MSFacturacion.model.Formapago;
 
 @Repository
-public interface FormaPagoRepository extends JpaRepository<FormaPago, Integer> {
+public interface FormaPagoRepository extends JpaRepository<Formapago, Integer> {
 
-    Optional<FormaPago> findByMedioDePago(String medioDePago);    
+    Optional<Formapago> findByMedioDePago(String medioDePago);    
 
 }
