@@ -16,15 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msGestionArtistica.model.Artista;
 import cl.duoc.msGestionArtistica.service.ArtistaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/artistas")
+@Tag(name = "Artistas", description = "Endpoints relacionados con los artistas, que permiten realizar operaciones CRUD sobre los artistas y asignar managers a los artistas.")
 public class ArtistaController {
 
     @Autowired
     private ArtistaService artistaService;
 
     @GetMapping("/ver_artistas")
+    @Operation(
+        summary = "Obtener todos los artistas", 
+        description = "Endpoint para obtener una lista de todos los artistas registrados en el sistema de gestión artística.")
     public ResponseEntity<?> getArtistas() {// Endpoint para mostrar a todos los artistas
 
         List<Artista> artistas = artistaService.getAllArtistas();
@@ -36,6 +42,9 @@ public class ArtistaController {
     }
 
     @GetMapping("/ver_artistas/find_id/{id}")
+    @Operation(
+        summary = "Obtener un artista por ID", 
+        description = "Endpoint para obtener un artista específico por su ID.")
     public ResponseEntity<?> getArtistaById(@PathVariable Integer id) {// Endpoint para buscar un artista por ID
 
         try {
@@ -47,8 +56,10 @@ public class ArtistaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
     @GetMapping("/ver_artistas/find_rut/{rut}")
+    @Operation(
+        summary = "Obtener un artista por RUT", 
+        description = "Endpoint para obtener un artista específico por su RUT.")
     public ResponseEntity<?> getArtistaByRut(@PathVariable String rut) {// endpoint para buscar un artista por RUT
 
         try {
@@ -62,6 +73,9 @@ public class ArtistaController {
     }    
 
     @GetMapping("/ver_artistas/find_correo/{correo}")
+    @Operation(
+        summary = "Obtener un artista por correo", 
+        description = "Endpoint para obtener un artista específico por su correo.")
     public ResponseEntity<?> getArtistaByCorreo(@PathVariable String correo) {// endpoint para buscar un artista por correo
 
         try {
@@ -75,6 +89,9 @@ public class ArtistaController {
     }
 
     @PostMapping("/crear_artista")
+    @Operation(
+        summary = "Crear un nuevo artista", 
+        description = "Endpoint para crear un nuevo artista en el sistema de gestión artística.")
     public ResponseEntity<?> saveArtista(@RequestBody Artista artista) {// Endpoint para crear un nuevo artista
 
         try {
@@ -88,6 +105,9 @@ public class ArtistaController {
     }
 
     @PutMapping("/actualizar_artista/id/{id}")
+    @Operation(
+        summary = "Actualizar un artista existente", 
+        description = "Endpoint para actualizar la información de un artista existente por su ID.")
     public ResponseEntity<?> updateArtista(@PathVariable Integer id, @RequestBody Artista artista) {// Endpoint para actualizar un artista existente por ID
 
         try {
@@ -101,6 +121,9 @@ public class ArtistaController {
     }   
 
     @DeleteMapping("/eliminar_artista/id/{id}")
+    @Operation(
+        summary = "Eliminar un artista", 
+        description = "Endpoint para eliminar un artista específico por su ID.")
     public ResponseEntity<?> deleteArtista(@PathVariable Integer id) {// Endpoint para eliminar un artista por ID
         try {
             artistaService.deleteArtista(id);// intenta eliminar el artista por ID,

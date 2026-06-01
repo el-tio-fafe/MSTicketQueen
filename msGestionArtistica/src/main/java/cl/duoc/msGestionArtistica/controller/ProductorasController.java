@@ -17,15 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msGestionArtistica.model.Productoras;
 import cl.duoc.msGestionArtistica.service.ProductorasService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/productoras")
+@Tag(name = "Productoras", description = "Endpoints relacionados con las productoras, que permiten realizar operaciones CRUD y asignar managers a las productoras.")
 public class ProductorasController {
 
     @Autowired
     private ProductorasService productorasService;
 
     @GetMapping("/ver_productoras")
+    @Operation(
+        summary = "Obtener todas las productoras", 
+        description = "Endpoint para obtener una lista de todas las productoras registradas en el sistema de gestión artística.")
     public ResponseEntity<?> getProductoras() {// Endpoint para mostrar a todas las productoras
 
         List<Productoras> productoras = productorasService.getAllProductoras();
@@ -37,6 +43,9 @@ public class ProductorasController {
     }
 
     @GetMapping("/ver_productoras/find_id/{id}")
+    @Operation(
+        summary = "Obtener una productora por ID", 
+        description = "Endpoint para obtener una productora específica por su ID.")
     public ResponseEntity<?> getProductoraById(@PathVariable Integer id) {// Endpoint para buscar una productora por ID
         
         try {
@@ -49,6 +58,9 @@ public class ProductorasController {
     }
 
     @GetMapping("/ver_productoras/find_nombre/{nombre}")
+    @Operation(
+        summary = "Obtener una productora por nombre", 
+        description = "Endpoint para obtener una productora específica por su nombre.")
     public ResponseEntity<?> getProductoraByNombre(@PathVariable String nombre) {// Endpoint para buscar una productora por nombre
         
         try {
@@ -62,6 +74,9 @@ public class ProductorasController {
 
 
     @GetMapping("/ver_productoras/find_rut/{rut}")
+    @Operation(
+        summary = "Obtener una productora por RUT", 
+        description = "Endpoint para obtener una productora específica por su RUT.")
     public ResponseEntity<?> getProductoraByRut(@PathVariable String rut) {// Endpoint para buscar una productora por RUT
         
         try {
@@ -74,6 +89,9 @@ public class ProductorasController {
     }
 
     @PostMapping("/crear_productora")
+    @Operation(
+        summary = "Crear una nueva productora", 
+        description = "Endpoint para crear una nueva productora en el sistema de gestión artística.")
     public ResponseEntity<?> saveProductora(@RequestBody Productoras productora) {// Endpoint para crear una nueva productora
 
         try {
@@ -86,6 +104,9 @@ public class ProductorasController {
     }
 
     @PutMapping("/actualizar_productora/{id}")
+    @Operation(
+        summary = "Actualizar una productora existente", 
+        description = "Endpoint para actualizar la información de una productora existente por su ID.")
     public ResponseEntity<?> updateProductora(@PathVariable Integer id, @RequestBody Productoras productora) {// Endpoint para actualizar una productora existente por ID
 
         try {
@@ -98,6 +119,9 @@ public class ProductorasController {
     }
 
     @DeleteMapping("/eliminar_productora/{id}")
+    @Operation(
+        summary = "Eliminar una productora", 
+        description = "Endpoint para eliminar una productora específica por su ID.")
     public ResponseEntity<?> deleteProductora(@PathVariable Integer id) {// Endpoint para eliminar una productora por ID
 
         try {
@@ -110,6 +134,9 @@ public class ProductorasController {
     }
 
     @PatchMapping("/asignar_manager/{idProductora}/{idManager}")
+    @Operation(
+        summary = "Asignar un manager a una productora", 
+        description = "Endpoint para asignar un manager específico a una productora existente por sus IDs.")
     public ResponseEntity<?> asignarManager(@PathVariable Integer idProductora, @PathVariable Integer idManager) {// Endpoint para asignar un manager a una productora
 
         try {

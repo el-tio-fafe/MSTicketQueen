@@ -17,15 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msGestionArtistica.model.Manager;
 import cl.duoc.msGestionArtistica.service.ManagerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/managers")
+@Tag(name = "Managers", description = "Endpoints relacionados con los managers, que permiten realizar operaciones CRUD y asignar artistas a los managers.")
 public class ManagerController {
 
     @Autowired
     private ManagerService managerService;
 
     @GetMapping("/ver_managers")
+    @Operation(
+        summary = "Obtener todos los managers", 
+        description = "Endpoint para obtener una lista de todos los managers registrados en el sistema de gestión artística.")
     public ResponseEntity<?> getManagers() {// Endpoint para mostrar a todos los managers
 
         List<Manager> managers = managerService.getAllManagers();
@@ -37,6 +43,9 @@ public class ManagerController {
     }
 
     @GetMapping("/ver_managers/find_id/{id}")
+    @Operation(
+        summary = "Obtener un manager por ID", 
+        description = "Endpoint para obtener un manager específico por su ID.")
     public ResponseEntity<?> getManagerById(@PathVariable Integer id) {// Endpoint para buscar un manager por ID
 
         try {
@@ -49,6 +58,9 @@ public class ManagerController {
     }
     
     @GetMapping("/ver_managers/find_rut/{rut}")
+    @Operation(
+        summary = "Obtener un manager por RUT", 
+        description = "Endpoint para obtener un manager específico por su RUT.")
     public ResponseEntity<?> getManagerByRut(@PathVariable String rut) {// Endpoint para buscar un manager por RUT
 
         try {
@@ -61,6 +73,9 @@ public class ManagerController {
     }
     
     @GetMapping("/ver_managers/find_correo/{correo}")
+    @Operation(
+        summary = "Obtener un manager por correo", 
+        description = "Endpoint para obtener un manager específico por su correo.")
     public ResponseEntity<?> getManagerByCorreo(@PathVariable String correo) {// Endpoint para buscar un manager por correo
 
         try {
@@ -73,6 +88,9 @@ public class ManagerController {
     }
 
     @PostMapping("/crear_manager")
+    @Operation(
+        summary = "Crear un nuevo manager", 
+        description = "Endpoint para crear un nuevo manager en el sistema de gestión artística.")
     public ResponseEntity<?> saveManager(@RequestBody Manager manager) {// Endpoint para crear un nuevo manager
 
         try {
@@ -85,6 +103,9 @@ public class ManagerController {
     }
 
     @PutMapping("/actualizar_manager/id/{id}")
+    @Operation(
+        summary = "Actualizar un manager existente", 
+        description = "Endpoint para actualizar la información de un manager existente por su ID.")
     public ResponseEntity<?> updateManager(@PathVariable Integer id, @RequestBody Manager manager) {// Endpoint para actualizar un manager existente por ID
 
         try {
@@ -97,6 +118,9 @@ public class ManagerController {
     }
 
     @DeleteMapping("/eliminar_manager/id/{id}")
+    @Operation(
+        summary = "Eliminar un manager", 
+        description = "Endpoint para eliminar un manager específico por su ID.")
     public ResponseEntity<?> deleteManager(@PathVariable Integer id) {// Endpoint para eliminar un manager por ID
 
         try {
@@ -109,6 +133,9 @@ public class ManagerController {
     }
 
     @PatchMapping("/asignar_artista/{idManager}/{idArtista}")
+    @Operation(
+        summary = "Asignar un artista a un manager", 
+        description = "Endpoint para asignar un artista específico a un manager existente por sus IDs.")
     public ResponseEntity<?> asignarArtista(@PathVariable Integer idManager, @PathVariable Integer idArtista) {// Endpoint para asignar un artista a un manager existente por ID
 
         try {
