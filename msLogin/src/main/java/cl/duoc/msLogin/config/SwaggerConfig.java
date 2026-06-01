@@ -13,7 +13,7 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("MicroServicio Gestion De Login")
                 .version("1.2")
-                .description("Documentacion De APi que permite la gestion de la direciones en el sistema")
+                .description("Documentacion De API que permite la gestion de Login de usuarios en el sistema")
             );
 
             }
