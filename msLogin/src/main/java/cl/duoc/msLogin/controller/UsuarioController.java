@@ -42,7 +42,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar paciente por ID", description = "Retorna Un Paciente Segun El ID Proporcionado ")
+    @Operation(summary = "Buscar Usuario por ID", description = "Retorna Un Paciente Segun El ID Proporcionado ")
     public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(id));
@@ -52,7 +52,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/correo/{correo}")
-    @Operation(summary = "Buscar paciente por Correo", description = "Retorna Un Paciente Segun El Correo Proporcionado ")
+    @Operation(summary = "Buscar Usuario por Correo", description = "Retorna Un Paciente Segun El Correo Proporcionado ")
     public ResponseEntity<?> obtenerUsuarioPorCorreo(@PathVariable String correo) {
         try {
             return ResponseEntity.ok(usuarioService.buscarUsuarioPorCorreo(correo));
