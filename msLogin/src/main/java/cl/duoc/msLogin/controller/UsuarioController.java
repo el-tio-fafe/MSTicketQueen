@@ -16,16 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msLogin.model.Usuario;
 import cl.duoc.msLogin.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/usuarios")
-
+@Tag(name = "usuario",description = "Operaciones Sobre Usuario")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
      @GetMapping
+     @Operation(summary = "Lista Los Usuarios", description = "Muestra Los Usuarios")
     public ResponseEntity<?> listarUsuarios() {
         try {
             List<Usuario> lista = usuarioService.listarUsuarios();
@@ -39,6 +42,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar paciente por ID", description = "Retorna Un Paciente Segun El ID Proporcionado ")
     public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(usuarioService.buscarUsuarioPorId(id));
@@ -48,6 +52,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/correo/{correo}")
+    @Operation(summary = "Buscar paciente por Correo", description = "Retorna Un Paciente Segun El Correo Proporcionado ")
     public ResponseEntity<?> obtenerUsuarioPorCorreo(@PathVariable String correo) {
         try {
             return ResponseEntity.ok(usuarioService.buscarUsuarioPorCorreo(correo));
@@ -57,6 +62,7 @@ public class UsuarioController {
     }
 
     @PostMapping
+    @Operation(summary = "Crear Usuario ", description = "Crea un Usuario Nuevo ")
     public ResponseEntity<?> crearUsuario(@RequestBody Usuario nuevoUsuario) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crearUsuario(nuevoUsuario));
@@ -66,6 +72,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualiza Un Usuario", description = "Edita un Usuario ya creado ")
     public ResponseEntity<?> actualizarUsuario(@PathVariable Integer id, @RequestBody Usuario usuarioActualizado) {
         try {
             return ResponseEntity.ok(usuarioService.actualizarUsuario(id, usuarioActualizado));
@@ -75,6 +82,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "elimina un usuario Un Usuario", description = "elimina un Usuario ya creado ")
     public ResponseEntity<?> eliminarUsuario(@PathVariable Integer id) {
         try {
             usuarioService.eliminarUsuario(id);
@@ -85,6 +93,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "ingresar al usuario", description = "verifica que el usuario y la contraseña que ingresa es correcto")
     public ResponseEntity<?> login(@RequestBody Usuario credenciales) {
         try {
             boolean valido = usuarioService.verificarCredenciales(credenciales.getCorreo(), credenciales.getPassword());
