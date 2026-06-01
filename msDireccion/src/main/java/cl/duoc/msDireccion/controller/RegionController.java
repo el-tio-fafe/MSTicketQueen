@@ -26,9 +26,13 @@ import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
 import cl.duoc.msDireccion.model.Region;
 import cl.duoc.msDireccion.service.RegionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/direccion")
+@Tag(name = "Direcciones", description = "Operaciones sobre direcciones")
+
 public class RegionController {
 
     @Autowired
@@ -54,6 +58,10 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/region-completa/id/{idRegion}")
+    @Operation(
+                summary = "Buscar dirección por ID", 
+                description = "Retorna una Dirección según el ID proporcionado")
+    
     public ResponseEntity<?> buscarRegionPorIdCompleto(@PathVariable Integer idRegion){
         try {
             return ResponseEntity.ok(regionService.buscarRegionCompletaPorId(idRegion));
