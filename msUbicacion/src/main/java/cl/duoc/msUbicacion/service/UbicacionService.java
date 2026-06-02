@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.msUbicacion.dto.UbicacionDTO;
 import cl.duoc.msUbicacion.model.Ubicacion;
 import cl.duoc.msUbicacion.repository.UbicacionRepository;
 
@@ -62,4 +63,44 @@ public class UbicacionService {
         }
         ubicacionRepository.deleteById(id);// si la ubicación existe, la elimina de la base de datos
     }
+
+    //COMUNICACION CON OTRO MS
+    public UbicacionDTO getUbicacionDTOById(Integer id) {
+        Ubicacion ubicacion = getUbicacionById(id);
+
+        UbicacionDTO dto = new UbicacionDTO();
+        dto.setIdUbi(ubicacion.getIdUbi());
+        dto.setNombreUbi(ubicacion.getNombreUbi());
+        dto.setPrecioUbi(ubicacion.getPrecioUbi());
+        dto.setStockDisponibleUbi(ubicacion.getStockDisponibleUbi());
+        dto.setTieneAsiento(ubicacion.getTieneAsiento());
+
+        return dto;
+    }
+
+
+    public UbicacionDTO getUbicacionDTOPorNombre(String nombreUbi) {
+        Ubicacion ubicacion = ubicacionRepository.findByNombreUbi(nombreUbi)
+        .orElseThrow(() -> new RuntimeException("Ubicacion con nombre: " + nombreUbi + " no encontrada"));
+
+        UbicacionDTO dto = new UbicacionDTO();
+        dto.setIdUbi(ubicacion.getIdUbi());
+        dto.setNombreUbi(ubicacion.getNombreUbi());
+        dto.setPrecioUbi(ubicacion.getPrecioUbi());
+        dto.setStockDisponibleUbi(ubicacion.getStockDisponibleUbi());
+        dto.setTieneAsiento(ubicacion.getTieneAsiento());
+
+        return dto;
+    }
+
+    // REDUCE EL STOCK CUANDO SE COMPRA UN TICKET DE ZONA GENERAL
+    public Ubicacion reducirStock(Integer idUbi) {
+        Ubicacion ubicacion = getUbicacionById(idUbi);
+        if (ubicacion.getStockDisponibleUbi() <= 0) {
+            throw new RuntimeException("No hay stock disponible para la ubicación: " + ubicacion.getNombreUbi());
+        }
+        ubicacion.setStockDisponibleUbi(ubicacion.getStockDisponibleUbi() - 1);
+        return ubicacionRepository.save(ubicacion);
+    }
+
 }
