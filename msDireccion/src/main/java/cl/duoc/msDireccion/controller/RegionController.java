@@ -42,6 +42,9 @@ public class RegionController {
 //REGIONES
 
     @GetMapping("/regiones")
+    @Operation(
+                summary = "Lista de regiones", 
+                description = "Retorna la lista de todas las Regiones")
     public ResponseEntity <?> listarRegiones(){
         List<Region> listarRegiones = regionService.listarRegiones();
         if(listarRegiones.isEmpty()){
@@ -59,8 +62,8 @@ public class RegionController {
 
     @GetMapping("/buscar/region-completa/id/{idRegion}")
     @Operation(
-                summary = "Buscar dirección por ID", 
-                description = "Retorna una Dirección según el ID proporcionado")
+                summary = "Buscar región por ID", 
+                description = "Retorna una Región según el ID proporcionado incluyendo una lista que muestra todas las ciudades o provincias y otra lista que muestra todas las comunas que pertenecen a esa región")
     
     public ResponseEntity<?> buscarRegionPorIdCompleto(@PathVariable Integer idRegion){
         try {
@@ -71,6 +74,9 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/region-resumida/id/{idRegion}")
+    @Operation(
+                summary = "Buscar región por ID", 
+                description = "Retorna una Región según el ID proporcionado")
     public ResponseEntity<?> buscarRegionPorId(@PathVariable Integer idRegion){
         try {
             return ResponseEntity.ok(regionService.buscarRegionPorId(idRegion));
