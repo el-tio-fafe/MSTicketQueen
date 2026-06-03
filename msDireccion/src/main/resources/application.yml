@@ -1,0 +1,24 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: msDireccion
+  datasource:
+    url: jdbc:mysql://localhost:3306/direcciones_bd
+    username: root
+    password: ""
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+springdoc:
+  api-docs:
+    enabled: true
+    version: openapi_3_0
+  swagger-ui:
+    enabled: true
+
+
+
