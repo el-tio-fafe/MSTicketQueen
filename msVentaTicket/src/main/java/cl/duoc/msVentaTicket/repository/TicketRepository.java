@@ -1,5 +1,23 @@
 package cl.duoc.msVentaTicket.repository;
 
-public interface TicketRepository {
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import cl.duoc.msVentaTicket.model.Ticket;
+
+@Repository
+public interface TicketRepository extends JpaRepository<Ticket, Integer>{
+
+    Optional<Ticket> findByCodigoQR(String codigoQR);
+
+    Optional<Ticket> findByNumeroAsiento(String numeroAsiento);
+
+    List<Ticket> findByIdEvento(Integer idEvento);
+
+    List<Ticket> findByNombreUbicacion(String nombreUbicacion);
 
 }
+
