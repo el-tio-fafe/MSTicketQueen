@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import jakarta.persistence.*;
 
@@ -14,10 +15,12 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "calle")
+@Schema(description = "Representa una Calle en el sistema")
 public class Calle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID único de la calle que es Autoincrementable")
     private Integer idCalle;
 
     @Column(nullable = false)

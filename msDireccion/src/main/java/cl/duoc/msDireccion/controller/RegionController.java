@@ -86,6 +86,9 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/region/nombre/{nombreRegion}")
+    @Operation(
+                summary = "Buscar región por Nombre de la Región", 
+                description = "Retorna una Región según el nombre proporcionado")
     public ResponseEntity<?> buscarRegionResumidaPorNombre(@PathVariable String nombreRegion){
         try {
             return ResponseEntity.ok(regionService.buscarRegionPorNombre(nombreRegion));
@@ -105,6 +108,9 @@ public class RegionController {
     // }
 
     @PostMapping("/guardar/region")
+    @Operation(
+                summary = "Guardar región", 
+                description = "Guarda una nueva Región")
     public ResponseEntity<?> guardarRegion(@RequestBody Region region){
         try {
             return ResponseEntity.ok(regionService.guardarRegion(region));
@@ -114,6 +120,9 @@ public class RegionController {
     }
     
     @PutMapping("/actualizar/region/id/{idRegion}")   //con el @PutMapping se actualizan todos los atributos
+    @Operation(
+                summary = "Actualizar región por ID", 
+                description = "Actualiza una Región según el ID proporcionado")
     public ResponseEntity<?> actualizarRegionPorId(@PathVariable Integer idRegion, @RequestBody Region region){
         try {
             return ResponseEntity.ok(regionService.actualizarRegionPorId(idRegion, region));
@@ -140,6 +149,9 @@ public class RegionController {
     
     
     @GetMapping("/ciudad-provincia/listar")
+    @Operation(
+                summary = "Lista todas las Ciudades o Provincias", 
+                description = "Retorna una lista de Ciudades o Provincias registradas en el sistema")
     public ResponseEntity <?> listarTodasCiudadesProvincias(){
         List<CiudadProvincia> listarCiudadesProvincias = regionService.listarCiudadesOProvincias();
         if(listarCiudadesProvincias.isEmpty()){
@@ -156,6 +168,9 @@ public class RegionController {
     }
 
     @GetMapping("/ciudad-provincia/listar/id/{idRegion}")
+    @Operation(
+                summary = "Listar Ciudades o Provincias por el ID de la Región", 
+                description = "Retorna una Lista de Ciudades o Provincias según el ID de la Región proporcionada")
     public ResponseEntity<?> listarCiudadesProvinciasPorIdRegion(@PathVariable Integer idRegion){
         try {
             List<CiudadProvincia> lista = regionService.listarCiudadesProvinciasPorIdRegion(idRegion);
@@ -175,6 +190,9 @@ public class RegionController {
     }
 
     @GetMapping("/ciudad-provincia/listar/nombre/{nombreRegion}")
+    @Operation(
+                summary = "Listar Ciudades o Provincias por nombre de Región", 
+                description = "Retorna una Lista de Ciudades o Provincias según el nombre de la Región proporcionada")
     public ResponseEntity<?> listarCiudadesProvinciasPorNombreRegion(@PathVariable String nombreRegion){
         try {
             List<CiudadProvincia> lista = regionService.listarCiudadesProvinciasPorNombreRegion(nombreRegion);
@@ -194,6 +212,9 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/ciudad-provincia/id/{idCiudadProvincia}")
+    @Operation(
+                summary = "Buscar Ciudades o Provincias por ID de la Ciudad o Provincia", 
+                description = "Retorna la Ciudad o Provincia según el ID proporcionado")    
     public ResponseEntity<?> buscarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia){
         try {
             return ResponseEntity.ok(regionService.buscarCiudadProvinciaPorId(idCiudadProvincia));
@@ -203,6 +224,9 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/ciudad-provincia/nombre/{nombreCiudadProvincia}")
+    @Operation(
+                summary = "Buscar Ciudades o Provincias por nombre", 
+                description = "Retorna la Ciudad o Provincia según el nombre proporcionado")
     public ResponseEntity<?> buscarCiudadProvinciaPorNombre(@PathVariable String nombreCiudadProvincia){
         try {
             return ResponseEntity.ok(regionService.buscarCiudadProvinciaPorNombre(nombreCiudadProvincia));
@@ -212,6 +236,9 @@ public class RegionController {
     }
 
     @PostMapping("/guardar/ciudad-provincia")
+    @Operation(
+                summary = "Guardar Ciudad o Provincia", 
+                description = "Guarda la nueva Ciudad o Provincia") 
     public ResponseEntity<?> guardarCiudadProvincia(@RequestBody CiudadProvincia ciudadProvincia){
         try {
             return ResponseEntity.ok(regionService.guardarCiudadProvincia(ciudadProvincia));
@@ -221,6 +248,9 @@ public class RegionController {
     }
 
     @PatchMapping("/actualizar/ciudad-provincia/id/{idCiudadProvincia}")
+    @Operation(
+                summary = "Actualizar Ciudades o Provincias por ID de la Ciudad o Provincia", 
+                description = "Actualiza la Ciudad o Provincia según el ID proporcionado") 
     public ResponseEntity<?> actualizarCiudadProvinciaPorId(@PathVariable Integer idCiudadProvincia, @RequestBody CiudadProvinciaUpdateDTO ciudadProvinciaUpdate){
         try {
             return ResponseEntity.ok(regionService.actualizarCiudadProvinciaPorId(idCiudadProvincia, ciudadProvinciaUpdate));
@@ -246,6 +276,9 @@ public class RegionController {
 //COMUNAS
 
     @GetMapping("/comunas")
+    @Operation(
+                summary = "Listar Comunas registradas", 
+                description = "Retorna una lista de las Comunas registradas en el sistema") 
     public ResponseEntity<?> listarComunas(){
         List<Comuna> listarComunas = regionService.listarComunas();
         if(listarComunas.isEmpty()){
@@ -262,6 +295,9 @@ public class RegionController {
     }
 
     @GetMapping("/comuna/listar/id/{idCiudadProvincia}")
+    @Operation(
+                summary = "Listar Comunas por ID de la Ciudad o Provincia", 
+                description = "Retorna una lista de Comunas que pertenecen al ID de la Ciudad/Provincia proporcionado") 
     public ResponseEntity<?> listarComunasPorIdCiudadProvincia(@PathVariable Integer idCiudadProvincia){
         try {
             List<Comuna> lista = regionService.listarComunasPorIdCiudadProvin(idCiudadProvincia);
@@ -281,6 +317,9 @@ public class RegionController {
     }
 
     @GetMapping("/comuna/listar/nombre/{nombreCiudadProvincia}")
+    @Operation(
+                summary = "Listar Comunas por nombre de la Ciudad o Provincia", 
+                description = "Retorna una lista de Comunas que pertenecen al nombre de la Ciudad/Provincia proporcionado")
     public ResponseEntity<?> listarComunasPorNombreCiudadProvincia(@PathVariable String nombreCiudadProvincia){
         try {
             List<Comuna> lista = regionService.listarComunasPorNombreCiudadProvin(nombreCiudadProvincia);
@@ -301,6 +340,9 @@ public class RegionController {
 
 
     @GetMapping("/buscar/comuna/id/{idComuna}")
+    @Operation(
+                summary = "Buscar Comunas por su ID", 
+                description = "Busca la Comuna según el ID proporcionado")
     public ResponseEntity <?> buscarComunaPorId(@PathVariable Integer idComuna){
         try {
             return ResponseEntity.ok(regionService.buscarComunaPorId(idComuna));
@@ -310,6 +352,9 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/comuna/nombre/{nombreComuna}")
+    @Operation(
+                summary = "Buscar Comunas por su nombre", 
+                description = "Busca la Comuna según el nombre proporcionado")
     public ResponseEntity<?> buscarComunaPorNombre(@PathVariable String nombreComuna){
         try {
             return ResponseEntity.ok(regionService.buscarComunaPorNombre(nombreComuna));
@@ -319,6 +364,9 @@ public class RegionController {
     }
 
     @PostMapping("/guardar/comuna")
+    @Operation(
+                summary = "Guardar Comuna", 
+                description = "Guarda una nueva Comuna en el sistema")
     public ResponseEntity<?> guardarComuna(@RequestBody Comuna comuna){
         try {
             return ResponseEntity.ok(regionService.guardarComuna(comuna));
@@ -328,6 +376,9 @@ public class RegionController {
     }
 
     @PatchMapping("/actualizar/comuna/id/{idComuna}")
+    @Operation(
+                summary = "Actualizar Comunas por su ID", 
+                description = "Actualiza una Comuna según el ID proporcionado")
     public ResponseEntity<?> actualizarComunaPorId(@PathVariable Integer idComuna, @RequestBody ComunaUpdateDTO comunaUpdateDTO){
         try {
             return ResponseEntity.ok(regionService.actualizarComunaPorId(idComuna, comunaUpdateDTO));
@@ -352,6 +403,9 @@ public class RegionController {
 //CALLE
 
     @GetMapping("/calles")
+    @Operation(
+                summary = "Listar Calles", 
+                description = "Retorna una lista de Calles registradas en el sistema")
     public ResponseEntity<?> listarCalles() {
         List<Calle> lista = regionService.listarCalles();
         if (lista.isEmpty()) {
@@ -361,6 +415,9 @@ public class RegionController {
     }
 
     @GetMapping("/buscar/calle/id/{idCalle}")
+    @Operation(
+                summary = "Buscar Calle por su ID", 
+                description = "Busca una Calle según el ID proporcionado")
     public ResponseEntity<?> buscarCallePorId(@PathVariable Integer idCalle) {
         try {
             return ResponseEntity.ok(regionService.buscarCallePorId(idCalle));
@@ -370,6 +427,9 @@ public class RegionController {
     }
 
     @GetMapping("/calle/listar/comuna/{idComuna}")
+    @Operation(
+                summary = "Listar Calle por el ID de la Comuna", 
+                description = "Retorna una Lista de las Calles que pertenecen al ID de la Comuna proporcionado")
     public ResponseEntity<?> listarCallesPorComuna(@PathVariable Integer idComuna) {
         try {
             List<Calle> lista = regionService.listarCallesPorComuna(idComuna);
@@ -383,6 +443,9 @@ public class RegionController {
     }
 
     @PostMapping("/guardar/calle")
+    @Operation(
+                summary = "Guardar Calle", 
+                description = "Guarda una nueva Calle en el sistema")
     public ResponseEntity<?> guardarCalle(@RequestBody Calle calle) {
         try {
             return ResponseEntity.ok(regionService.guardarCalle(calle));
@@ -392,6 +455,9 @@ public class RegionController {
     }
 
     @PatchMapping("/actualizar/calle/id/{idCalle}")
+    @Operation(
+                summary = "Actualizar Calle por su ID", 
+                description = "Actualiza una Calle según el ID proporcionado")
     public ResponseEntity<?> actualizarNombreCalle(@PathVariable Integer idCalle, @RequestBody CalleUpdateDTO calleUpdateDTO) {
         try {
             return ResponseEntity.ok(regionService.actualizarNombreCalle(idCalle, calleUpdateDTO));
