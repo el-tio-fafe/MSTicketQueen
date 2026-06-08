@@ -7,7 +7,7 @@ server:
 
 eureka:
     client: 
-        registrar-with-eureka: false    #le dice que no s registre a si mismo
+        register-with-eureka: false    #le dice que no s registre a si mismo
         fetch-registry: false     #le dice al servidor eureka que no busque otras rutas de otros
                                   #servidores eureka porque es el unico que tenemos
 
