@@ -9,11 +9,12 @@ spring:
       locator:
         enabled: true
         lower-case-service-id: true
+    gateway: # Es buena practica agrupar explicitamente bajo gateway
       routes:
-        - id: direccion-ms  #SE CREA UN ID PARA IDENTIFICAR EL MS DE MANERA INTERNA
-          uri: lb://msDireccion  #LA RUTA DEL MICROSERVICIO, GRACIAS A EUREKA ES SOLO EL NOMBRE
+        - id: direccion-ms # SE CREA UN ID PARA IDENTIFICAR EL MS DE MANERA INTERNA
+          uri: lb://msDireccion # LA RUTA DEL MICROSERVICIO, GRACIAS A EUREKA ES SOLO EL NOMBRE
           predicates:
-          - Path=/api/v1/direccion/**  #LA RUTA PARA ACCEDER A LOS METODOS(CONTROLLER DEL MS)
+            - Path=/api/v1/direccion/** # LA RUTA PARA ACCEDER A LOS METODOS(CONTROLLER DEL MS)
 
         - id: administrador-ms
           uri: lb://msAdministrador
@@ -23,7 +24,7 @@ spring:
         - id: asiento-ms
           uri: lb://msAsiento
           predicates:
-              - Patch=/api/v1/asientos/**
+            - Patch=/api/v1/asientos/**
 
         - id: comprador-ms
           uri: lb://msComprador
@@ -60,20 +61,11 @@ spring:
           predicates:
             - Patch=/api/v1/**
 
-        
 
-        
 
-        
 
-        
-
-          
 
 eureka:
   client:
     service-url:
-      defaultZone:http://localhost:8761/eureka/
-
-
-
+      defaultZone: http://localhost:8761/eureka/
