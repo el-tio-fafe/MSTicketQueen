@@ -24,17 +24,21 @@ public class Calle {
     private Integer idCalle;
 
     @Column(nullable = false)
+    @Schema(description = "Nombre de la calle")
     private String nombreCalle;
 
     @Column(nullable = false)
+    @Schema(description = "Número de la calle")
     private String numeroCalle;
 
     @Column(nullable = true)
+    @Schema(description = "Número del departamento si corresponde")
     private String numeroDepto;
     
     @ManyToOne
     @JoinColumn(name = "idComuna", nullable = false)
     @JsonBackReference("comuna-calle")
+    @Schema(description = "Nombre de la Comuna a la cual pertenece la Calle")
     private Comuna comuna;
 
     
