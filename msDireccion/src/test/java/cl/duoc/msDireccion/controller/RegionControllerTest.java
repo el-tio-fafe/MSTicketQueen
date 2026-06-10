@@ -2,6 +2,8 @@ package cl.duoc.msDireccion.controller;
 
 
 
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ public class RegionControllerTest {
     @Autowired
     private MockMvc mock; //mock que simula las éticiones HTTP
 
-    @MockBean
+    @MockitoBean
     private RegionService regionService; //service falso
 
     private Region regionEjemplo;

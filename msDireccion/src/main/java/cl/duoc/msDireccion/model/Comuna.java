@@ -34,7 +34,7 @@ public class Comuna {
     @ManyToOne
     @JoinColumn(name = "idCiudadProvincia", nullable = false)
     @JsonBackReference("ciudad-comuna")
-    @Schema(description = "Nombre de la Ciudad o Provencia a la cual pertenece la comuna")
+    @Schema(description = "Nombre de la Ciudad o Provincia a la cual pertenece la comuna")
     private CiudadProvincia ciudadProvincia; 
 
 
