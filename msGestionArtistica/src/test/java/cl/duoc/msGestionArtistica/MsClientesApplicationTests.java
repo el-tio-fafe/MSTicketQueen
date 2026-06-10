@@ -1,4 +1,4 @@
-package cl.duoc.MSClientes;
+package cl.duoc.msGestionArtistica;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,4 +10,5 @@ class MsClientesApplicationTests {
 	void contextLoads() {
 	}
 
+	
 }

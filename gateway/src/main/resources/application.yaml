@@ -1,15 +1,23 @@
 server:
   port: 8080
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
 spring:
-  application:
-    name: gateway
-  cloud:
-    discovery:
+ application:
+  name: gateway
+ cloud:
+  gateway:
+   server:
+    webmvc:
+      discovery:
       locator:
         enabled: true
         lower-case-service-id: true
-    gateway: # Es buena practica agrupar explicitamente bajo gateway
       routes:
         - id: direccion-ms # SE CREA UN ID PARA IDENTIFICAR EL MS DE MANERA INTERNA
           uri: lb://msDireccion # LA RUTA DEL MICROSERVICIO, GRACIAS A EUREKA ES SOLO EL NOMBRE
@@ -60,12 +68,3 @@ spring:
           uri: lb://msVentaTicket
           predicates:
             - Patch=/api/v1/**
-
-
-
-
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
