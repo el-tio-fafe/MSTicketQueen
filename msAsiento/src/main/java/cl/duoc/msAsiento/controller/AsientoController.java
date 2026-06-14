@@ -15,15 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 import cl.duoc.msAsiento.dto.AsientoDTO;
 import cl.duoc.msAsiento.model.Asiento;
 import cl.duoc.msAsiento.service.AsientoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/asientos")
+@Tag(name = "AsientoController", description = "Controlador para gestionar los asientos en el sistema")
 public class AsientoController {
 
     @Autowired
     private AsientoService asientoService; 
 
     @GetMapping
+    @Operation(
+        summary = "Listar asientos",
+        description = "Obtiene la lista de todos los asientos")
     public ResponseEntity<List<Asiento>> listar() {
         List<Asiento> lista = asientoService.listarAsientos();
         if (lista.isEmpty()) {
@@ -33,6 +39,9 @@ public class AsientoController {
     }
 
     @GetMapping("/estado/{estadoAsiento}")
+    @Operation(
+        summary = "Listar asientos por estado",
+        description = "Obtiene la lista de asientos filtrados por su estado (DISPONIBLE, RESERVADO o VENDIDO)")
     public ResponseEntity<?> listarPorEstado(@PathVariable String estadoAsiento){
         List<Asiento> listaEstados = asientoService.listarPorEstado(estadoAsiento);
         if (listaEstados.isEmpty()){
@@ -43,6 +52,9 @@ public class AsientoController {
 
 
     @GetMapping("/{id}")
+    @Operation(
+        summary = "Buscar asiento por ID",
+        description = "Obtiene un asiento específico utilizando su identificador único")
     public ResponseEntity<Asiento> buscarPorId(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(asientoService.buscarPorId(id));
@@ -52,6 +64,9 @@ public class AsientoController {
     }
 
     @GetMapping("numero/{numAsiento}")
+    @Operation(
+        summary = "Buscar asiento por número",
+        description = "Obtiene un asiento específico utilizando su número")
     public ResponseEntity<Asiento> buscarPorNumero(@PathVariable String numAsiento) {
         try {
             return ResponseEntity.ok(asientoService.buscarPorNumAsiento(numAsiento));
@@ -61,6 +76,9 @@ public class AsientoController {
     }
 
     @PostMapping
+    @Operation(
+        summary = "Guardar asiento",
+        description = "Crea un nuevo asiento en el sistema")
     public ResponseEntity<?> guardar(@RequestBody Asiento asiento) {
         try {
             return ResponseEntity.ok(asientoService.guardar(asiento));
@@ -81,6 +99,9 @@ public class AsientoController {
     // }
 
     @GetMapping("/dto/{id}")
+    @Operation(
+        summary = "Obtener AsientoDTO por ID",
+        description = "Obtiene un AsientoDTO específico utilizando el identificador del asiento")
     public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable("id") Integer idAsiento) {
     Asiento asiento = asientoService.buscarPorId(idAsiento);
     AsientoDTO dto = new AsientoDTO(
@@ -92,6 +113,9 @@ public class AsientoController {
 }
 
  @PutMapping("/{idAsiento}")
+    @Operation(
+        summary = "Actualizar asiento",
+        description = "Actualiza la información de un asiento específico")
     public ResponseEntity<Asiento> actualizar(@PathVariable Integer idAsiento, @RequestBody Asiento asiento){
         try {
             Asiento asientoActualizado = asientoService.actualizar(idAsiento, asiento);
