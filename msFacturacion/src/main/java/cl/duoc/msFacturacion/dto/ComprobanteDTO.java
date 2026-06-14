@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion.dto;
+package cl.duoc.msFacturacion.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

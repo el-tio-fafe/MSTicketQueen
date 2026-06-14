@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion.controller;
+package cl.duoc.msFacturacion.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import cl.duoc.MSFacturacion.dto.ComprobanteDTO;
-import cl.duoc.MSFacturacion.model.Banco;
-import cl.duoc.MSFacturacion.model.Comprobante;
-import cl.duoc.MSFacturacion.model.FormaPago;
-import cl.duoc.MSFacturacion.service.BancoService;
+import cl.duoc.msFacturacion.dto.ComprobanteDTO;
+import cl.duoc.msFacturacion.model.Banco;
+import cl.duoc.msFacturacion.model.Comprobante;
+import cl.duoc.msFacturacion.model.FormaPago;
+import cl.duoc.msFacturacion.service.BancoService;
 
 @RestController
 @RequestMapping("/api/v1/facturacion")

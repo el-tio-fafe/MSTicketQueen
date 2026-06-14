@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion.model;
+package cl.duoc.msFacturacion.model;
 
 import java.util.List;
 

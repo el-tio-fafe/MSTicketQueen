@@ -18,11 +18,6 @@ spring:
               enabled: true
               lower-case-service-id: true
           routes:
-            - id: direccion-ms
-              uri: lb://msDireccion
-              predicates:
-                - Path=/api/v1/direccion/**
-
             - id: administrador-ms
               uri: lb://msAdministrador
               predicates:
@@ -31,12 +26,17 @@ spring:
             - id: asiento-ms
               uri: lb://msAsiento
               predicates:
-                - Path=/api/v1/asientos/**
+                - Path=/api/v1/asientos/**, /api/v1/reservas/**
 
             - id: comprador-ms
               uri: lb://msComprador
               predicates:
                 - Path=/api/v1/compradores/**
+
+            - id: direccion-ms
+              uri: lb://msDireccion
+              predicates:
+                - Path=/api/v1/direccion/**
 
             - id: evento-ms
               uri: lb://msEvento
@@ -46,12 +46,12 @@ spring:
             - id: facturacion-ms
               uri: lb://msFacturacion
               predicates:
-                - Path=/api/v1/bancos/**
+                - Path=/api/v1/facturacion/**
 
             - id: gestionArtistica-ms
               uri: lb://msGestionArtistica
               predicates:
-                - Path=/api/v1/artistas/**, /api/v1/generos/**
+                - Path=/api/v1/artistas/**, /api/v1/managers/** , /api/v1/productoras/**
 
             - id: login-ms
               uri: lb://msLogin
@@ -66,4 +66,4 @@ spring:
             - id: ventaTicket-ms
               uri: lb://msVentaTicket
               predicates:
-                - Path=/api/v1/tickets/**
+                - Path=/api/v1/boletas/** , /api/v1/detalles/** ,/api/v1/tickets/**

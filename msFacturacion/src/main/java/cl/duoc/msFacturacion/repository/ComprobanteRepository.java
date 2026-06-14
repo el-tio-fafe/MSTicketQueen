@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion.repository;
+package cl.duoc.msFacturacion.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import cl.duoc.MSFacturacion.model.Comprobante;
-import cl.duoc.MSFacturacion.model.Banco;
+import cl.duoc.msFacturacion.model.Banco;
+import cl.duoc.msFacturacion.model.Comprobante;
 
 @Repository
 public interface ComprobanteRepository extends JpaRepository<Comprobante, Integer> {

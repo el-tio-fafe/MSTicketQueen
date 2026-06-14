@@ -1,16 +1,16 @@
-package cl.duoc.MSFacturacion.Config;
+package cl.duoc.msFacturacion.Config;
 
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import cl.duoc.MSFacturacion.model.Comprobante;
-import cl.duoc.MSFacturacion.model.Banco;
-import cl.duoc.MSFacturacion.model.FormaPago;
-import cl.duoc.MSFacturacion.repository.ComprobanteRepository;
-import cl.duoc.MSFacturacion.repository.FormaPagoRepository;
-import cl.duoc.MSFacturacion.repository.BancoRepository;
+import cl.duoc.msFacturacion.model.Banco;
+import cl.duoc.msFacturacion.model.Comprobante;
+import cl.duoc.msFacturacion.model.FormaPago;
+import cl.duoc.msFacturacion.repository.BancoRepository;
+import cl.duoc.msFacturacion.repository.ComprobanteRepository;
+import cl.duoc.msFacturacion.repository.FormaPagoRepository;
 
 @Configuration
 public class Dataloader {

@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion.repository;
+package cl.duoc.msFacturacion.repository;
 
 
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import cl.duoc.MSFacturacion.model.Banco;
+import cl.duoc.msFacturacion.model.Banco;
 
 @Repository
 public interface BancoRepository extends JpaRepository<Banco, Integer> {

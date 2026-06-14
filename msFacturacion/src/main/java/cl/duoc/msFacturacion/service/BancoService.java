@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion.service;
+package cl.duoc.msFacturacion.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cl.duoc.MSFacturacion.dto.ComprobanteDTO;
-import cl.duoc.MSFacturacion.model.Banco;
-import cl.duoc.MSFacturacion.repository.BancoRepository;
-import cl.duoc.MSFacturacion.repository.ComprobanteRepository;
-import cl.duoc.MSFacturacion.repository.FormaPagoRepository;
-import cl.duoc.MSFacturacion.model.Comprobante;
-import cl.duoc.MSFacturacion.model.FormaPago;
+import cl.duoc.msFacturacion.dto.ComprobanteDTO;
+import cl.duoc.msFacturacion.model.Banco;
+import cl.duoc.msFacturacion.model.Comprobante;
+import cl.duoc.msFacturacion.model.FormaPago;
+import cl.duoc.msFacturacion.repository.BancoRepository;
+import cl.duoc.msFacturacion.repository.ComprobanteRepository;
+import cl.duoc.msFacturacion.repository.FormaPagoRepository;
 
 @Service
 public class BancoService {

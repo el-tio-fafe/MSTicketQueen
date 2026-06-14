@@ -1,4 +1,4 @@
-package cl.duoc.MSFacturacion;
+package cl.duoc.msFacturacion;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
