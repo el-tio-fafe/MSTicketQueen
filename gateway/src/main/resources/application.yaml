@@ -6,65 +6,64 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
-
 spring:
- application:
-  name: gateway
- cloud:
-  gateway:
-   server:
-    webmvc:
-      discovery:
-      locator:
-        enabled: true
-        lower-case-service-id: true
-      routes:
-        - id: direccion-ms # SE CREA UN ID PARA IDENTIFICAR EL MS DE MANERA INTERNA
-          uri: lb://msDireccion # LA RUTA DEL MICROSERVICIO, GRACIAS A EUREKA ES SOLO EL NOMBRE
-          predicates:
-            - Path=/api/v1/direccion/** # LA RUTA PARA ACCEDER A LOS METODOS(CONTROLLER DEL MS)
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: direccion-ms
+              uri: lb://msDireccion
+              predicates:
+                - Path=/api/v1/direccion/**
 
-        - id: administrador-ms
-          uri: lb://msAdministrador
-          predicates:
-            - Patch=/api/v1/administradores/**
+            - id: administrador-ms
+              uri: lb://msAdministrador
+              predicates:
+                - Path=/api/v1/administradores/**
 
-        - id: asiento-ms
-          uri: lb://msAsiento
-          predicates:
-            - Patch=/api/v1/asientos/**
+            - id: asiento-ms
+              uri: lb://msAsiento
+              predicates:
+                - Path=/api/v1/asientos/**
 
-        - id: comprador-ms
-          uri: lb://msComprador
-          predicates:
-            - Patch=/api/v1/compradores/**
+            - id: comprador-ms
+              uri: lb://msComprador
+              predicates:
+                - Path=/api/v1/compradores/**
 
-        - id: evento-ms
-          uri: lb://msEvento
-          predicates:
-            - Patch=/api/v1/eventos/**
+            - id: evento-ms
+              uri: lb://msEvento
+              predicates:
+                - Path=/api/v1/eventos/**
 
-        - id: facturacion-ms
-          uri: lb://msFacturacion
-          predicates:
-            - Patch=/api/v1/bancos/**
+            - id: facturacion-ms
+              uri: lb://msFacturacion
+              predicates:
+                - Path=/api/v1/bancos/**
 
-        - id: gestionArtistica-ms
-          uri: lb://msGestionArtistica
-          predicates:
-            - Patch=/api/v1/**
-      
-        - id: login-ms
-          uri: lb://msLogin
-          predicates:
-            - Patch=/api/v1/usuarios/**
+            - id: gestionArtistica-ms
+              uri: lb://msGestionArtistica
+              predicates:
+                - Path=/api/v1/artistas/**, /api/v1/generos/**
 
-        - id: ubicacion-ms
-          uri: lb://msUbicacion
-          predicates:
-            - Patch=/api/v1/ubicaciones/**
+            - id: login-ms
+              uri: lb://msLogin
+              predicates:
+                - Path=/api/v1/usuarios/**
 
-        - id: ventaTicket-ms
-          uri: lb://msVentaTicket
-          predicates:
-            - Patch=/api/v1/**
+            - id: ubicacion-ms
+              uri: lb://msUbicacion
+              predicates:
+                - Path=/api/v1/ubicaciones/**
+
+            - id: ventaTicket-ms
+              uri: lb://msVentaTicket
+              predicates:
+                - Path=/api/v1/tickets/**
