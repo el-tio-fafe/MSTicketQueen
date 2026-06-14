@@ -1,4 +1,4 @@
-package cl.duoc.msUbicacion.config;
+package cl.duoc.msAdministrador.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,10 @@ public class SwaggerConfig {
 
         return new OpenAPI()
             .info(new Info()
-                .title("Microservicio de control de ubicaciones")
+                .title("Microservicio de administración")
                 .version("1.1")
-                .description("Documentacion de el microservicio de control de ubicaciones")
+                .description("Documentación del microservicio de administración")
         );
     }
+
 }

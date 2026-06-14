@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -15,33 +16,42 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "administrador")
+@Schema(description = "Entidad que representa a un administrador en el sistema de control de evntos. Contiene información personal del administrador, como su nombre, apellido, RUT, correo electrónico y número de teléfono. Además, cada administrador puede tener asociadas múltiples auditorías, que registran las acciones realizadas por el administrador en el sistema.")
 
 public class Administrador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID del administrador, generado automáticamente por la base de datos.", example = "1")
     private Integer idAdm;
 
     @Column(nullable = false, unique = true)
+    @Schema(description = "RUT del administrador.", example = "16517526-3")
     private String rutAdm;
 
     @Column(nullable = false)
+    @Schema(description = "Nombre del administrador.", example = "Maria Jose")
     private String nombreAdm;
 
     @Column(nullable = false)
+    @Schema(description = "Apellido paterno del administrador.", example = "Cruces")
     private String apPatAdm;
 
     @Column(nullable = false)
+    @Schema(description = "Apellido materno del administrador.", example = "Huaiquil")
     private String apMatAdm;
 
     @Column(nullable = false, unique = true)
+    @Schema(description = "Correo electrónico del administrador.", example = "cote.cruces@gmail.com")
     private String correoAdm;
 
     @Column(nullable = false)
+    @Schema(description = "Número de teléfono del administrador.", example = "+56949783198")
     private String telefonoAdm;
 
     @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @Schema(description = "Lista de auditorías asociadas al administrador.")
     private List<Auditoria> auditoria;
     
 }

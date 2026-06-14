@@ -20,15 +20,21 @@ import cl.duoc.msAdministrador.dto.AdministradorEmailDTO;
 import cl.duoc.msAdministrador.model.Administrador;
 import cl.duoc.msAdministrador.model.Auditoria;
 import cl.duoc.msAdministrador.service.AdministradorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/administradores")
+@Tag(name = "Administradores", description = "Endpoints relacionados con los administradores y sus auditorías, que permiten realizar operaciones CRUD sobre los administradores y consultar las auditorías asociadas a ellos.")
 public class AdministradorController {
 
     @Autowired
     private AdministradorService administradorService;
 
     @GetMapping
+    @Operation(
+        summary = "Obtener todos los administradores", 
+        description = "Endpoint para obtener una lista de todos los administradores registrados en el sistema de control de eventos.")
     public ResponseEntity<List<AdministradorDTO>> listarAdministradores(){
         List<Administrador> listarAdministradores = administradorService.listarAdministradores();
         if (listarAdministradores.isEmpty()){
@@ -48,6 +54,9 @@ public class AdministradorController {
     }
 
     @GetMapping("/auditorias")
+    @Operation(
+        summary = "Obtener todas las auditorías", 
+        description = "Endpoint para obtener una lista de todas las auditorías registradas en el sistema de control de eventos.")
     public ResponseEntity<?> listarAuditorias() {
         try {
             List<Auditoria> lista = administradorService.listarAuditorias();
@@ -61,6 +70,9 @@ public class AdministradorController {
     }
 
     @GetMapping("/auditorias/buscar/{idAuditoria}")
+    @Operation(
+        summary = "Buscar auditoría por ID", 
+        description = "Endpoint para buscar una auditoría específica por su ID.")
     public ResponseEntity<?> buscarAuditoriaPorId(@PathVariable Integer idAuditoria) {
         try {
             return ResponseEntity.ok(administradorService.buscarAuditoriaPorId(idAuditoria));
@@ -70,6 +82,9 @@ public class AdministradorController {
     }
 
     @GetMapping("/auditorias/buscar/rut/{rutAdm}")
+    @Operation(
+        summary = "Buscar auditorías por Administrador", 
+        description = "Endpoint para buscar auditorías específicas por el RUT del administrador.")  
     public ResponseEntity<?> buscarAuditoriasPorAdm(@PathVariable String rutAdm){
         try {
             List<Auditoria> lista = administradorService.buscarAuditoriaPorRutAdm(rutAdm);
@@ -85,6 +100,9 @@ public class AdministradorController {
 
 
     @GetMapping("/auditorias/listar/{idAdm}")
+    @Operation(
+        summary = "Listar auditorías por ID de administrador", 
+        description = "Endpoint para listar todas las auditorías asociadas a un administrador específico por su ID.")
     public ResponseEntity<?> listarAuditoriaPorAdm(@PathVariable Integer idAdm) {
         try {
             List<Auditoria> lista = administradorService.listarAuditoriasPorAdm(idAdm);
@@ -109,6 +127,9 @@ public class AdministradorController {
     // }
 
     @GetMapping("/id/{idAdm}")
+    @Operation(
+        summary = "Obtener administrador por ID", 
+        description = "Endpoint para obtener un administrador específico por su ID.")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer idAdm) {
         try {
             Administrador admin = administradorService.buscarPorIdAdm(idAdm);
@@ -120,6 +141,9 @@ public class AdministradorController {
 
 
     @GetMapping("/rut/{rutAdm}")
+    @Operation(
+        summary = "Obtener administrador por RUT", 
+        description = "Endpoint para obtener un administrador específico por su RUT.")
     public ResponseEntity<?> buscarPorRut(@PathVariable String rutAdm){
         try {
             Administrador admin = administradorService.buscarPorRutAdm(rutAdm);
@@ -130,6 +154,9 @@ public class AdministradorController {
     }
 
     @PostMapping
+    @Operation(
+        summary = "Guardar nuevo administrador", 
+        description = "Endpoint para guardar un nuevo administrador en el sistema de control de eventos, proporcionando los datos necesarios en el cuerpo de la solicitud.")
     public ResponseEntity<?> guardar(@RequestBody Administrador administrador){
         try {
             return ResponseEntity.ok(administradorService.guardarAdministrador(administrador));
@@ -140,6 +167,9 @@ public class AdministradorController {
     }
 
     @DeleteMapping("eliminar/id/{idAdm}")
+    @Operation(
+        summary = "Eliminar administrador por ID", 
+        description = "Endpoint para eliminar un administrador específico por su ID.")
     public ResponseEntity<?> eliminarPorId(@PathVariable Integer idAdm){
         try {
             administradorService.eliminarPorId(idAdm);
@@ -151,6 +181,9 @@ public class AdministradorController {
 
 
     @DeleteMapping("eliminar/rut/{rutAdm}")
+    @Operation(
+        summary = "Eliminar administrador por RUT", 
+        description = "Endpoint para eliminar un administrador específico por su RUT.")
     public ResponseEntity<?> eliminarPorRut(@PathVariable String rutAdm){
         try {
             administradorService.eliminarPorRut(rutAdm);
@@ -162,6 +195,9 @@ public class AdministradorController {
 
 
     @PutMapping("actualizar/id/{idAdm}")
+    @Operation(
+        summary = "Actualizar administrador por ID", 
+        description = "Endpoint para actualizar la información de un administrador específico por su ID, proporcionando los nuevos datos en el cuerpo de la solicitud.")
     public ResponseEntity<?> actualizarPorId(@PathVariable Integer idAdm, @RequestBody Administrador administrador){
         try {
             Administrador admActualizado = administradorService.actualizarAdmPorId(idAdm, administrador);
@@ -173,6 +209,9 @@ public class AdministradorController {
 
 
     @PutMapping("actualizar/rut/{rutAdm}")
+    @Operation(
+        summary = "Actualizar administrador por RUT", 
+        description = "Endpoint para actualizar la información de un administrador específico por su RUT, proporcionando los nuevos datos en el cuerpo de la solicitud.")
     public ResponseEntity<?> actualizarPorRut(@PathVariable String rutAdm, @RequestBody Administrador administrador){
         try {
             Administrador admActualizado = administradorService.actualizarAdmPorRut(rutAdm, administrador);
@@ -184,6 +223,9 @@ public class AdministradorController {
 
 
     @PatchMapping("actualizar/email/id/{idAdm}")
+    @Operation(
+        summary = "Actualizar email de administrador por ID", 
+        description = "Endpoint para actualizar únicamente el email de un administrador específico por su ID, proporcionando el nuevo email en el cuerpo de la solicitud.")
     public ResponseEntity<?> actualizarEmailPorId(@PathVariable Integer idAdm, @RequestBody AdministradorEmailDTO emailDTO){
         try {
             return ResponseEntity.ok(administradorService.actualizarEmailAdm(idAdm, emailDTO));
@@ -194,6 +236,9 @@ public class AdministradorController {
 
 
     @PostMapping("/auditorias/guardar")
+    @Operation(
+        summary = "Guardar nueva auditoría", 
+        description = "Endpoint para guardar una nueva auditoría en el sistema de control de eventos, proporcionando los datos necesarios en el cuerpo de la solicitud.")
     public ResponseEntity<?> guardarAuditoria(@RequestBody Auditoria auditoria){
         try {
             return ResponseEntity.ok(administradorService.guardarAuditoria(auditoria));
