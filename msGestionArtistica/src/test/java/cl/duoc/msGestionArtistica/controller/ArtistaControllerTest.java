@@ -58,4 +58,26 @@ public class ArtistaControllerTest {
             .andExpect(status().isNotFound());
     }
 
+
+    //public Artista getArtistaById(Integer id) {// Método para obtener un artista por su ID
+    //    return artistaRepository.findById(id)
+    //            .orElseThrow(() -> new RuntimeException("Artista con id: " + id + " no encontrado."));//mensaje de error
+    //}
+
+    @Test
+    void getArtistaByRut_encontrado() throws Exeption {
+        //Arrage
+
+        //Act + Assert
+    }
+
+
+
+    @Test
+    void getArtistaByRut_no_encontrado() throws Exeption {
+        //Arrage
+
+        //Act + Assert    
+    }
+
 }

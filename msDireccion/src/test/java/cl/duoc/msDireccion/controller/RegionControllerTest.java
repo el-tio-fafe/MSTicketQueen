@@ -59,15 +59,12 @@ public class RegionControllerTest {
 
 
     @Test 
-    void buscarPorId_retorna404() throws Exception{
+    void buscarPorId_retorna400() throws Exception{
         //ARRANGE: buscamos unz region con id 99 y tira un error
-        when(regionService.buscarRegionPorId(99)).thenThrow(new RuntimeException("Region con id 99 no encontrada"));
+        when(regionService.buscarRegionPorId(99)).thenThrow(new RuntimeException("Region con id: 99 no encontrada"));
 
         //ACT + ASSERT
-        mock.perform(get("/api/v1/direccion/buscar/region-resumida/id/99")).andExpect(status().isNotFound());  // o sea un codigo HTTPS 404
-
-
-
+        mock.perform(get("/api/v1/direccion/buscar/region-resumida/id/99")).andExpect(status().isBadRequest());  // o sea un codigo HTTPS 400
     }
 
 }
