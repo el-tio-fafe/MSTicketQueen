@@ -26,17 +26,17 @@ public class Region {
     private Integer idRegion;
 
     @Column(nullable = false, unique = true)
-    @Schema(description = "Nombre de la Región, el cual es único")
+    @Schema(description = "Nombre de la Región, el cual es único", examples = ("Metropolitana"))
     private String nombreRegion;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
-    @Schema(description = "Lista las Ciudades o Provincias de la Región proporcionada")
+    @Schema(description = "Lista las Ciudades o Provincias de la Región proporcionada", examples = ("Santiago"))
     @JsonManagedReference
     private List<CiudadProvincia> ciudadesProvincias;
 
     @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
     @JsonManagedReference("region-comuna")
-    @Schema(description = "Lista de las Comunas pertenecientes a la Región")
+    @Schema(description = "Lista de las Comunas pertenecientes a la Región", examples = ("Quilicura, Huechuraba"))
     private List<Comuna> comunas;
 
 }

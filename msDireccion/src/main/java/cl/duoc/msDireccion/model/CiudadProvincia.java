@@ -22,22 +22,22 @@ public class CiudadProvincia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "ID único de la Ciudad o Provincia que es AutoIncrementable")
+    @Schema(description = "ID único de la Ciudad o Provincia que es AutoIncrementable", examples = ("1"))
     private Integer idCiudadProvincia;
 
     @Column(nullable = false, unique = true)
-    @Schema(description = "Nombre único de la Ciudad o Provincia que es único")
+    @Schema(description = "Nombre único de la Ciudad o Provincia que es único", examples = ("Santiago"))
     private String nombreCiudadProvincia;
 
     @ManyToOne
     @JoinColumn(name = "idRegion", nullable = false)
     @JsonBackReference
-    @Schema(description = "Región a la cual pertenece la Ciudad o Provincia")
+    @Schema(description = "Región a la cual pertenece la Ciudad o Provincia", examples = ("Metropolitana"))
     private Region region;
 
     @OneToMany(mappedBy = "ciudadProvincia", cascade = CascadeType.ALL)
     @JsonIgnore   
-    @Schema(description = "Lista de Comunas que pertenecen a la Ciudad o Provincia")
+    @Schema(description = "Lista de Comunas que pertenecen a la Ciudad o Provincia", examples = ("Quilicura, Huechuraba"))
     private List<Comuna> comunas;
 
 
