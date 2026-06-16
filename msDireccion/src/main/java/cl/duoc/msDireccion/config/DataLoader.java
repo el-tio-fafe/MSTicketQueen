@@ -26,26 +26,28 @@ public class DataLoader {
         return args -> {
             if(regionRepository.count() > 0){
                 System.out.println("No se cargaron datos porque ya existian datos en la base de datos");
-            }else{
+            } else {
+                // 1. REGIONES 
+                Region reg1 = new Region(); reg1.setNombreRegion("Metropolitana");
+                Region reg2 = new Region(); reg2.setNombreRegion("Del Biobio");
+                Region reg3 = new Region(); reg3.setNombreRegion("La Araucania");
+                Region reg4 = new Region(); reg4.setNombreRegion("Coquimbo");
+                Region reg5 = new Region(); reg5.setNombreRegion("Valparaiso");
                 
-                Region reg1 = new Region(null, "Metropolitana", null, null);
-                Region reg2 = new Region(null, "Del Biobio", null, null);
-                Region reg3 = new Region(null, "La Araucania", null, null);
-                Region reg4 = new Region(null, "Coquimbo", null, null);
-                Region reg5 = new Region(null, "Valparaiso", null, null);
                 regionRepository.save(reg1);
                 regionRepository.save(reg2);
                 regionRepository.save(reg3);
                 regionRepository.save(reg4);
                 regionRepository.save(reg5);
 
+                // 2. CIUDADES / PROVINCIAS
+                CiudadProvincia ciuPro1 = new CiudadProvincia(); ciuPro1.setNombreCiudadProvincia("Santiago"); ciuPro1.setRegion(reg1);
+                CiudadProvincia ciuPro2 = new CiudadProvincia(); ciuPro2.setNombreCiudadProvincia("Chacabuco"); ciuPro2.setRegion(reg1);
+                CiudadProvincia ciuPro3 = new CiudadProvincia(); ciuPro3.setNombreCiudadProvincia("Concepción"); ciuPro3.setRegion(reg2);
+                CiudadProvincia ciuPro4 = new CiudadProvincia(); ciuPro4.setNombreCiudadProvincia("San Antonio"); ciuPro4.setRegion(reg5);
+                CiudadProvincia ciuPro5 = new CiudadProvincia(); ciuPro5.setNombreCiudadProvincia("Cautin"); ciuPro5.setRegion(reg3);
+                CiudadProvincia ciuPro6 = new CiudadProvincia(); ciuPro6.setNombreCiudadProvincia("Elqui"); ciuPro6.setRegion(reg4);
                 
-                CiudadProvincia ciuPro1 = new CiudadProvincia(null, "Santiago", reg1, null);
-                CiudadProvincia ciuPro2 = new CiudadProvincia(null, "Chacabuco", reg1, null);
-                CiudadProvincia ciuPro3 = new CiudadProvincia(null, "Concepción", reg2, null);
-                CiudadProvincia ciuPro4 = new CiudadProvincia(null, "San Antonio", reg5, null);
-                CiudadProvincia ciuPro5 = new CiudadProvincia(null, "Cautin", reg3, null);
-                CiudadProvincia ciuPro6 = new CiudadProvincia(null, "Elqui", reg4, null);
                 ciudadProvinciaRepository.save(ciuPro1);
                 ciudadProvinciaRepository.save(ciuPro2);
                 ciudadProvinciaRepository.save(ciuPro3);
@@ -53,19 +55,20 @@ public class DataLoader {
                 ciudadProvinciaRepository.save(ciuPro5);
                 ciudadProvinciaRepository.save(ciuPro6);
 
+                // 3. COMUNAS
+                Comuna com1 = new Comuna(); com1.setNombreComuna("Quilicura"); com1.setRegion(reg1); com1.setCiudadProvincia(ciuPro1);
+                Comuna com2 = new Comuna(); com2.setNombreComuna("Huechuraba"); com2.setRegion(reg1); com2.setCiudadProvincia(ciuPro1);
+                Comuna com3 = new Comuna(); com3.setNombreComuna("Lampa"); com3.setRegion(reg1); com3.setCiudadProvincia(ciuPro2);
+                Comuna com4 = new Comuna(); com4.setNombreComuna("El Quisco"); com4.setRegion(reg5); com4.setCiudadProvincia(ciuPro4);
+                Comuna com5 = new Comuna(); com5.setNombreComuna("Temuco"); com5.setRegion(reg3); com5.setCiudadProvincia(ciuPro5);
                 
-                Comuna com1 = new Comuna(null, "Quilicura", reg1, ciuPro1);
-                Comuna com2 = new Comuna(null, "Huechuraba", reg1, ciuPro1);
-                Comuna com3 = new Comuna(null, "Lampa", reg1, ciuPro2);
-                Comuna com4 = new Comuna(null, "El Quisco", reg5, ciuPro4);
-                Comuna com5 = new Comuna(null, "Temuco", reg3, ciuPro5);
                 comunaRepository.save(com1);
                 comunaRepository.save(com2);
                 comunaRepository.save(com3);
                 comunaRepository.save(com4);
                 comunaRepository.save(com5);
 
-
+                // 4. CALLES 
                 calleRepository.save(new Calle(null, "Av. Manuel Antonio Matta", "1230", null, com1));
                 calleRepository.save(new Calle(null, "Américo Vespucio", "1500", "Depto 402", com2));
                 calleRepository.save(new Calle(null, "Las Torres", "455", null, com1));
