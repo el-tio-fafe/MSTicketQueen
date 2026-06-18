@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -21,11 +22,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
+import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
 import cl.duoc.msDireccion.dto.RegionDTO;
 import cl.duoc.msDireccion.dto.RegionUpdateDTO;
 import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
 import cl.duoc.msDireccion.model.Region;
+import cl.duoc.msDireccion.repository.CiudadProvinciaRepository;
+import cl.duoc.msDireccion.repository.ComunaRepository;
 import cl.duoc.msDireccion.repository.RegionRepository;
 
 
@@ -35,18 +40,33 @@ public class RegionServiceTest {
     @Mock //crea un objeto simulado de RegionRepository para ser utilizado en las pruebas
     private RegionRepository regionRepository;
 
+    @Mock
+    private CiudadProvinciaRepository ciudadProvinciaRepository;
+
+    @Mock
+    private ComunaRepository comunaRepository;
+
     @InjectMocks //crea una instancia de RegionService e inyecta el objeto simulado de RegionRepository en ella
     private RegionService regionService;
 
     private Region regionEjemplo;
+    private CiudadProvincia ciudadProvinciaEjemplo;
+    private Comuna comunaEjemplo;
 
     @BeforeEach
     void setUp(){
-
+        
         regionEjemplo = new Region();
         regionEjemplo.setIdRegion(1);
         regionEjemplo.setNombreRegion("Metropolitana");
-    
+
+        ciudadProvinciaEjemplo = new CiudadProvincia();
+        ciudadProvinciaEjemplo.setIdCiudadProvincia(1);
+        ciudadProvinciaEjemplo.setNombreCiudadProvincia("Santiago");
+
+        comunaEjemplo = new Comuna();
+        comunaEjemplo.setIdComuna(1);
+        comunaEjemplo.setNombreComuna("Quilicura");
     }
 
 
@@ -89,27 +109,23 @@ public class RegionServiceTest {
 
     @Test
     void buscarRegionCompletaPorId_encontrado() {
-    // ARRANGE: Construimos una región completa con relaciones simuladas
-    Region regionCompletaMock = new Region();
-    regionCompletaMock.setIdRegion(1);
-    regionCompletaMock.setNombreRegion("Metropolitana");
-
+    // ARRANGE: 
     // Simulamos una lista de Ciudades/Provincias
     List<CiudadProvincia> ciudadesMock = new ArrayList<>();
     CiudadProvincia stgo = new CiudadProvincia();
-    stgo.setNombreCiudadProvincia("Santiago"); // Asumiendo que tiene este setter
+    stgo.setNombreCiudadProvincia("Santiago"); 
     ciudadesMock.add(stgo);
-    regionCompletaMock.setCiudadesProvincias(ciudadesMock);
+    regionEjemplo.setCiudadesProvincias(ciudadesMock);
 
     // Simulamos una lista de Comunas
     List<Comuna> comunasMock = new ArrayList<>();
     Comuna quilicura = new Comuna();
-    quilicura.setNombreComuna("Quilicura"); // Asumiendo que tiene este setter
+    quilicura.setNombreComuna("Quilicura"); 
     comunasMock.add(quilicura);
-    regionCompletaMock.setComunas(comunasMock);
+    regionEjemplo.setComunas(comunasMock);
 
     // Programamos el Mockito para que retorne nuestra región bien armada
-    when(regionRepository.findById(1)).thenReturn(Optional.of(regionCompletaMock));
+    when(regionRepository.findById(1)).thenReturn(Optional.of(regionEjemplo));
 
     // ACT: Ejecutamos el método del servicio
     Region resultado = regionService.buscarRegionCompletaPorId(1);
@@ -128,7 +144,6 @@ public class RegionServiceTest {
 
     verify(regionRepository, times(1)).findById(1);
     }
-
 
     @Test
     void buscarRegionCompletaPorId_noEncontrado_lanzaRuntimeException() {
@@ -165,7 +180,7 @@ public class RegionServiceTest {
     }
 
     @Test
-    void buscarPorId_noEncontrado(){
+    void buscarRegionPorId_noEncontrado(){
         //ARRANGE: preparamos la prueba, para qe retorne una region vacia
         Optional<Region> regionVacia = Optional.empty();
         when(regionRepository.findById(99)).thenReturn(regionVacia);
@@ -217,53 +232,38 @@ public class RegionServiceTest {
 
     @Test
     void guardarRegion_exitoso(){
-        // ARRANGE: Preparamos una región nueva (sin ID) para enviar al servicio
-        Region regionNueva = new Region();
-        regionNueva.setNombreRegion("Valparaíso");
-
-        // Simulamos la región que nos devolverá el repositorio una vez guardada (con ID asignado)
-        Region regionGuardada = new Region();
-        regionGuardada.setIdRegion(2);
-        regionGuardada.setNombreRegion("Valparaíso");
-
-        
-        // 1. Al buscar "Valparaíso", simulamos que no existe (Optional.empty())
-        when(regionRepository.findByNombreRegion("Valparaíso")).thenReturn(Optional.empty());
-        // 2. Al guardar la región nueva, simulamos que el repositorio responde exitosamente con el objeto persistido
-        when(regionRepository.save(regionNueva)).thenReturn(regionGuardada);
+        // ARRANGE: 
+        // Al buscar "Metropolitana", simulamos que no existe (Optional.empty())
+        when(regionRepository.findByNombreRegion("Metropolitana")).thenReturn(Optional.empty());
+        // Al guardar la región nueva, simulamos que el repositorio responde exitosamente con el objeto persistido
+        when(regionRepository.save(regionEjemplo)).thenReturn(regionEjemplo);
 
         // ACT: Ejecutamos la acción real del service
-        Region resultado = regionService.guardarRegion(regionNueva);
+        Region resultado = regionService.guardarRegion(regionEjemplo);
 
         // ASSERT: Validamos que la respuesta contenga los datos esperados
         assertNotNull(resultado);
-        assertEquals(2, resultado.getIdRegion());
-        assertEquals("Valparaíso", resultado.getNombreRegion());
+        assertEquals(1, resultado.getIdRegion());
+        assertEquals("Metropolitana", resultado.getNombreRegion());
         
-        // Verificamos que se interactuó con el repositorio de la forma correcta
-        verify(regionRepository, times(1)).save(regionNueva);
+        verify(regionRepository, times(1)).save(regionEjemplo);
 
     }
 
-
     @Test
     void guardarRegion_errorRegionYaExiste_lanzaRuntimeException() {
-        // ARRANGE: Vamos a intentar guardar una región que ya existe (usamos "Metropolitana")
-        Region regionIntentoGuardar = new Region();
-        regionIntentoGuardar.setNombreRegion("Metropolitana");
-
+        // ARRANGE: 
         // Simulamos que al buscar "Metropolitana", el repositorio responde que SÍ existe (usando tu regionEjemplo)
         when(regionRepository.findByNombreRegion("Metropolitana")).thenReturn(Optional.of(regionEjemplo));
 
         // ACT & ASSERT: Esperamos que lance la RuntimeException
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            regionService.guardarRegion(regionIntentoGuardar);
+            regionService.guardarRegion(regionEjemplo);
         });
 
-        // Verificamos el mensaje exacto que configuraste en tu Service
+        // Verificamos el mensaje exacto
         assertEquals("Ya existe la region: Metropolitana", exception.getMessage());
 
-        // Verificación crítica de seguridad: Nos aseguramos de que NUNCA llamó al método save()
         verify(regionRepository, never()).save(any(Region.class));
     }
 
@@ -273,61 +273,765 @@ public class RegionServiceTest {
     @Test
     void actualizarRegionPorId_exitoso() {
     // ARRANGE: 
-    Integer idBuscado = 1;
-    
     // Creamos el objeto con los nuevos datos que envía el usuario
     Region datosNuevos = new Region();
     datosNuevos.setNombreRegion("Metropolitana Modificada");
 
     // Simulamos la región que actualmente está en la BD usando la metropolitana del ejemplo
     Optional<Region> optionalRegion = Optional.of(regionEjemplo);
-    when(regionRepository.findById(idBuscado)).thenReturn(optionalRegion);
+    when(regionRepository.findById(1)).thenReturn(optionalRegion);
 
     // Simulamos el comportamiento del save. Al guardar, Mockito devolverá la región con el nombre ya cambiado
     Region regionGuardadaEnBD = new Region();
-    regionGuardadaEnBD.setIdRegion(idBuscado);
+    regionGuardadaEnBD.setIdRegion(1);
     regionGuardadaEnBD.setNombreRegion("Metropolitana Modificada");
     when(regionRepository.save(any(Region.class))).thenReturn(regionGuardadaEnBD);
 
     // ACT: Ejecutamos el método del servicio
-    RegionUpdateDTO resultado = regionService.actualizarRegionPorId(idBuscado, datosNuevos);
+    RegionUpdateDTO resultado = regionService.actualizarRegionPorId(1, datosNuevos);
 
     // ASSERT: Verificamos que el DTO de salida no sea nulo y contenga el nuevo nombre
     assertNotNull(resultado);
     assertEquals("Metropolitana Modificada", resultado.getNombreRegion());
 
-    // Verificaciones de comportamiento
-    verify(regionRepository, times(1)).findById(idBuscado);
+    // Verificaciones
+    verify(regionRepository, times(1)).findById(1);
     verify(regionRepository, times(1)).save(any(Region.class));
     }
-
 
     @Test
     void actualizarRegionPorId_noEncontrado_lanzaRuntimeException() {
     // ARRANGE: Intentamos actualizar un ID que no existe
-    Integer idInexistente = 99;
     Region datosNuevos = new Region();
     datosNuevos.setNombreRegion("Biobío");
 
     // Simulamos que el repositorio no encuentra nada (Optional.empty())
-    when(regionRepository.findById(idInexistente)).thenReturn(Optional.empty());
+    when(regionRepository.findById(99)).thenReturn(Optional.empty());
 
     // ACT & ASSERT: Esperamos que salte la excepción al no encontrar el ID
     RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-        regionService.actualizarRegionPorId(idInexistente, datosNuevos);
+        regionService.actualizarRegionPorId(99, datosNuevos);
     });
 
     // Validamos el mensaje exacto del .orElseThrow()
     assertEquals("Region con id: 99 no encontrada", exception.getMessage());
 
     // Verificación crítica: Si no existe, nunca debe intentar guardar nada en el repositorio
-    verify(regionRepository, times(1)).findById(idInexistente);
+    verify(regionRepository, times(1)).findById(99);
     verify(regionRepository, never()).save(any(Region.class));
+}
+
+//****************************************************************************************************** */
+//TEST CIUDAD-PROVINCIA
+
+    @Test
+    void listarCiudadProvincia_retornaListaDeEntidades() {
+    // ARRANGE
+    List<CiudadProvincia> listaMock = new ArrayList<>();
+    listaMock.add(ciudadProvinciaEjemplo); 
+
+    when(ciudadProvinciaRepository.findAll()).thenReturn(listaMock);
+
+    // ACT
+
+    List<CiudadProvincia> resultado = regionService.listarCiudadesOProvincias();
+
+    // ASSERT
+    assertNotNull(resultado);
+    assertEquals(1, resultado.size());
+    assertEquals("Santiago", resultado.get(0).getNombreCiudadProvincia());
+    
+    verify(ciudadProvinciaRepository, times(1)).findAll();
+    }
+
+    @Test
+    void listarCiudadProvincia_vacia_retornaListaVacia() {
+        // ARRANGE
+        when(ciudadProvinciaRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // ACT
+        List<CiudadProvincia> resultado = regionService.listarCiudadesOProvincias();
+
+        // ASSERT
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+        
+        verify(ciudadProvinciaRepository, times(1)).findAll();
+    }
+
+
+    @Test
+    void listarCiudadesProvinciasPorIdRegion_encontrado_retornaLista() {
+    // ARRANGE: 
+    //  Creación de la lista de ciudades que simula estar dentro de esa región
+    List<CiudadProvincia> ciudadesMock = new ArrayList<>();
+    CiudadProvincia santiago = new CiudadProvincia();
+    santiago.setIdCiudadProvincia(1);
+    santiago.setNombreCiudadProvincia("Santiago");
+    santiago.setRegion(regionEjemplo);
+    ciudadesMock.add(santiago);
+
+    // Adjuntamos la lista a la región mockeada
+    regionEjemplo.setCiudadesProvincias(ciudadesMock);
+
+    // Programamos el repositorio de regiones para que devuelva la región armada
+    when(regionRepository.findById(1)).thenReturn(Optional.of(regionEjemplo));
+
+    // ACT: Ejecutamos el método del servicio
+    List<CiudadProvincia> resultado = regionService.listarCiudadesProvinciasPorIdRegion(1);
+
+    // ASSERT: Validamos el resultado de la lista
+    assertNotNull(resultado);
+    assertEquals(1, resultado.size());
+    assertEquals("Santiago", resultado.get(0).getNombreCiudadProvincia());
+    assertEquals(1, resultado.get(0).getRegion().getIdRegion());
+
+    verify(regionRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void listarCiudadesProvinciasPorIdRegion_noEncontrado_lanzaRuntimeException() {
+    // ARRANGE:
+    when(regionRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT:
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.listarCiudadesProvinciasPorIdRegion(99);
+    });
+
+    assertEquals("Region con id: 99 no encontrada", exception.getMessage());
+
+    verify(regionRepository, times(1)).findById(99);
+    }
+
+
+    @Test
+    void listarCiudadesProvinciasPorNombreRegion_encontrado_retornaLista() {
+    // ARRANGE: 
+    //  Creación de la lista de ciudades que simula estar dentro de esa región
+    List<CiudadProvincia> ciudadesMock = new ArrayList<>();
+    CiudadProvincia santiago = new CiudadProvincia();
+    santiago.setIdCiudadProvincia(1);
+    santiago.setNombreCiudadProvincia("Santiago");
+    santiago.setRegion(regionEjemplo);
+    ciudadesMock.add(santiago);
+
+    // Adjuntamos la lista a la región mockeada
+    regionEjemplo.setCiudadesProvincias(ciudadesMock);
+
+    // Programamos el repositorio de regiones para que devuelva la región armada
+    when(regionRepository.findByNombreRegion("Metropolitana")).thenReturn(Optional.of(regionEjemplo));
+
+    // ACT: Ejecutamos el método del servicio
+    List<CiudadProvincia> resultado = regionService.listarCiudadesProvinciasPorNombreRegion("Metropolitana");
+
+    // ASSERT: Validamos el resultado de la lista
+    assertNotNull(resultado);
+    assertEquals(1, resultado.size());
+    assertEquals("Santiago", resultado.get(0).getNombreCiudadProvincia());
+    assertEquals(1, resultado.get(0).getRegion().getIdRegion());
+
+    verify(regionRepository, times(1)).findByNombreRegion("Metropolitana");
+    }
+
+    @Test
+    void listarCiudadesProvinciasPorNombreRegion_NoEncontrado_LanzaRuntimeException() {
+        // ARRANGE
+        when(regionRepository.findByNombreRegion("Nunca Jamas")).thenReturn(Optional.empty());
+
+        // ACT & ASSERT
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            regionService.listarCiudadesProvinciasPorNombreRegion("Nunca Jamas");
+        });
+
+        assertEquals("Region con nombre: Nunca Jamas no encontrada", exception.getMessage());
+        verify(regionRepository, times(1)).findByNombreRegion("Nunca Jamas");
+    }
+
+
+
+    @Test
+    void buscarCiudadProvinciaPorId_encontrado(){
+        //ARRANGE: preparamos la prueba, le decimos que hacer
+        Optional<CiudadProvincia> optionalRegion = Optional.of(ciudadProvinciaEjemplo);
+        when(ciudadProvinciaRepository.findById(1)).thenReturn(optionalRegion);
+
+        //ACT: llamamos el estado real
+        CiudadProvincia resultado = regionService.buscarCiudadProvinciaPorId(1);
+
+        //Assert
+        assertEquals(1, resultado.getIdCiudadProvincia());
+        assertEquals("Santiago", resultado.getNombreCiudadProvincia());
+
+    }
+    
+    @Test
+    void buscarCiudadProvinciaPorId_noEncontrado(){
+        //ARRANGE: preparamos la prueba, para qe retorne una region vacia
+        Optional<CiudadProvincia> ciudadProvinciaVacia = Optional.empty();
+        when(ciudadProvinciaRepository.findById(99)).thenReturn(ciudadProvinciaVacia);
+
+        //ACT: llamamos el estado real
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            regionService.buscarCiudadProvinciaPorId(99);
+        });
+
+        assertEquals("Ciudad/Provincia con id: 99 no encontrada", exception.getMessage());
+        
+    }
+
+
+
+    @Test
+    void buscarCiudadProvinciaPorNombre_encontrado(){
+        //ARRANGE: preparamos la prueba, le decimos que hacer
+        Optional<CiudadProvincia> optionalRegion = Optional.of(ciudadProvinciaEjemplo);
+        when(ciudadProvinciaRepository.findByNombreCiudadProvincia("Santiago")).thenReturn(optionalRegion);
+
+        //ACT: llamamos el estado real
+        CiudadProvincia resultado = regionService.buscarCiudadProvinciaPorNombre("Santiago");
+
+        //Assert
+        assertEquals(1, resultado.getIdCiudadProvincia());
+        assertEquals("Santiago", resultado.getNombreCiudadProvincia());
+
+    }
+
+    @Test
+    void buscarCiudadProvinciaPorNombre_noEncontrado(){
+        //ARRANGE: preparamos la prueba, para qe retorne una region vacia
+        Optional<CiudadProvincia> ciudadProvinciaVacia = Optional.empty();
+        when(ciudadProvinciaRepository.findByNombreCiudadProvincia("Nunca Jamas")).thenReturn(ciudadProvinciaVacia);
+
+        //ACT: llamamos el estado real
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            regionService.buscarCiudadProvinciaPorNombre("Nunca Jamas");
+        });
+
+        assertEquals("Ciudad/Provincia: Nunca Jamas no encontrada", exception.getMessage());
+        
+    }
+
+
+
+    @Test
+    void guardarCiudadProvincia_Exitoso() {
+    // ARRANGE: 
+    // Preparamos una ciudad o provincia nueva (asociándole la región)
+    CiudadProvincia ciudadProvinciaNueva = new CiudadProvincia();
+    ciudadProvinciaNueva.setNombreCiudadProvincia("Santiago");
+    ciudadProvinciaNueva.setRegion(regionEjemplo); 
+
+    // Simulamos la Ciudad o Provincia que nos devolverá el repositorio una vez guardada
+    CiudadProvincia ciudadProvinciaGuardada = new CiudadProvincia();
+    ciudadProvinciaGuardada.setIdCiudadProvincia(1);
+    ciudadProvinciaGuardada.setNombreCiudadProvincia("Santiago");
+    ciudadProvinciaGuardada.setRegion(regionEjemplo);
+
+
+    //Validamos que el nombre no esté duplicado
+    when(ciudadProvinciaRepository.findByNombreCiudadProvincia("Santiago")).thenReturn(Optional.empty());
+    
+    //Validamos que la región asociada realmente exista en la BD
+    when(regionRepository.findById(1)).thenReturn(Optional.of(regionEjemplo));
+    
+    //Simulamos el guardado exitoso
+    when(ciudadProvinciaRepository.save(ciudadProvinciaNueva)).thenReturn(ciudadProvinciaGuardada);
+
+    // ACT: Ejecutamos la acción real del service
+    CiudadProvincia resultado = regionService.guardarCiudadProvincia(ciudadProvinciaNueva);
+
+    // ASSERT: Validamos que la respuesta contenga los datos esperados
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdCiudadProvincia());
+    assertEquals("Santiago", resultado.getNombreCiudadProvincia());
+    assertNotNull(resultado.getRegion());
+    assertEquals(1, resultado.getRegion().getIdRegion());
+    
+    
+    verify(ciudadProvinciaRepository, times(1)).findByNombreCiudadProvincia("Santiago");
+    verify(regionRepository, times(1)).findById(1);
+    verify(ciudadProvinciaRepository, times(1)).save(ciudadProvinciaNueva);
+    }
+
+    @Test
+    void guardarCiudadProvincia_NombreDuplicado_LanzaRuntimeException() {
+    // ARRANGE: Preparamos la entidad a guardar
+    CiudadProvincia ciudadProvinciaDuplicada = new CiudadProvincia();
+    ciudadProvinciaDuplicada.setNombreCiudadProvincia("Santiago");
+
+    // Simulamos que el repositorio ya encuentra una ciudad con ese nombre
+    CiudadProvincia ciudadExistente = new CiudadProvincia();
+    ciudadExistente.setIdCiudadProvincia(99);
+    ciudadExistente.setNombreCiudadProvincia("Santiago");
+
+    when(ciudadProvinciaRepository.findByNombreCiudadProvincia("Santiago"))
+        .thenReturn(Optional.of(ciudadExistente));
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.guardarCiudadProvincia(ciudadProvinciaDuplicada);
+    });
+
+    assertEquals("Ya existe la ciudad/provincia: Santiago", exception.getMessage());
+    
+    verify(ciudadProvinciaRepository, times(1)).findByNombreCiudadProvincia("Santiago");
+    verify(regionRepository, times(0)).findById(anyInt());
+    verify(ciudadProvinciaRepository, times(0)).save(ciudadProvinciaDuplicada);
+    }
+
+    @Test
+    void guardarCiudadProvincia_RegionNoExiste_LanzaRuntimeException() {
+    // ARRANGE: Creamos una región local con un ID simulado
+    Region regionInexistente = new Region();
+    regionInexistente.setIdRegion(99);
+
+    // Asociamos esta región a la nueva ciudad
+    CiudadProvincia ciudadProvinciaNueva = new CiudadProvincia();
+    ciudadProvinciaNueva.setNombreCiudadProvincia("Concepción");
+    ciudadProvinciaNueva.setRegion(regionInexistente);
+
+    //El nombre está disponible
+    when(ciudadProvinciaRepository.findByNombreCiudadProvincia("Concepción"))
+        .thenReturn(Optional.empty());
+    
+    //Al buscar la región por ID, simulamos que retorna un Optional vacío
+    when(regionRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.guardarCiudadProvincia(ciudadProvinciaNueva);
+    });
+
+    String mensajeEsperado = "No se puede guardar la Ciudad/Provincia: Concepción porque la región con id: 99 no existe";
+    assertEquals(mensajeEsperado, exception.getMessage());
+
+    verify(ciudadProvinciaRepository, times(1)).findByNombreCiudadProvincia("Concepción");
+    verify(regionRepository, times(1)).findById(99);
+    // Aseguramos que jamás se llamó al método save debido al error de la región
+    verify(ciudadProvinciaRepository, times(0)).save(ciudadProvinciaNueva);
+    }
+
+
+
+    @Test
+    void actualizarCiudadProvinciaPorId_Exitoso() {
+    // ARRANGE: 
+    //El DTO que viene desde el Controller con la nueva información
+    CiudadProvinciaUpdateDTO updateDTO = new CiudadProvinciaUpdateDTO();
+    updateDTO.setNombreCiudadProvincia("Santiago Actualizado");
+
+    //La entidad modificada que esperamos que retorne el repositorio tras el .save()
+    CiudadProvincia ciudadProvinciaActualizada = new CiudadProvincia();
+    ciudadProvinciaActualizada.setIdCiudadProvincia(1);
+    ciudadProvinciaActualizada.setNombreCiudadProvincia("Santiago Actualizado");
+
+    // Comportamiento de los Mocks
+    when(ciudadProvinciaRepository.findById(1)).thenReturn(Optional.of(ciudadProvinciaEjemplo));
+    when(ciudadProvinciaRepository.save(ciudadProvinciaEjemplo)).thenReturn(ciudadProvinciaActualizada);
+
+    // ACT
+    CiudadProvincia resultado = regionService.actualizarCiudadProvinciaPorId(1, updateDTO);
+
+    // ASSERT
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdCiudadProvincia());
+    assertEquals("Santiago Actualizado", resultado.getNombreCiudadProvincia()); // Verificamos el cambio de nombre
+    
+    verify(ciudadProvinciaRepository, times(1)).findById(1);
+    verify(ciudadProvinciaRepository, times(1)).save(ciudadProvinciaEjemplo);
+    }
+
+    @Test
+    void actualizarCiudadProvinciaPorId_NoEncontrado_LanzaRuntimeException() {
+    // ARRANGE
+    CiudadProvinciaUpdateDTO updateDTO = new CiudadProvinciaUpdateDTO();
+    updateDTO.setNombreCiudadProvincia("Providencia");
+
+    when(ciudadProvinciaRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.actualizarCiudadProvinciaPorId(99, updateDTO);
+    });
+
+    assertEquals("Ciudad/Provincia con id: 99 no encontrada", exception.getMessage());
+    
+    verify(ciudadProvinciaRepository, times(1)).findById(99);
+    verify(ciudadProvinciaRepository, times(0)).save(any(CiudadProvincia.class));
+    }
+
+
+//*******************************************************************************************************************/    
+//COMUNAS
+
+    @Test
+    void listarComunas_RetornaListaDeEntidades() {
+    // ARRANGE: 
+    List<Comuna> listaMock = new ArrayList<>();
+    listaMock.add(comunaEjemplo); 
+
+    // Mockeamos el repositorio correspondiente
+    when(comunaRepository.findAll()).thenReturn(listaMock);
+
+    // ACT: Invocamos al método del service centralizado
+    List<Comuna> resultado = regionService.listarComunas();
+
+    // ASSERT: Validaciones físicas y de contenido
+    assertNotNull(resultado);
+    assertEquals(1, resultado.size());
+    assertEquals("Quilicura", resultado.get(0).getNombreComuna());
+    
+    verify(comunaRepository, times(1)).findAll();
+    }
+
+    @Test
+    void listarComunas_vacia_retornaListaVacia() {
+        // ARRANGE
+        when(comunaRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // ACT
+        List<Comuna> resultado = regionService.listarComunas();
+
+        // ASSERT
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+        
+        verify(comunaRepository, times(1)).findAll();
+    }
+
+
+    @Test
+    void listarComunasPorIdCiudadProvincia_encontrado_retornaLista() {
+    // ARRANGE: 
+    //  Creación de la lista de ciudades que simula estar dentro de esa región
+    List<Comuna> comunasMock = new ArrayList<>();
+    Comuna quilicura = new Comuna();
+    quilicura.setIdComuna(1);
+    quilicura.setNombreComuna("Quilicura");
+    quilicura.setCiudadProvincia(ciudadProvinciaEjemplo);
+    comunasMock.add(quilicura);
+
+    // Adjuntamos la lista a la ciudad o provincia mockeada
+    ciudadProvinciaEjemplo.setComunas(comunasMock);
+
+    // Programamos el repositorio de comunas para que devuelva la comuna armada
+    when(ciudadProvinciaRepository.findById(1)).thenReturn(Optional.of(ciudadProvinciaEjemplo));
+
+    // ACT: Ejecutamos el método del servicio
+    List<Comuna> resultado = regionService.listarComunasPorIdCiudadProvin(1);
+
+    // ASSERT: Validamos el resultado de la lista
+    assertNotNull(resultado);
+    assertEquals(1, resultado.size());
+    assertEquals("Quilicura", resultado.get(0).getNombreComuna());
+    assertEquals(1, resultado.get(0).getCiudadProvincia().getIdCiudadProvincia());
+
+    verify(ciudadProvinciaRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void listarComunasPorIdCiudadProvincia_NoEncontrado_LanzaRuntimeException() {
+    // ARRANGE;
+    // Configuramos el repositorio correcto para retornar un Optional vacío
+    when(ciudadProvinciaRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.listarComunasPorIdCiudadProvin(99);
+    });
+
+    assertEquals("Ciudad/Provincia con id: 99 no encontrada", exception.getMessage());
+    
+    verify(ciudadProvinciaRepository, times(1)).findById(99);
+    }
+
+
+    @Test
+    void listarComunasPorNombreCiudadProvincia_encontrado_retornaLista() {
+    // ARRANGE: 
+    //  Creación de la lista de ciudades que simula estar dentro de esa región
+    List<Comuna> comunasMock = new ArrayList<>();
+    Comuna quilicura = new Comuna();
+    quilicura.setIdComuna(1);
+    quilicura.setNombreComuna("Quilicura");
+    quilicura.setCiudadProvincia(ciudadProvinciaEjemplo);
+    comunasMock.add(quilicura);
+
+    // Adjuntamos la lista a la ciudad o provincia mockeada
+    ciudadProvinciaEjemplo.setComunas(comunasMock);
+
+    // Programamos el repositorio de comunas para que devuelva la comuna armada
+    when(ciudadProvinciaRepository.findByNombreCiudadProvincia("Santiago")).thenReturn(Optional.of(ciudadProvinciaEjemplo));
+
+    // ACT: Ejecutamos el método del servicio
+    List<Comuna> resultado = regionService.listarComunasPorNombreCiudadProvin("Santiago");
+
+    // ASSERT: Validamos el resultado de la lista
+    assertNotNull(resultado);
+    assertEquals(1, resultado.size());
+    assertEquals("Quilicura", resultado.get(0).getNombreComuna());
+    assertEquals(1, resultado.get(0).getCiudadProvincia().getIdCiudadProvincia());
+
+    verify(ciudadProvinciaRepository, times(1)).findByNombreCiudadProvincia("Santiago");
+    }
+
+    @Test
+    void listarComunasPorNombreCiudadProvincia_NoEncontrado_LanzaRuntimeException() {
+    // ARRANGE
+    //String nombreInexistente = "Nunca Jamas";
+    
+    // Configuramos el repositorio correcto para retornar un Optional vacío
+    when(ciudadProvinciaRepository.findByNombreCiudadProvincia("Nunca Jamas")).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.listarComunasPorNombreCiudadProvin("Nunca Jamas");
+    });
+
+    assertEquals("Ciudad/Provincia con nombre: Nunca Jamas no encontrada", exception.getMessage());
+    
+    verify(ciudadProvinciaRepository, times(1)).findByNombreCiudadProvincia("Nunca Jamas");
+    }
+
+
+
+    @Test
+    void buscarComunaPorId_Encontrada_DevuelveComuna() {
+    // ARRANGE: 
+    // Envolvemos en el Optional requerido por el repositorio
+    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo));
+
+    // ACT: Ejecutamos el método real del servicio
+    Comuna resultado = regionService.buscarComunaPorId(1);
+
+    // ASSERT: Validamos que la data coincida con lo mockeado
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdComuna());
+    assertEquals("Quilicura", resultado.getNombreComuna());
+    
+    // Verificación de comportamiento
+    verify(comunaRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void buscarComunaPorId_NoEncontrada_LanzaRuntimeException() {
+    // ARRANGE
+    when(comunaRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.buscarComunaPorId(99);
+    });
+
+    // Validamos el mensaje exacto de tu negocio
+    assertEquals("Comuna con id: 99 no encontrada", exception.getMessage());
+    
+    verify(comunaRepository, times(1)).findById(99);
+    }
+
+
+
+    @Test
+    void buscarComunaPorNombre_Encontrada_RetornaComuna() {
+    
+    // Envolvemos en el Optional requerido por el repositorio
+    when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.of(comunaEjemplo));
+
+    // ACT: Ejecutamos el método real del servicio
+    Comuna resultado = regionService.buscarComunaPorNombre("Quilicura");
+
+    // ASSERT: Validamos que la data coincida con lo mockeado
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdComuna());
+    assertEquals("Quilicura", resultado.getNombreComuna());
+    
+    verify(comunaRepository, times(1)).findByNombreComuna("Quilicura");
+    }
+
+    @Test
+    void buscarComunaPorNombre_noEncontrada(){
+        //ARRANGE: preparamos la prueba, para qe retorne una region vacia
+        Optional<Comuna> comunaVacia = Optional.empty();
+        when(comunaRepository.findByNombreComuna("Nunca Jamas")).thenReturn(comunaVacia);
+
+        //ACT: llamamos el estado real
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            regionService.buscarComunaPorNombre("Nunca Jamas");
+        });
+
+        assertEquals("Comuna: Nunca Jamas no encontrada", exception.getMessage());
+        
+    }
+
+
+
+
+    @Test
+    void guardarComuna_Exitoso() {
+    // ARRANGE: 
+    comunaEjemplo.setRegion(regionEjemplo);
+    comunaEjemplo.setCiudadProvincia(ciudadProvinciaEjemplo);
+
+    // Entidad simulada creada (con ID asignado)
+    Comuna comunaGuardada = new Comuna();
+    comunaGuardada.setIdComuna(1);
+    comunaGuardada.setNombreComuna("Quilicura");
+    comunaGuardada.setRegion(regionEjemplo);
+    comunaGuardada.setCiudadProvincia(ciudadProvinciaEjemplo);
+
+    // Mocks en orden secuencial de ejecución
+    when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.empty());
+    when(regionRepository.findById(1)).thenReturn(Optional.of(regionEjemplo));
+    when(ciudadProvinciaRepository.findById(1)).thenReturn(Optional.of(ciudadProvinciaEjemplo));
+    when(comunaRepository.save(comunaEjemplo)).thenReturn(comunaGuardada);
+
+    // ACT
+    Comuna resultado = regionService.guardarComuna(comunaEjemplo);
+
+    // ASSERT
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdComuna());
+    assertEquals("Quilicura", resultado.getNombreComuna());
+    assertEquals(1, resultado.getRegion().getIdRegion());
+    assertEquals(1, resultado.getCiudadProvincia().getIdCiudadProvincia());
+
+    verify(comunaRepository, times(1)).findByNombreComuna("Quilicura");
+    verify(regionRepository, times(1)).findById(1);
+    verify(ciudadProvinciaRepository, times(1)).findById(1);
+    verify(comunaRepository, times(1)).save(comunaEjemplo);
+    }
+
+    @Test
+    void guardarComuna_NombreDuplicado_LanzaRuntimeException() {
+    // ARRANGE
+    when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.of(new Comuna()));
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.guardarComuna(comunaEjemplo);
+    });
+
+    assertEquals("Ya existe la comuna: Quilicura", exception.getMessage());
+    verify(comunaRepository, times(1)).findByNombreComuna("Quilicura");
+    verify(regionRepository, times(0)).findById(anyInt());
+    verify(ciudadProvinciaRepository, times(0)).findById(anyInt());
+    verify(comunaRepository, times(0)).save(comunaEjemplo);
+    }
+
+    @Test
+    void guardarComuna_RegionNoExiste_LanzaRuntimeException() {
+    // ARRANGE
+    Region regionInexistente = new Region();
+    regionInexistente.setIdRegion(99);
+
+    Comuna comunaNueva = new Comuna();
+    comunaNueva.setNombreComuna("Quilicura");
+    comunaNueva.setRegion(regionInexistente);
+
+    when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.empty());
+    when(regionRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.guardarComuna(comunaNueva);
+    });
+
+    assertEquals("No se puede guardar la Comuna: Quilicura porque la región con id: 99 no existe", exception.getMessage());
+    verify(comunaRepository, times(1)).findByNombreComuna("Quilicura");
+    verify(regionRepository, times(1)).findById(99);
+    verify(ciudadProvinciaRepository, times(0)).findById(anyInt());
+    verify(comunaRepository, times(0)).save(comunaNueva);
+    }
+
+    @Test
+    void guardarComuna_CiudadProvinciaNoExiste_LanzaRuntimeException() {
+    // ARRANGE
+    CiudadProvincia ciudadInexistente = new CiudadProvincia();
+    ciudadInexistente.setIdCiudadProvincia(99);
+
+    Comuna comunaNueva = new Comuna();
+    comunaNueva.setNombreComuna("Quilicura");
+    comunaNueva.setRegion(regionEjemplo);
+    comunaNueva.setCiudadProvincia(ciudadInexistente);
+
+    when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.empty());
+    when(regionRepository.findById(1)).thenReturn(Optional.of(regionEjemplo));
+    when(ciudadProvinciaRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.guardarComuna(comunaNueva);
+    });
+
+    assertEquals("No se puede guardar la Comuna: Quilicura porque la Ciudad/Provincia con id: 99 no existe", exception.getMessage());
+    verify(comunaRepository, times(1)).findByNombreComuna("Quilicura");
+    verify(regionRepository, times(1)).findById(1);
+    verify(ciudadProvinciaRepository, times(1)).findById(99);
+    verify(comunaRepository, times(0)).save(comunaNueva);
 }
 
 
 
+    @Test
+    void actualizarComunaPorId_Exitoso() {
+    // ARRANGE: Instanciamos el DTO de forma local con el nuevo nombre
+    ComunaUpdateDTO updateDTO = new ComunaUpdateDTO();
+    updateDTO.setNombreComuna("Quilicura Actualizado");
 
+    // Preparamos la entidad que esperamos recibir del repositorio tras el .save()
+    Comuna comunaActualizada = new Comuna();
+    comunaActualizada.setIdComuna(1); // Mismo ID del BeforeEach
+    comunaActualizada.setNombreComuna("Quilicura Actualizado");
+    comunaActualizada.setRegion(regionEjemplo);
+    comunaActualizada.setCiudadProvincia(ciudadProvinciaEjemplo);
+
+    // Mocks utilizando el ID de 'comunaEjemplo' (ID: 1)
+    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo));
+    when(comunaRepository.save(comunaEjemplo)).thenReturn(comunaActualizada);
+
+    // ACT: Ejecutamos el método del servicio
+    Comuna resultado = regionService.actualizarComunaPorId(1, updateDTO);
+
+    // ASSERT: Validamos que se haya aplicado el cambio correctamente
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdComuna());
+    assertEquals("Quilicura Actualizado", resultado.getNombreComuna());
+
+    // Verificaciones de comportamiento
+    verify(comunaRepository, times(1)).findById(1);
+    verify(comunaRepository, times(1)).save(comunaEjemplo);
+    }
+
+    @Test
+    void actualizarComunaPorId_NoEncontrado_LanzaRuntimeException() {
+    // ARRANGE
+    ComunaUpdateDTO updateDTO = new ComunaUpdateDTO();
+    updateDTO.setNombreComuna("Lampa");
+
+    // Configuramos el repositorio para retornar un Optional vacío
+    when(comunaRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.actualizarComunaPorId(99, updateDTO);
+    });
+
+    // Validamos el mismo msj del Regionservice
+    assertEquals("Comuna con id: 99 no encontrada", exception.getMessage());
+
+    verify(comunaRepository, times(1)).findById(99);
+    verify(comunaRepository, times(0)).save(any(Comuna.class));
+    }
+
+
+
+
+
+
+
+
+    
 }
 
 
