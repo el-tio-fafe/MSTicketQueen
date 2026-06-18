@@ -2,6 +2,7 @@ package cl.duoc.msDireccion.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,13 +23,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import cl.duoc.msDireccion.dto.CalleUpdateDTO;
 import cl.duoc.msDireccion.dto.CiudadProvinciaUpdateDTO;
 import cl.duoc.msDireccion.dto.ComunaUpdateDTO;
 import cl.duoc.msDireccion.dto.RegionDTO;
 import cl.duoc.msDireccion.dto.RegionUpdateDTO;
+import cl.duoc.msDireccion.model.Calle;
 import cl.duoc.msDireccion.model.CiudadProvincia;
 import cl.duoc.msDireccion.model.Comuna;
 import cl.duoc.msDireccion.model.Region;
+import cl.duoc.msDireccion.repository.CalleRepository;
 import cl.duoc.msDireccion.repository.CiudadProvinciaRepository;
 import cl.duoc.msDireccion.repository.ComunaRepository;
 import cl.duoc.msDireccion.repository.RegionRepository;
@@ -46,12 +50,18 @@ public class RegionServiceTest {
     @Mock
     private ComunaRepository comunaRepository;
 
+    @Mock
+    private CalleRepository calleRepository;
+
     @InjectMocks //crea una instancia de RegionService e inyecta el objeto simulado de RegionRepository en ella
     private RegionService regionService;
 
     private Region regionEjemplo;
     private CiudadProvincia ciudadProvinciaEjemplo;
-    private Comuna comunaEjemplo;
+    private Comuna comunaEjemplo1;
+    private Comuna comunaEjemplo2;
+    private Calle calleEjemplo1;
+    private Calle calleEjemplo2;
 
     @BeforeEach
     void setUp(){
@@ -64,11 +74,32 @@ public class RegionServiceTest {
         ciudadProvinciaEjemplo.setIdCiudadProvincia(1);
         ciudadProvinciaEjemplo.setNombreCiudadProvincia("Santiago");
 
-        comunaEjemplo = new Comuna();
-        comunaEjemplo.setIdComuna(1);
-        comunaEjemplo.setNombreComuna("Quilicura");
+        comunaEjemplo1 = new Comuna();
+        comunaEjemplo1.setIdComuna(1);
+        comunaEjemplo1.setNombreComuna("Quilicura");
+
+        comunaEjemplo2 = new Comuna();
+        comunaEjemplo2.setIdComuna(2);
+        comunaEjemplo2.setNombreComuna("Huechuraba");
+
+        calleEjemplo1 = new Calle();
+        calleEjemplo1.setIdCalle(1);
+        calleEjemplo1.setNombreCalle("Av. Manuel Antonio Matta");
+        calleEjemplo1.setNumeroCalle("1230");
+        calleEjemplo1.setNumeroDepto(null);
+        calleEjemplo1.setComuna(comunaEjemplo1);
+
+        
+        calleEjemplo2 = new Calle();
+        calleEjemplo2.setIdCalle(2);
+        calleEjemplo2.setNombreCalle("Américo Vespucio");
+        calleEjemplo2.setNumeroCalle("1500");
+        calleEjemplo2.setNumeroDepto("Depto 402");
+        calleEjemplo2.setComuna(comunaEjemplo2);
     }
 
+//****************************************************************************************************** */
+//TEST REGION
 
     @Test
     void listarRegiones_retornaListaDeEntidades() {
@@ -669,7 +700,7 @@ public class RegionServiceTest {
     void listarComunas_RetornaListaDeEntidades() {
     // ARRANGE: 
     List<Comuna> listaMock = new ArrayList<>();
-    listaMock.add(comunaEjemplo); 
+    listaMock.add(comunaEjemplo1); 
 
     // Mockeamos el repositorio correspondiente
     when(comunaRepository.findAll()).thenReturn(listaMock);
@@ -800,7 +831,7 @@ public class RegionServiceTest {
     void buscarComunaPorId_Encontrada_DevuelveComuna() {
     // ARRANGE: 
     // Envolvemos en el Optional requerido por el repositorio
-    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo));
+    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo1));
 
     // ACT: Ejecutamos el método real del servicio
     Comuna resultado = regionService.buscarComunaPorId(1);
@@ -836,7 +867,7 @@ public class RegionServiceTest {
     void buscarComunaPorNombre_Encontrada_RetornaComuna() {
     
     // Envolvemos en el Optional requerido por el repositorio
-    when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.of(comunaEjemplo));
+    when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.of(comunaEjemplo1));
 
     // ACT: Ejecutamos el método real del servicio
     Comuna resultado = regionService.buscarComunaPorNombre("Quilicura");
@@ -870,8 +901,8 @@ public class RegionServiceTest {
     @Test
     void guardarComuna_Exitoso() {
     // ARRANGE: 
-    comunaEjemplo.setRegion(regionEjemplo);
-    comunaEjemplo.setCiudadProvincia(ciudadProvinciaEjemplo);
+    comunaEjemplo1.setRegion(regionEjemplo);
+    comunaEjemplo1.setCiudadProvincia(ciudadProvinciaEjemplo);
 
     // Entidad simulada creada (con ID asignado)
     Comuna comunaGuardada = new Comuna();
@@ -884,10 +915,10 @@ public class RegionServiceTest {
     when(comunaRepository.findByNombreComuna("Quilicura")).thenReturn(Optional.empty());
     when(regionRepository.findById(1)).thenReturn(Optional.of(regionEjemplo));
     when(ciudadProvinciaRepository.findById(1)).thenReturn(Optional.of(ciudadProvinciaEjemplo));
-    when(comunaRepository.save(comunaEjemplo)).thenReturn(comunaGuardada);
+    when(comunaRepository.save(comunaEjemplo1)).thenReturn(comunaGuardada);
 
     // ACT
-    Comuna resultado = regionService.guardarComuna(comunaEjemplo);
+    Comuna resultado = regionService.guardarComuna(comunaEjemplo1);
 
     // ASSERT
     assertNotNull(resultado);
@@ -899,7 +930,7 @@ public class RegionServiceTest {
     verify(comunaRepository, times(1)).findByNombreComuna("Quilicura");
     verify(regionRepository, times(1)).findById(1);
     verify(ciudadProvinciaRepository, times(1)).findById(1);
-    verify(comunaRepository, times(1)).save(comunaEjemplo);
+    verify(comunaRepository, times(1)).save(comunaEjemplo1);
     }
 
     @Test
@@ -909,14 +940,14 @@ public class RegionServiceTest {
 
     // ACT & ASSERT
     RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-        regionService.guardarComuna(comunaEjemplo);
+        regionService.guardarComuna(comunaEjemplo1);
     });
 
     assertEquals("Ya existe la comuna: Quilicura", exception.getMessage());
     verify(comunaRepository, times(1)).findByNombreComuna("Quilicura");
     verify(regionRepository, times(0)).findById(anyInt());
     verify(ciudadProvinciaRepository, times(0)).findById(anyInt());
-    verify(comunaRepository, times(0)).save(comunaEjemplo);
+    verify(comunaRepository, times(0)).save(comunaEjemplo1);
     }
 
     @Test
@@ -987,8 +1018,8 @@ public class RegionServiceTest {
     comunaActualizada.setCiudadProvincia(ciudadProvinciaEjemplo);
 
     // Mocks utilizando el ID de 'comunaEjemplo' (ID: 1)
-    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo));
-    when(comunaRepository.save(comunaEjemplo)).thenReturn(comunaActualizada);
+    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo1));
+    when(comunaRepository.save(comunaEjemplo1)).thenReturn(comunaActualizada);
 
     // ACT: Ejecutamos el método del servicio
     Comuna resultado = regionService.actualizarComunaPorId(1, updateDTO);
@@ -1000,7 +1031,7 @@ public class RegionServiceTest {
 
     // Verificaciones de comportamiento
     verify(comunaRepository, times(1)).findById(1);
-    verify(comunaRepository, times(1)).save(comunaEjemplo);
+    verify(comunaRepository, times(1)).save(comunaEjemplo1);
     }
 
     @Test
@@ -1025,13 +1056,240 @@ public class RegionServiceTest {
     }
 
 
+//****************************************************************************************************** */
+//TEST CALLES
+
+    @Test
+    void listarCalles_RetornaListaDeEntidades() {
+    // ARRANGE: 
+    List<Calle> listaMock = new ArrayList<>();
+    listaMock.add(calleEjemplo1);
+    listaMock.add(calleEjemplo2);
+
+    when(calleRepository.findAll()).thenReturn(listaMock);
+
+    // ACT: Invocamos al método del servicio centralizado
+    List<Calle> resultado = regionService.listarCalles();
+
+    // ASSERT: 
+    assertNotNull(resultado);
+    assertEquals(2, resultado.size());
+
+    assertEquals(1, resultado.get(0).getIdCalle());
+    assertEquals("Av. Manuel Antonio Matta", resultado.get(0).getNombreCalle());
+    assertEquals("1230", resultado.get(0).getNumeroCalle());
+    assertNull(resultado.get(0).getNumeroDepto());
+    
+    // Verificamos que la relación con la comuna del BeforeEach esté intacta
+    assertNotNull(resultado.get(0).getComuna());
+    assertEquals(1, resultado.get(0).getComuna().getIdComuna());
+    assertEquals("Quilicura", resultado.get(0).getComuna().getNombreComuna());
+
+    assertEquals(2, resultado.get(1).getIdCalle());
+    assertEquals("Américo Vespucio", resultado.get(1).getNombreCalle());
+    assertEquals("1500", resultado.get(1).getNumeroCalle());
+    assertEquals("Depto 402", resultado.get(1).getNumeroDepto());
+
+    assertNotNull(resultado.get(1).getComuna());
+    assertEquals(2, resultado.get(1).getComuna().getIdComuna());
+    assertEquals("Huechuraba", resultado.get(1).getComuna().getNombreComuna());
+
+    verify(calleRepository, times(1)).findAll();
+    }
+
+
+    @Test
+    void listarCalles_SinCallesEnBD_RetornaListaVacia() {
+    // ARRANGE: Simulamos que el repositorio no tiene registros (retorna lista vacía)
+    List<Calle> listaVaciaMock = new ArrayList<>();
+    when(calleRepository.findAll()).thenReturn(listaVaciaMock);
+
+    // ACT
+    List<Calle> resultado = regionService.listarCalles();
+
+    // ASSERT: Validamos que la lista no sea null pero sí esté vacía
+    assertNotNull(resultado);
+    assertTrue(resultado.isEmpty());
+    assertEquals(0, resultado.size());
+
+    verify(calleRepository, times(1)).findAll();
+    }
 
 
 
+    @Test
+    void buscarCallePorId_Exitoso_DevuelveCalle() {
+    // ARRANGE: 
+    when(calleRepository.findById(1)).thenReturn(Optional.of(calleEjemplo1));
+
+    // ACT
+    Calle resultado = regionService.buscarCallePorId(1);
+
+    // ASSERT
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdCalle());
+    assertEquals("Av. Manuel Antonio Matta", resultado.getNombreCalle());
+    verify(calleRepository, times(1)).findById(1);
+    }
+
+    @Test
+    void buscarCallePorId_NoEncontrada_LanzaRuntimeException() {
+    // ARRANGE
+    when(calleRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.buscarCallePorId(99);
+    });
+
+    assertEquals("Calle con id: 99 no encontrada.", exception.getMessage());
+    verify(calleRepository, times(1)).findById(99);
+    }
 
 
+
+    @Test
+    void listarCallesPorComuna_Exitoso_DevuelveLista() {
+    // ARRANGE: Usamos comunaEjemplo1 (ID: 1) y metemos calleEjemplo1 en la lista
+    calleEjemplo2.setComuna(comunaEjemplo1);
+    List<Calle> callesDeComuna = new ArrayList<>();
+    callesDeComuna.add(calleEjemplo1);
+    callesDeComuna.add(calleEjemplo2);
+
+    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo1));
+    when(calleRepository.findByComuna_IdComuna(1)).thenReturn(callesDeComuna);
+
+    // ACT
+    List<Calle> resultado = regionService.listarCallesPorComuna(1);
+
+    // ASSERT
+    assertNotNull(resultado);
+    assertEquals(2, resultado.size()); //aquí decimos que esperamos 2 elementos
+
+    assertEquals(1, resultado.get(0).getIdCalle());
+    assertEquals("Av. Manuel Antonio Matta", resultado.get(0).getNombreCalle());
+    assertEquals(1, resultado.get(0).getComuna().getIdComuna());
+
+    assertEquals(2, resultado.get(1).getIdCalle());
+    assertEquals("Américo Vespucio", resultado.get(1).getNombreCalle());
+    assertEquals(1, resultado.get(1).getComuna().getIdComuna());
+
+    verify(comunaRepository, times(1)).findById(1);
+    verify(calleRepository, times(1)).findByComuna_IdComuna(1);
+    }
+
+    @Test
+    void listarCallesPorComuna_ComunaNoExiste_LanzaRuntimeException() {
+    // ARRANGE
+    when(comunaRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.listarCallesPorComuna(99);
+    });
+
+    assertEquals("Comuna con id: 99 no encontrada.", exception.getMessage());
+    
+    verify(comunaRepository, times(1)).findById(99);
+    // Aseguramos el cortocircuito: si la comuna no existe, jamás consulta las calles
+    verify(calleRepository, times(0)).findByComuna_IdComuna(anyInt());
+    }
+
+
+
+    @Test
+    void guardarCalle_Exitoso_DevuelveCalleGuardada() {
+    // ARRANGE: 
+    when(comunaRepository.findById(1)).thenReturn(Optional.of(comunaEjemplo1));
+    when(calleRepository.save(calleEjemplo1)).thenReturn(calleEjemplo1);
+
+    // ACT
+    Calle resultado = regionService.guardarCalle(calleEjemplo1);
+
+    // ASSERT
+    assertNotNull(resultado);
+    assertEquals("Av. Manuel Antonio Matta", resultado.getNombreCalle());
+    assertEquals(1, resultado.getComuna().getIdComuna());
+
+    verify(comunaRepository, times(1)).findById(1);
+    verify(calleRepository, times(1)).save(calleEjemplo1);
+    }
+
+    @Test
+    void guardarCalle_ComunaNoExiste_LanzaRuntimeException() {
+    // ARRANGE:
+    Comuna comunaInexistente = new Comuna();
+    comunaInexistente.setIdComuna(99);
+
+    Calle calleNueva = new Calle();
+    calleNueva.setNombreCalle("Calle Muy Lejana");
+    calleNueva.setNumeroCalle("123");
+    calleNueva.setComuna(comunaInexistente);
+
+    when(comunaRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.guardarCalle(calleNueva);
+    });
+
+    assertEquals("No se puede guardar la calle porque la comuna con id: 99 no existe.", exception.getMessage());
+    
+    verify(comunaRepository, times(1)).findById(99);
+    // Verificamos protección de BD: Jamás se llamó al save
+    verify(calleRepository, times(0)).save(calleNueva);
+    }
 
     
+
+    @Test
+    void actualizarNombreCalle_Exitoso_DevuelveCalleModificada() {
+    // ARRANGE
+    CalleUpdateDTO updateDTO = new CalleUpdateDTO();
+    updateDTO.setNombreCalle("Nuevo Nombre Matta");
+
+    // Copia modificada esperada del repositorio 
+    Calle calleActualizada = new Calle();
+    calleActualizada.setIdCalle(1);
+    calleActualizada.setNombreCalle("Nuevo Nombre Matta");
+    calleActualizada.setNumeroCalle("1230");
+    calleActualizada.setComuna(comunaEjemplo1);
+
+    when(calleRepository.findById(1)).thenReturn(Optional.of(calleEjemplo1));
+    when(calleRepository.save(calleEjemplo1)).thenReturn(calleActualizada);
+
+    // ACT
+    Calle resultado = regionService.actualizarNombreCalle(1, updateDTO);
+
+    // ASSERT
+    assertNotNull(resultado);
+    assertEquals(1, resultado.getIdCalle());
+    assertEquals("Nuevo Nombre Matta", resultado.getNombreCalle());
+
+    verify(calleRepository, times(1)).findById(1);
+    verify(calleRepository, times(1)).save(calleEjemplo1);
+    }
+
+    @Test
+    void actualizarNombreCalle_NoEncontrada_LanzaRuntimeException() {
+    // ARRANGE
+    CalleUpdateDTO updateDTO = new CalleUpdateDTO();
+    updateDTO.setNombreCalle("Cualquier Nombre");
+
+    when(calleRepository.findById(99)).thenReturn(Optional.empty());
+
+    // ACT & ASSERT
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        regionService.actualizarNombreCalle(99, updateDTO);
+    });
+
+    assertEquals("Calle con id: 99 no encontrada.", exception.getMessage());
+    
+    verify(calleRepository, times(1)).findById(99);
+    verify(calleRepository, times(0)).save(any(Calle.class));
+    }
+
+
 }
 
 

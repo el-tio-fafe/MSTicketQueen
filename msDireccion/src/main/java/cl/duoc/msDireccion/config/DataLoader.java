@@ -69,14 +69,14 @@ public class DataLoader {
                 comunaRepository.save(com5);
 
                 // 4. CALLES 
-                calleRepository.save(new Calle(null, "Av. Manuel Antonio Matta", "1230", null, com1));
-                calleRepository.save(new Calle(null, "Américo Vespucio", "1500", "Depto 402", com2));
-                calleRepository.save(new Calle(null, "Las Torres", "455", null, com1));
-                calleRepository.save(new Calle(null, "Arturo Prat", "890", null, com3));
-                calleRepository.save(new Calle(null, "Av. Isidoro Dubournais", "210", "Block B-12", com4));
-                calleRepository.save(new Calle(null, "Av. Alemania", "01240", null, com5));
-                calleRepository.save(new Calle(null, "Caupolicán", "530", "Depto 15", com5));
-                calleRepository.save(new Calle(null, "Pedro Fontova", "7890", null, com2));
+                calleRepository.save(new Calle(1, "Av. Manuel Antonio Matta", "1230", null, com1));
+                calleRepository.save(new Calle(2, "Américo Vespucio", "1500", "Depto 402", com2));
+                calleRepository.save(new Calle(3, "Las Torres", "455", null, com1));
+                calleRepository.save(new Calle(4, "Arturo Prat", "890", null, com3));
+                calleRepository.save(new Calle(5, "Av. Isidoro Dubournais", "210", "Block B-12", com4));
+                calleRepository.save(new Calle(6, "Av. Alemania", "01240", null, com5));
+                calleRepository.save(new Calle(7, "Caupolicán", "530", "Depto 15", com5));
+                calleRepository.save(new Calle(8, "Pedro Fontova", "7890", null, com2));
 
                 System.out.println("Datos cargados con exito a la base de datos");
             }
