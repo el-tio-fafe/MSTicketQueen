@@ -20,25 +20,25 @@ public class Calle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "ID único de la calle que es Autoincrementable")
+    @Schema(description = "ID único de la calle que es Autoincrementable", example = "1")
     private Integer idCalle;
 
     @Column(nullable = false)
-    @Schema(description = "Nombre de la calle")
+    @Schema(description = "Nombre de la calle", example = "Américo Vespucio")
     private String nombreCalle;
 
     @Column(nullable = false)
-    @Schema(description = "Número de la calle")
+    @Schema(description = "Número de la calle", example = "1500")
     private String numeroCalle;
 
     @Column(nullable = true)
-    @Schema(description = "Número del departamento si corresponde")
+    @Schema(description = "Número del departamento si corresponde", example = "Depto 402")
     private String numeroDepto;
     
     @ManyToOne
     @JoinColumn(name = "idComuna", nullable = false)
     @JsonBackReference("comuna-calle")
-    @Schema(description = "Nombre de la Comuna a la cual pertenece la Calle")
+    @Schema(description = "Nombre de la Comuna a la cual pertenece la Calle", example = "Huechuraba")
     private Comuna comuna;
 
     
