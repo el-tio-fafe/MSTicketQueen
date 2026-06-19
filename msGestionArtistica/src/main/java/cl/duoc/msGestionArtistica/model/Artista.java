@@ -32,7 +32,7 @@ public class Artista {
     private String correoArt;
 
     @Column(nullable = false)
-    @Schema(description = "Número de teléfono del artista.", example = "987654321")
+    @Schema(description = "Número de teléfono del artista.", example = "+56987654321")
     private String telefonoArt;
     
 }

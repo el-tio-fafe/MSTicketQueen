@@ -59,6 +59,7 @@ public class RegionController {
         }
     }
 
+
     @GetMapping("/buscar/region-completa/id/{idRegion}")
     @Operation(
                 summary = "Buscar región por ID", 
@@ -72,6 +73,7 @@ public class RegionController {
         }
     }
 
+
     @GetMapping("/buscar/region-resumida/id/{idRegion}")
     @Operation(
                 summary = "Buscar región por ID", 
@@ -84,6 +86,7 @@ public class RegionController {
         }
     }
 
+
     @GetMapping("/buscar/region/nombre/{nombreRegion}")
     @Operation(
                 summary = "Buscar región por Nombre de la Región", 
@@ -95,6 +98,7 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     //ESTE METODO QUE VIENE DEL SERVICE DEVUELVE LA REGION COMPLETA
     // @GetMapping("/buscar/region/nombre/{nombreRegion}")
@@ -118,6 +122,7 @@ public class RegionController {
         }
     }
     
+
     @PutMapping("/actualizar/region/id/{idRegion}")   //con el @PutMapping se actualizan todos los atributos
     @Operation(
                 summary = "Actualizar región por ID", 
@@ -129,6 +134,7 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     //SOLO PARA EFECTOS DE APRENDIZAJE Y HACER PRUEBAS EN POSTMAN HICE ESTE METODO Y FUNCIONÓ .. :)
     // @DeleteMapping("/eliminar/region/id/{idRegion}")
@@ -142,8 +148,8 @@ public class RegionController {
     // }
     
 
-//**************************************************************************************************************************//
 
+//**************************************************************************************************************************//
 //CIUDADES PROVINCIAS
     
     
@@ -165,6 +171,7 @@ public class RegionController {
             return ResponseEntity.ok(listaCiudadProvinciaDTO); 
         } 
     }
+
 
     @GetMapping("/ciudad-provincia/listar/id/{idRegion}")
     @Operation(
@@ -188,6 +195,7 @@ public class RegionController {
         }
     }
 
+
     @GetMapping("/ciudad-provincia/listar/nombre/{nombreRegion}")
     @Operation(
                 summary = "Listar Ciudades o Provincias por nombre de Región", 
@@ -210,6 +218,7 @@ public class RegionController {
         }
     }
 
+
     @GetMapping("/buscar/ciudad-provincia/id/{idCiudadProvincia}")
     @Operation(
                 summary = "Buscar Ciudades o Provincias por ID de la Ciudad o Provincia", 
@@ -221,6 +230,7 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/buscar/ciudad-provincia/nombre/{nombreCiudadProvincia}")
     @Operation(
@@ -234,6 +244,7 @@ public class RegionController {
         }
     }
 
+
     @PostMapping("/guardar/ciudad-provincia")
     @Operation(
                 summary = "Guardar Ciudad o Provincia", 
@@ -246,6 +257,7 @@ public class RegionController {
         }
     }
 
+    
     @PatchMapping("/actualizar/ciudad-provincia/id/{idCiudadProvincia}")
     @Operation(
                 summary = "Actualizar Ciudades o Provincias por ID de la Ciudad o Provincia", 
@@ -293,6 +305,7 @@ public class RegionController {
         }
     }
 
+
     @GetMapping("/comuna/listar/id/{idCiudadProvincia}")
     @Operation(
                 summary = "Listar Comunas por ID de la Ciudad o Provincia", 
@@ -314,6 +327,7 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/comuna/listar/nombre/{nombreCiudadProvincia}")
     @Operation(
@@ -350,6 +364,7 @@ public class RegionController {
         }
     }
 
+
     @GetMapping("/buscar/comuna/nombre/{nombreComuna}")
     @Operation(
                 summary = "Buscar Comunas por su nombre", 
@@ -362,6 +377,7 @@ public class RegionController {
         }
     }
 
+
     @PostMapping("/guardar/comuna")
     @Operation(
                 summary = "Guardar Comuna", 
@@ -373,6 +389,7 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());   
         }
     }
+
 
     @PatchMapping("/actualizar/comuna/id/{idComuna}")
     @Operation(
@@ -413,6 +430,7 @@ public class RegionController {
         return ResponseEntity.ok(lista);
     }
 
+
     @GetMapping("/buscar/calle/id/{idCalle}")
     @Operation(
                 summary = "Buscar Calle por su ID", 
@@ -424,6 +442,7 @@ public class RegionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/calle/listar/comuna/{idComuna}")
     @Operation(
@@ -441,6 +460,7 @@ public class RegionController {
         }
     }
 
+
     @PostMapping("/guardar/calle")
     @Operation(
                 summary = "Guardar Calle", 
@@ -453,6 +473,7 @@ public class RegionController {
         }
     }
 
+    
     @PatchMapping("/actualizar/calle/id/{idCalle}")
     @Operation(
                 summary = "Actualizar Calle por su ID", 
