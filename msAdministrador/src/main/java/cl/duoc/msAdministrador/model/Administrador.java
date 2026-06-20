@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "administrador")
-@Schema(description = "Entidad que representa a un administrador en el sistema de control de evntos. Contiene información personal del administrador, como su nombre, apellido, RUT, correo electrónico y número de teléfono. Además, cada administrador puede tener asociadas múltiples auditorías, que registran las acciones realizadas por el administrador en el sistema.")
+@Schema(description = "Entidad que representa a un administrador en el sistema de control de eventos. Contiene información personal del administrador, como su nombre, apellido, RUT, correo electrónico y número de teléfono. Además, cada administrador puede tener asociadas múltiples auditorías, que registran las acciones realizadas por el administrador en el sistema.")
 
 public class Administrador {
 

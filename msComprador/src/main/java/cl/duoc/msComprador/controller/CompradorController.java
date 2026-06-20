@@ -18,9 +18,12 @@ import cl.duoc.msComprador.dto.ActualizarCorreoDTO;
 import cl.duoc.msComprador.dto.ActualizarTelefonoDTO;
 import cl.duoc.msComprador.model.Comprador;
 import cl.duoc.msComprador.service.CompradorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/compradores")
+@Tag(name = "CompradorController", description = "Controlador para gestionar los compradores en el sistema")
 public class CompradorController {
 
     @Autowired
@@ -28,6 +31,9 @@ public class CompradorController {
 
 
     @GetMapping
+    @Operation(
+        summary = "Listar compradores o clientes",
+        description = "Obtiene la lista de todos los compradores")
     public ResponseEntity<?> listarClientes(){
         List<Comprador> lista = compradorService.listarCompradores();
         if(lista.isEmpty()){
@@ -38,6 +44,9 @@ public class CompradorController {
 
 
     @PostMapping
+    @Operation(
+        summary = "Guardar Compradores o Clientes",
+        description = "Crea un nuevo comprador y lo guarda en el sistema")
     public ResponseEntity<?> guardarCliente(@RequestBody Comprador comprador){
         try {
             return ResponseEntity.ok(compradorService.guardarComprador(comprador));
@@ -48,6 +57,9 @@ public class CompradorController {
 
 
     @GetMapping("/id/{idCliente}")
+     @Operation(
+        summary = "Buscar cliente por ID",
+        description = "Obtiene un comprador específico utilizando su identificador único")
     public ResponseEntity<?> buscarClientePorId(@PathVariable Integer idCliente){
         try {
             Comprador comprador = compradorService.buscarCompradorPorId(idCliente);
@@ -60,6 +72,9 @@ public class CompradorController {
 
 
     @GetMapping("/rut/{rutCliente}")
+    @Operation(
+        summary = "Buscar cliente por número de RUT",
+        description = "Obtiene un comprador específico utilizando su número de RUT")
     public ResponseEntity<?> buscarClientePorRut(@PathVariable String rutCliente){
         try {
             Comprador cli = compradorService.buscarCompradorPorRut(rutCliente);
@@ -71,6 +86,9 @@ public class CompradorController {
 
 
     @PutMapping("/actualizar/id/{idCliente}")
+    @Operation(
+        summary = "Actualizar cliente",
+        description = "Actualiza la información de un comprador específico por su número de ID")
     public ResponseEntity<?> actualizarClientePorId(@PathVariable Integer idCliente, @RequestBody Comprador comprador){
         try {
             Comprador cliActualizado = compradorService.actualizarCompradorPorId(idCliente, comprador);
@@ -82,6 +100,9 @@ public class CompradorController {
 
 
     @PutMapping("/actualizar/rut/{rutCliente}")
+    @Operation(
+        summary = "Actualizar cliente",
+        description = "Actualiza la información de un comprador específico por su número de RUT")
     public ResponseEntity<?> actualizarClientePorRut(@PathVariable String rutCliente, @RequestBody Comprador comprador){
         try {
             Comprador cliAct = compradorService.actualizarCompradorPorRut(rutCliente, comprador);
@@ -97,6 +118,9 @@ public class CompradorController {
     // Y EN EL FRONTEND (postman) EN VEZ DE ENVIAR UN OBJETO JSON CON EL NUEVO CORREO, SOLO ENVIARIA EL NUEVO CORREO COMO PARAMETRO
     // EN LA URL: http://localhost:8083/api/v1/compradores/actualizar/correo/25008098-0?nuevoCorreo=nuevocorreo@gmail.com
     @PatchMapping("/actualizar/correo/{rutCliente}")
+    @Operation(
+        summary = "Actualizar correo del cliente",
+        description = "Actualiza sólo el correo de un comprador específico por su número de RUT")
     public ResponseEntity<?> actualizarCorreoClientePorRut(@PathVariable String rutCliente, @RequestBody ActualizarCorreoDTO correoDto){
         try {
             return ResponseEntity.ok(compradorService.actualizarCorreoPorRut(rutCliente, correoDto.getCorreoCliente()));
@@ -107,6 +131,9 @@ public class CompradorController {
 
 
     @PatchMapping("/actualizar/telefono/{rutCliente}")
+    @Operation(
+        summary = "Actualizar teléfono del cliente",
+        description = "Actualiza sólo el teléfono de un comprador específico por su número de RUT")
     public ResponseEntity<?> actualizarTelefonoPorRut(@PathVariable String rutCliente, @RequestBody ActualizarTelefonoDTO telefonoDto){
         try {
             return ResponseEntity.ok(compradorService.actualizarTelefonoPorRut(rutCliente, telefonoDto.getTelefonoCliente()));
@@ -117,6 +144,9 @@ public class CompradorController {
 
 
     @DeleteMapping("/eliminar/id/{idCliente}")
+    @Operation(
+        summary = "Eliminar cliente por su ID",
+        description = "Elimina toda la información de un comprador específico en el sistema por su número de ID")
     public ResponseEntity<?> eliminarClientePorId(@PathVariable Integer idCliente){
         try {
             compradorService.eliminarCompradorPorId(idCliente);
@@ -129,6 +159,9 @@ public class CompradorController {
 
 
     @DeleteMapping("/eliminar/rut/{rutCliente}")
+     @Operation(
+        summary = "Eliminar cliente por RUT",
+        description = "Elimina toda la información de un comprador específico en el sistema por su número de RUT")
     public ResponseEntity<?> eliminarClientePorRut(@PathVariable String rutCliente){
         try {
             compradorService.eliminarCompradorPorRut(rutCliente);

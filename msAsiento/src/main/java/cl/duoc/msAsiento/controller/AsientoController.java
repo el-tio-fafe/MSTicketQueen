@@ -112,7 +112,7 @@ public class AsientoController {
     return ResponseEntity.ok(dto);
 }
 
- @PutMapping("/{idAsiento}")
+    @PutMapping("/{idAsiento}")
     @Operation(
         summary = "Actualizar asiento",
         description = "Actualiza la información de un asiento específico")

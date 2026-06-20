@@ -35,5 +35,9 @@ public class ReservaTemporal {
 
     @ManyToOne
     @JoinColumn(name = "id_asiento", nullable = false)
+    @Schema(description = "Datos del Asiento", example = "ID: 1, Número del Asiento: A100 y Estado del Asiento: DISPONIBLE ")
     private Asiento asiento;
+
+
+    
 }
