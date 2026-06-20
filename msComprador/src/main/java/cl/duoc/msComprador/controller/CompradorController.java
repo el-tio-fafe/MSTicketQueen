@@ -159,7 +159,7 @@ public class CompradorController {
 
 
     @DeleteMapping("/eliminar/rut/{rutCliente}")
-     @Operation(
+    @Operation(
         summary = "Eliminar cliente por RUT",
         description = "Elimina toda la información de un comprador específico en el sistema por su número de RUT")
     public ResponseEntity<?> eliminarClientePorRut(@PathVariable String rutCliente){

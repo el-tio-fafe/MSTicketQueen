@@ -21,10 +21,10 @@ public class DataLoader {
 
                 //PRIMERO PONER NOMBRES DE NUEVOS ATRIBUTOS PARA LLENAR LAS TABLAS ASI:
                 //NOMBRE DE CADA CLASE1 DEL MODEL clase1 = new CLASE1 (atributos);
-                Comprador comp1 = new Comprador(null, "23388916-4", "Matias", "Gomez", "Cruces", "mati@gmail.com", "+569 84578596", "cuaderno");
-                Comprador comp2 = new Comprador(null, "25008098-0", "Abraham", "Cortes", "Perez", "aby@gmail.com", "+569 52584565", "moto");
-                Comprador comp3 = new Comprador(null, "9989533-0", "Rosa", "Huaiquil", "Briones", "rosa@gmail.com", "+569 93944430", "bebida70");
-                Comprador comp4 = new Comprador(null, "17122488-2", "Alejandro", "Cruces", "Alcantara", "ale@gmail.com", "+569 22233565", "alejo");
+                Comprador comp1 = new Comprador(null, "20516581-8", "Matias", "Gutierrez", "Cortes", "mati@gmail.com", "+569 88548596", "casaleta");
+                Comprador comp2 = new Comprador(null, "22458965-9", "Abraham", "Aguilera", "Perez", "aby@gmail.com", "+569 59652565", "moto");
+                Comprador comp3 = new Comprador(null, "9528747-3", "Rosa", "Huaiquil", "Peralta", "rosa@gmail.com", "+569 93988830", "bebida70");
+                Comprador comp4 = new Comprador(null, "18548965-5", "Alejandro", "Cruces", "Alcantara", "ale@gmail.com", "+569 22233565", "alejo");
 
                 //clase1Repo.save(clase1)
                 compradorRepository.save(comp1);
