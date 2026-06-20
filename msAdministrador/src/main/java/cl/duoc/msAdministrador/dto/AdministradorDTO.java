@@ -14,16 +14,16 @@ public class AdministradorDTO {
     @Schema(description = "ID del administrador.", example = "1")
     private Integer idAdm;
     
-    @Schema(description = "Nombre del administrador.", example = "Maria Jose")
+    @Schema(description = "Nombre del administrador.", example = "Maria")
     private String nombreAdm;
 
-    @Schema(description = "Apellido paterno del administrador.", example = "Cruces")
+    @Schema(description = "Apellido paterno del administrador.", example = "Cruz")
     private String apPatAdm;
 
-    @Schema(description = "RUT del administrador.", example = "16517526-3")
+    @Schema(description = "RUT del administrador.", example = "16517585-2")
     private String rutAdm;
     
-    @Schema(description = "Correo electrónico del administrador.", example = "cote.cruces@gmail.com")
+    @Schema(description = "Correo electrónico del administrador.", example = "maria.r@gmail.com")
     private String correoAdm;
 
 }

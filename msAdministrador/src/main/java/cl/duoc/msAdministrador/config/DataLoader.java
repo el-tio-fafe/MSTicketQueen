@@ -26,8 +26,8 @@ public class DataLoader {
                 //PRIMERO PONER NOMBRES DE NUEVOS ATRIBUTOS PARA LLENAR LAS TABLAS ASI:
                 //NOMBRE DE CADA CLASE1 DEL MODEL clase1 = new CLASE1 (atributos);
 
-                Administrador adm1 = new Administrador(null, "16517526-3", "Maria Jose", "Cruces", "Huaiquil", "cote.cruces@gmail.com", "+56949783198", null);
-                Administrador adm2 = new Administrador(null, "16123152-5", "Ramon", "Gomez", "Cortes", "ramon@gmail.com", "+56933032274", null);
+                Administrador adm1 = new Administrador(null, "16517585-2", "Maria", "Cruz", "Recabarren", "maria.r@gmail.com", "+56949854785", null);
+                Administrador adm2 = new Administrador(null, "13598152-5", "Ramon", "Gutierrez", "Cortes", "ramon@gmail.com", "+56938574586", null);
 
 
 

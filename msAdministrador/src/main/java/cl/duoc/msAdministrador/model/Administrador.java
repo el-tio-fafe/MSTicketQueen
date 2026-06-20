@@ -26,27 +26,27 @@ public class Administrador {
     private Integer idAdm;
 
     @Column(nullable = false, unique = true)
-    @Schema(description = "RUT del administrador.", example = "16517526-3")
+    @Schema(description = "RUT del administrador.", example = "16517585-2")
     private String rutAdm;
 
     @Column(nullable = false)
-    @Schema(description = "Nombre del administrador.", example = "Maria Jose")
+    @Schema(description = "Nombre del administrador.", example = "Maria")
     private String nombreAdm;
 
     @Column(nullable = false)
-    @Schema(description = "Apellido paterno del administrador.", example = "Cruces")
+    @Schema(description = "Apellido paterno del administrador.", example = "Cruz")
     private String apPatAdm;
 
     @Column(nullable = false)
-    @Schema(description = "Apellido materno del administrador.", example = "Huaiquil")
+    @Schema(description = "Apellido materno del administrador.", example = "Recabarren")
     private String apMatAdm;
 
     @Column(nullable = false, unique = true)
-    @Schema(description = "Correo electrónico del administrador.", example = "cote.cruces@gmail.com")
+    @Schema(description = "Correo electrónico del administrador.", example = "maria.r@gmail.com")
     private String correoAdm;
 
     @Column(nullable = false)
-    @Schema(description = "Número de teléfono del administrador.", example = "+56949783198")
+    @Schema(description = "Número de teléfono del administrador.", example = "+56949854785")
     private String telefonoAdm;
 
     @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)

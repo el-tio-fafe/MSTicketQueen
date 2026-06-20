@@ -53,6 +53,7 @@ public class AdministradorController {
         }
     }
 
+
     @GetMapping("/auditorias")
     @Operation(
         summary = "Obtener todas las auditorías", 
@@ -69,6 +70,7 @@ public class AdministradorController {
         }
     }
 
+
     @GetMapping("/auditorias/buscar/{idAuditoria}")
     @Operation(
         summary = "Buscar auditoría por ID", 
@@ -80,6 +82,7 @@ public class AdministradorController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/auditorias/buscar/rut/{rutAdm}")
     @Operation(
@@ -166,6 +169,7 @@ public class AdministradorController {
         
     }
 
+    
     @DeleteMapping("eliminar/id/{idAdm}")
     @Operation(
         summary = "Eliminar administrador por ID", 
