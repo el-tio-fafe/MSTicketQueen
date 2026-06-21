@@ -18,10 +18,13 @@ import cl.duoc.msEvento.model.Evento;
 import cl.duoc.msEvento.model.Recinto;
 import cl.duoc.msEvento.model.TipoEvento;
 import cl.duoc.msEvento.service.EventoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 @RestController
 @RequestMapping("/api/v1/eventos")
+@Tag(name = "Eventos", description = "Endpoints relacionados con los eventos, recinto y tipo de evento que permiten realizar operaciones CRUD sobre los eventos y consultar el recinto y el tipo asociado a ellos.")
 public class EventoController {
 
     @Autowired
@@ -31,6 +34,9 @@ public class EventoController {
 //EVENTO
 
     @GetMapping("/listartodos")
+    @Operation(
+        summary = "Obtener todos los eventos", 
+        description = "Endpoint para obtener una lista de todos los eventos registrados en el sistema de control de eventos.")
     public ResponseEntity<?> listarEventos(){
         try {
             List<Evento> lista = eventoService.listarEventos();
@@ -46,6 +52,9 @@ public class EventoController {
 
 
     @GetMapping("buscar/id/{idEvento}")
+    @Operation(
+        summary = "Buscar todos los eventos por su ID", 
+        description = "Endpoint para obtener un evento registrado en el sistema según su número de ID en el control de eventos.")
     public ResponseEntity<?> buscarEventoPorId(@PathVariable Integer idEvento){
         try {
             return ResponseEntity.ok(eventoService.buscarEventoPorId(idEvento));
@@ -56,6 +65,9 @@ public class EventoController {
 
 
     @GetMapping("listar/estado/{estadoEvento}")  //PENDIENTE, APROBADO O RECHAZADO
+    @Operation(
+        summary = "Listar todos los eventos por su estado", 
+        description = "Endpoint para obtener los eventos registrados en el sistema según el estado en el control de eventos.")
     public ResponseEntity<?> listarEventosPorEstado(@PathVariable String estadoEvento){
         try {
             List<Evento> lista = eventoService.listarEventosPorEstado(estadoEvento);
@@ -70,6 +82,9 @@ public class EventoController {
     }
 
     @GetMapping("/listar-eventos/por-productora/id/{idProd}")
+    @Operation(
+        summary = "Listar todos los eventos según la productora que realiza el evento", 
+        description = "Endpoint para obtener los eventos registrados en el sistema según la productora que organiza el evento en el control de eventos.")
     public ResponseEntity<?> listarEventosPorProductora(@PathVariable Integer idProd){
         try {
             List<Evento> lista = eventoService.listarEventosPorProductora(idProd);
@@ -85,6 +100,9 @@ public class EventoController {
 
 
     @PostMapping("/crear")
+    @Operation(
+        summary = "Crear nuevo evento en el sistema", 
+        description = "Endpoint para crear un nuevo evento en el sistema de control de eventos.")
     public ResponseEntity<?> crearEvento(@RequestBody Evento evento){
         try {
             return ResponseEntity.ok(eventoService.crearEvento(evento));
@@ -95,6 +113,9 @@ public class EventoController {
 
 
     @PatchMapping("/aprobar/id/{idEvento}")
+    @Operation(
+        summary = "Aprobar un evento por su número de ID", 
+        description = "Endpoint para aprobar un evento registrado en el sistema según su número de ID en el control de eventos.")
     public ResponseEntity<?> aprobarEventoPorId(@PathVariable Integer idEvento, @RequestParam Integer idAdministrador){
         try {
             return ResponseEntity.ok(eventoService.aprobarEvento(idEvento, idAdministrador));
@@ -105,6 +126,9 @@ public class EventoController {
 
 
     @PatchMapping("/rechazar/id/{idEvento}")
+    @Operation(
+        summary = "Rechazar un evento por su número de ID", 
+        description = "Endpoint para rechazar un evento registrado en el sistema según su número de ID en el control de eventos.")
     public ResponseEntity<?> rechazarEventoPorId(@PathVariable Integer idEvento, @RequestParam Integer idAdministrador){
         try {
             return ResponseEntity.ok(eventoService.rechazarEvento(idEvento, idAdministrador));
@@ -115,6 +139,9 @@ public class EventoController {
 
 
     @DeleteMapping("/delete/id/{idEvento}")
+    @Operation(
+        summary = "Eliminar evento por su número de ID", 
+        description = "Endpoint para eliminar un evento registrado en el sistema según el número de ID en el control de eventos.")
     public ResponseEntity<?> eliminarEventoPorId(@PathVariable Integer idEvento){
         try {
             eventoService.eliminarEvento(idEvento);
@@ -128,6 +155,9 @@ public class EventoController {
 //TIPO EVENTO
 
     @GetMapping("/tiposEvento")
+    @Operation(
+        summary = "Listar todos los tipos de eventos registrados en el sistema", 
+        description = "Endpoint para listar todos los tipos de eventos registrados en el sistema de control de eventos.")
     public ResponseEntity<?> listarTiposEvento(){
         try {
             List<TipoEvento> lista = eventoService.listarTiposEvento();
@@ -142,6 +172,9 @@ public class EventoController {
 
 
     @GetMapping("/tiposEvento/buscar/id/{idTipoEvento}")
+    @Operation(
+        summary = "Buscar todos los tipos de eventos por su ID", 
+        description = "Endpoint para obtener un evento registrado en el sistema según su número de ID registrado en el sistema de control de eventos.")
     public ResponseEntity<?> buscarTiposEvento(@PathVariable Integer idTipoEvento){
         try {
             return ResponseEntity.ok(eventoService.buscarEventoPorId(idTipoEvento));
@@ -151,6 +184,9 @@ public class EventoController {
     } 
 
     @PostMapping("/tiposEvento")
+    @Operation(
+        summary = "Guardar un nuevo tipo de evento", 
+        description = "Endpoint para crear un nuevo tipo de evento y que quede guardado en el sistema.")
     public ResponseEntity<?> guardarTiposEvento(@RequestBody TipoEvento tipoEvento){
         try {
             return ResponseEntity.ok(eventoService.guardarTipoEvento(tipoEvento));
@@ -160,6 +196,9 @@ public class EventoController {
     }
 
     @PatchMapping("tipoEvento/id/{idTipoEvento}")
+    @Operation(
+        summary = "Actualizar un tipo de evento por su número de ID", 
+        description = "Endpoint para actualizar un tipo de evento registrado en el sistema según el número de ID en el control de eventos.")
     public ResponseEntity<?> actualizarTiposEvento(@PathVariable Integer idTipoEvento, @RequestBody TipoEvento tipoEvento){
         try {
             return ResponseEntity.ok(eventoService.actualizarTipoEvento(idTipoEvento, tipoEvento));
@@ -169,6 +208,9 @@ public class EventoController {
     }
 
     @DeleteMapping("/tipoEvento/id/{idTipoEvento}")
+    @Operation(
+        summary = "Eliminar un tipo de evento por su número de ID", 
+        description = "Endpoint para eliminar un tipo de evento registrado en el sistema según el número de ID en el control de eventos.")
     public ResponseEntity<?> eliminarTiposEvento(@PathVariable Integer idTipoEvento){
         try {
             eventoService.eliminarEvento(idTipoEvento);
@@ -183,6 +225,10 @@ public class EventoController {
 //RECINTO
 
     @GetMapping("/recinto/listar")
+    @Operation(
+        summary = "Listar todos los recintos registrados en el sistema", 
+        description = "Endpoint para listar todos los recintos registrados en el sistema de control de eventos.")
+
     public ResponseEntity<?> listarRecintos(){
         try {
             List<Recinto> lista = eventoService.listarRecintos();
@@ -197,6 +243,9 @@ public class EventoController {
 
 
     @GetMapping("/recinto/buscar/id/{idRecinto}")
+    @Operation(
+        summary = "Buscar un recinto específico por su ID", 
+        description = "Endpoint para obtener un recinto registrado en el sistema según su número de ID.")
     public ResponseEntity<?> buscarRecintoPorId(@PathVariable Integer idRecinto){
         try {
             return ResponseEntity.ok(eventoService.buscarRecintoPorId(idRecinto));
@@ -207,6 +256,9 @@ public class EventoController {
 
 
     @GetMapping("/recinto/buscar/nombre/{nombreRecinto}")
+    @Operation(
+        summary = "Buscar un recinto específico por su nombre", 
+        description = "Endpoint para obtener un recinto según su nombre registrado en el sistema de control de eventos.")
     public ResponseEntity<?> buscarRecintoPorNombre(@PathVariable String nombreRecinto){
         try {
             return ResponseEntity.ok(eventoService.buscarRecintoPorNombre(nombreRecinto));
@@ -216,6 +268,9 @@ public class EventoController {
     } 
 
     @PostMapping("/recinto/guardar")
+    @Operation(
+        summary = "Guardar un nuevo recinto", 
+        description = "Endpoint para crear un nuevo recinto y que quede guardado en el sistema.")
     public ResponseEntity<?> guardarRecinto(@RequestBody Recinto recinto){
         try {
             return ResponseEntity.ok(eventoService.guardarRecinto(recinto));
@@ -225,6 +280,9 @@ public class EventoController {
     }
 
     @PatchMapping("/recinto/actualizar/id/{idRecinto}")
+    @Operation(
+        summary = "Actualizar un recinto por su número de ID", 
+        description = "Endpoint para actualizar un recinto registrado en el sistema según el número de ID en el control de eventos.")
     public ResponseEntity<?> actualizarRecinto(@PathVariable Integer idRecinto, @RequestBody Recinto recinto){
         try {
             return ResponseEntity.ok(eventoService.actualizarRecinto(idRecinto, recinto));
@@ -234,6 +292,10 @@ public class EventoController {
     }
 
     @DeleteMapping("/recinto/eliminar/id/{idRecinto}")
+    @Operation(
+        summary = "Eliminar un recinto por su número de ID", 
+        description = "Endpoint para eliminar un recinto registrado en el sistema según el número de ID en el control de eventos.")
+
     public ResponseEntity<?> eliminarRecinto(@PathVariable Integer idRecinto){
         try {
             eventoService.eliminarRecinto(idRecinto);;
