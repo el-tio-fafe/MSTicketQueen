@@ -82,7 +82,8 @@ public class CompradorService {
         return compradorRepository.save(comprador);
     }
 
-
+    
+    
 
     //ACTUALIZAR SOLO EL TELEFONO DEL CLIENTE POR SU RUT
     public Comprador actualizarTelefonoPorRut(String rutCliente, String nuevoTelefono){
