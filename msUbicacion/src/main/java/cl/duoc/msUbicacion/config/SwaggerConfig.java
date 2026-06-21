@@ -16,7 +16,7 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("Microservicio de control de ubicaciones")
                 .version("1.1")
-                .description("Documentacion de el microservicio de control de ubicaciones")
+                .description("Documentación de el microservicio de control de ubicaciones")
         );
     }
 }

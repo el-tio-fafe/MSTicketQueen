@@ -14,9 +14,9 @@ public class SwaggerConfig {
 
         return new OpenAPI()
             .info(new Info()
-                .title("Microservicio de administración")
+                .title("Microservicio Gestión de Administración")
                 .version("1.1")
-                .description("Documentación del microservicio de administración")
+                .description("Documentación de API que permite la gestión de los Administradores en el sistema")
         );
     }
 

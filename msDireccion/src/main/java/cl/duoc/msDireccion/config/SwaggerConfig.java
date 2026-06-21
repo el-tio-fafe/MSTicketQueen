@@ -14,9 +14,9 @@ public class SwaggerConfig {
 
         return new OpenAPI()
             .info(new Info()
-                .title("Microservicio Gestion de Direcciones")
+                .title("Microservicio Gestión de Direcciones")
                 .version("1.2")
-                .description("Documentacion de API que permite la gestion de las direcciones en el sistema" )
+                .description("Documentación de API que permite la gestión de las direcciones en el sistema" )
             );
 
     }

@@ -14,9 +14,9 @@ public class SwaggerConfig {
 
         return new OpenAPI()
             .info(new Info()
-                .title("Microservicio gestion artistica")
+                .title("Microservicio gestión artística")
                 .version("1.1")
-                .description("Documentacion de el microservicio de gestion artistica")
+                .description("Documentación de el microservicio de gestión artística")
     );
 
 

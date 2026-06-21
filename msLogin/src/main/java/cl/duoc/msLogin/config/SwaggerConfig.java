@@ -11,9 +11,9 @@ public class SwaggerConfig {
     public OpenAPI customOpenApi(){
       return new OpenAPI()
             .info(new Info()
-                .title("MicroServicio Gestion De Login")
+                .title("MicroServicio Gestión De Login")
                 .version("1.2")
-                .description("Documentacion De API que permite la gestion de Login de usuarios en el sistema")
+                .description("Documentación De API que permite la gestión de Login de usuarios en el sistema")
             );
 
             }
