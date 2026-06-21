@@ -3,6 +3,8 @@ package cl.duoc.msAsiento.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,6 +34,7 @@ public class AsientoServiceTest {
 
 
     private Asiento asientoEjemplo;
+    private Asiento asientoModificadoEjemplo;
 
 
     @BeforeEach
@@ -41,6 +44,12 @@ public class AsientoServiceTest {
         asientoEjemplo.setIdAsiento(1);
         asientoEjemplo.setNumeroAsiento("A1");
         asientoEjemplo.setEstadoAsiento("DISPONIBLE");
+
+
+        asientoModificadoEjemplo = new Asiento();
+        asientoModificadoEjemplo.setIdAsiento(1);
+        asientoModificadoEjemplo.setNumeroAsiento("a1"); 
+        asientoModificadoEjemplo.setEstadoAsiento("ocupado");
 
 
     }
@@ -149,8 +158,123 @@ public class AsientoServiceTest {
     }
 
 
-    
+//GUARDAR
+
+    @Test
+    void guardar_exitoso() {
+        when(asientoRepository.findByNumeroAsiento("A1")).thenReturn(Optional.empty());
+        when(asientoRepository.save(any(Asiento.class))).thenReturn(asientoEjemplo);
+
+        Asiento resultado = asientoService.guardar(asientoModificadoEjemplo);
+
+        assertNotNull(resultado);
+        assertEquals("A1", asientoModificadoEjemplo.getNumeroAsiento());
+        assertEquals("OCUPADO", asientoModificadoEjemplo.getEstadoAsiento());
+        verify(asientoRepository, times(1)).save(asientoModificadoEjemplo);
+    }
+
+    @Test
+    void guardar_NumeroAsientoDuplicado() {
+        when(asientoRepository.findByNumeroAsiento("A1")).thenReturn(Optional.of(asientoEjemplo));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            asientoService.guardar(asientoModificadoEjemplo);
+        });
+
+        assertEquals("El número de asiento A1 ya existe", exception.getMessage());
+        verify(asientoRepository, never()).save(any(Asiento.class));
+    }
+
+
+//ELIMINAR POR ID
+
+    @Test
+    void eliminarPorId_exitoso() {
+        when(asientoRepository.existsById(1)).thenReturn(true);
+
+        asientoService.eliminarPorId(1);
+
+        verify(asientoRepository, times(1)).deleteById(1);
+    }
+
+    @Test
+    void eliminarPorId_NoExiste() {
+        Integer idInexistente = 99;
+        when(asientoRepository.existsById(idInexistente)).thenReturn(false);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            asientoService.eliminarPorId(idInexistente);
+        });
+
+        assertEquals("Asiento id: " + idInexistente + " no existe", exception.getMessage());
+        verify(asientoRepository, never()).deleteById(any(Integer.class));
+    }
+
+    //ELIMINAR POR NUM ASIENTO
+
+    @Test
+    void eliminarPorNumAsiento_exitoso() {
+        when(asientoRepository.findByNumeroAsiento("A1")).thenReturn(Optional.of(asientoEjemplo));
+
+        asientoService.eliminarPorNumAsiento("A1");
+
+        verify(asientoRepository, times(1)).deleteById(1);
+    }
+
+    @Test
+    void eliminarPorNumAsiento_NoExiste() {
+        String numInexistente = "B2";
+        when(asientoRepository.findByNumeroAsiento(numInexistente)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            asientoService.eliminarPorNumAsiento(numInexistente);
+        });
+
+        assertEquals("Asiento numero: " + numInexistente + " no existe", exception.getMessage());
+        verify(asientoRepository, never()).deleteById(any(Integer.class));
+    }
+
+
+//ACTUALIZAR
+
+    @Test
+    void actualizar_exitoso() {
+        when(asientoRepository.findById(1)).thenReturn(Optional.of(asientoEjemplo));
+        when(asientoRepository.save(any(Asiento.class))).thenReturn(asientoEjemplo);
+
+        Asiento resultado = asientoService.actualizar(1, asientoModificadoEjemplo);
+
+        assertNotNull(resultado);
+        assertEquals("A1", asientoEjemplo.getNumeroAsiento());
+        assertEquals("OCUPADO", asientoEjemplo.getEstadoAsiento());
+        verify(asientoRepository, times(1)).save(asientoEjemplo);
+    }
+
+    @Test
+    void actualizar_NoEncontrado() {
+        //Integer idInexistente = 99;
+        when(asientoRepository.findById(99)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            asientoService.actualizar(99, asientoModificadoEjemplo);
+        });
+
+        assertEquals("Asiento id: 99 no encontrado", exception.getMessage());
+        verify(asientoRepository, never()).save(any(Asiento.class));
+    }
+
+
+
+
+
 
 
 
 }
+
+
+
+
+
+
+

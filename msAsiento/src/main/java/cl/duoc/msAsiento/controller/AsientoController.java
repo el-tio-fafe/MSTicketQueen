@@ -38,6 +38,7 @@ public class AsientoController {
         return ResponseEntity.ok(lista);
     }
 
+
     @GetMapping("/estado/{estadoAsiento}")
     @Operation(
         summary = "Listar asientos por estado",
@@ -63,6 +64,7 @@ public class AsientoController {
         }
     }
 
+
     @GetMapping("numero/{numAsiento}")
     @Operation(
         summary = "Buscar asiento por número",
@@ -74,6 +76,7 @@ public class AsientoController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @PostMapping
     @Operation(
@@ -102,15 +105,20 @@ public class AsientoController {
     @Operation(
         summary = "Obtener AsientoDTO por ID",
         description = "Obtiene un AsientoDTO específico utilizando el identificador del asiento")
-    public ResponseEntity<AsientoDTO> obtenerAsientoDTO(@PathVariable("id") Integer idAsiento) {
-    Asiento asiento = asientoService.buscarPorId(idAsiento);
-    AsientoDTO dto = new AsientoDTO(
-            asiento.getIdAsiento(),
-            asiento.getNumeroAsiento(),
-            asiento.getEstadoAsiento()
-    );
-    return ResponseEntity.ok(dto);
-}
+    public ResponseEntity<?> obtenerAsientoDTO(@PathVariable("id") Integer idAsiento) {
+        try {
+            Asiento asiento = asientoService.buscarPorId(idAsiento);
+            AsientoDTO dto = new AsientoDTO(
+                    asiento.getIdAsiento(),
+                    asiento.getNumeroAsiento(),
+                    asiento.getEstadoAsiento()
+            );
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build(); // Retorna 404 si no existe
+        }
+    }
+
 
     @PutMapping("/{idAsiento}")
     @Operation(
