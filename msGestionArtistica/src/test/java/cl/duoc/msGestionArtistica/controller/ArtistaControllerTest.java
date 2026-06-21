@@ -1,7 +1,11 @@
 package cl.duoc.msGestionArtistica.controller;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
@@ -10,15 +14,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
 
 import cl.duoc.msGestionArtistica.model.Artista;
 import cl.duoc.msGestionArtistica.service.ArtistaService;
-import io.swagger.v3.oas.annotations.Operation;
 
 @WebMvcTest(ArtistaController.class)
 public class ArtistaControllerTest {
@@ -42,6 +43,7 @@ public class ArtistaControllerTest {
         ejemplo.setTelefonoArt("+56912345678");
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------------
     @Test
     void getAllArtistas() throws Exception {
         //Arrange
@@ -52,7 +54,17 @@ public class ArtistaControllerTest {
             .andExpect(status().isOk());
     }
 
+    @Test
+    void getAllArtistas_vacio() throws Exception {
+        //Arrange
+        when(service.getAllArtistas()).thenReturn(List.of());
+        //Act + Assert
+        mock.perform(get("/api/v1/artistas/ver_artistas"))
+            .andExpect(status().isNoContent());        
+    }
+    //-----------------------------------------------------------------------------------------------------------------------------
 
+    //-----------------------------------------------------------------------------------------------------------------------------
     @Test
     void getArtistaById_encontrado() throws Exception {
         //Arrange
@@ -72,7 +84,9 @@ public class ArtistaControllerTest {
         mock.perform(get("/api/v1/artistas/ver_artistas/find_id/99"))
             .andExpect(status().isNotFound());
     }
+    //-----------------------------------------------------------------------------------------------------------------------------
 
+    //-----------------------------------------------------------------------------------------------------------------------------
     @Test
     void getArtistaByRut_encontrado() throws Exception {
         //Arrage
@@ -92,24 +106,9 @@ public class ArtistaControllerTest {
         mock.perform(get("/api/v1/artistas/ver_artistas/find_rut/98765432-1"))
             .andExpect(status().isNotFound());    
     }
+    //-----------------------------------------------------------------------------------------------------------------------------
 
-
-    //@GetMapping("/ver_artistas/find_correo/{correo}")
-    //@Operation(
-    //    summary = "Obtener un artista por correo", 
-    //    description = "Endpoint para obtener un artista específico por su correo.")
-    //public ResponseEntity<?> getArtistaByCorreo(@PathVariable String correo) {// endpoint para buscar un artista por correo
-//
-    //    try {
-    //        Artista artista = artistaService.getArtistaByCorreo(correo);// intenta obtener el artista por correo,
-    //        //  si no lo encuentra lanza una excepción que es capturada en el bloque catch y devuelve un status 404 Not Found
-    //        return ResponseEntity.ok(artista);
-//
-    //    } catch (RuntimeException e) {
-    //        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    //    }
-    //}
-
+    //-----------------------------------------------------------------------------------------------------------------------------
     @Test
     void getArtistaByCorreo_Encontrado() throws Exception {
         //Arrage
@@ -128,4 +127,85 @@ public class ArtistaControllerTest {
         mock.perform(get("/api/v1/artistas/ver_artistas/find_correo/noencontrado@gmail.com"))
             .andExpect(status().isNotFound());
     }
+    //-----------------------------------------------------------------------------------------------------------------------------
+
+
+@Test
+    void saveArtista_creado() throws Exception {
+        //Arrange
+        when(service.saveArtista(ejemplo)).thenReturn(ejemplo);
+        //Act + Assert
+        mock.perform(post("/api/v1/artistas/crear_artista")
+            .contentType("application/json")
+            .content("{\"idArt\":1,\"rutArt\":\"12345678-9\",\"nombreArt\":\"Los Bunkers\",\"correoArt\":\"losbunkers@gmail.com\",\"telefonoArt\":\"+56912345678\"}"))
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    void saveArtista_con_mismo_rut() throws Exception {
+        //Arrange
+        when(service.saveArtista(ejemplo)).thenThrow(new RuntimeException("Ya existe un artista con el rut: 1"));
+        //Act + Assert
+        mock.perform(post("/api/v1/artistas/crear_artista")
+            .contentType("application/json")
+            .content("{\"idArt\":1,\"rutArt\":\"12345678-9\",\"nombreArt\":\"Los Bunkers\",\"correoArt\":\"losbunkers@gmail.com\",\"telefonoArt\":\"+56912345678\"}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void saveArtista_con_mismo_correo() throws Exception {
+        //Arrange
+        when(service.saveArtista(ejemplo)).thenThrow(new RuntimeException("Ya existe un artista con el correo: losbunkers@gmail.com"));
+        //Act + Assert
+        mock.perform(post("/api/v1/artistas/crear_artista")
+            .contentType("application/json")
+            .content("{\"idArt\":1,\"rutArt\":\"12345678-9\",\"nombreArt\":\"Los Bunkers\",\"correoArt\":\"losbunkers@gmail.com\",\"telefonoArt\":\"+56912345678\"}"))
+            .andExpect(status().isBadRequest());
+    }
+    //-----------------------------------------------------------------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------------------------------------------------------------
+    @Test
+    void updateArtista_existente() throws Exception {
+        //Arrange
+        when(service.updateArtista(1, ejemplo)).thenReturn(ejemplo);
+        //Act + Assert
+        mock.perform(put("/api/v1/artistas/actualizar_artista/id/1")
+            .contentType("application/json")
+            .content("{\"idArt\":1,\"rutArt\":\"12345678-9\",\"nombreArt\":\"Los Bunkers\",\"correoArt\":\"losbunkers@gmail.com\",\"telefonoArt\":\"+56912345678\"}"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void updateArtista_id_no_encontrado() throws Exception {
+        //Arrange
+        when(service.updateArtista(99, ejemplo)).thenThrow(new RuntimeException("Artista con id: 99 no encontrado. No se puede actualizar."));
+        //Act + Assert
+        mock.perform(put("/api/v1/artistas/actualizar_artista/id/99")
+            .contentType("application/json")
+            .content("{\"idArt\":1,\"rutArt\":\"12345678-9\",\"nombreArt\":\"Los Bunkers\",\"correoArt\":\"losbunkers@gmail.com\",\"telefonoArt\":\"+56912345678\"}"))
+            .andExpect(status().isNotFound());
+    }
+    //-----------------------------------------------------------------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------------------------------------------------------------
+    @Test
+    void deleteArtista_existente() throws Exception {
+        //Arrange
+
+        //act + Assert
+        mock.perform(delete("/api/v1/artistas/eliminar_artista/id/1"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteArtista_no_existente() throws Exception {
+        //Arrange
+        doThrow(new RuntimeException("Artista con id: 99 no encontrado. No se puede eliminar."))
+            .when(service).deleteArtista(99);
+        //act + Assert
+        mock.perform(delete("/api/v1/artistas/eliminar_artista/id/99"))
+            .andExpect(status().isNotFound());
+    }
+    //-----------------------------------------------------------------------------------------------------------------------------
 }
