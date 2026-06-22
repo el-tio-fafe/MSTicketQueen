@@ -403,7 +403,7 @@ public class EventoServiceTest {
 
         //Assert
         assertNotNull(resultado);
-        assertEquals("Concierto", resultado.getPruebaDescripcion()); // O getDescripcion() según tus getters
+        assertEquals("Concierto", resultado.getDescripcion()); // O getDescripcion() según tus getters
     }
 
     @Test
@@ -418,6 +418,10 @@ public class EventoServiceTest {
 
         assertEquals("Ya existe el tipo de evento: Concierto", exception.getMessage());
     }
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
+//GUARDAR TIPO DE EVENTO
 
     @Test
     void actualizarTipoEvento_exitoso() {
@@ -450,6 +454,9 @@ public class EventoServiceTest {
         assertEquals("Tipo de Evento con id: 99No encontrado", exception.getMessage());
     }
 
+//-----------------------------------------------------------------------------------------------------------------------------
+//ELIMINAR TIPO DE EVENTO
+
     @Test
     void eliminarTipoEvento_exitoso() {
         //Arrange
@@ -461,9 +468,10 @@ public class EventoServiceTest {
         //Assert
         verify(tipoEventoRepository, times(1)).deleteById(1);
     }
-    //-----------------------------------------------------------------------------------------------------------------------------
+   
+//-----------------------------------------------------------------------------------------------------------------------------
+//LISTAR RECINTOS
 
-    //-----------------------------------------------------------------------------------------------------------------------------
     @Test
     void listarRecintos_exitoso() {
         //Arrange
@@ -476,6 +484,22 @@ public class EventoServiceTest {
         assertNotNull(resultado);
         assertEquals(1, resultado.size());
     }
+
+    @Test
+    void listarRecintos_vacio() {
+        //Arrange
+        when(recintoRepository.findAll()).thenReturn(List.of());
+
+        //Act
+        List<Recinto> resultado = eventoService.listarRecintos();
+
+        //Assert
+        assertNotNull(resultado);
+        assertEquals(0, resultado.size());
+    }
+
+//-----------------------------------------------------------------------------------------------------------------------------
+//BUSCAR RECINTOS
 
     @Test
     void buscarRecintoPorId_encontrado() {
@@ -491,6 +515,20 @@ public class EventoServiceTest {
     }
 
     @Test
+    void buscarRecintoPorId_noEncontrado_lanzaException() {
+        //Arrange
+        when(recintoRepository.findById(99)).thenReturn(Optional.empty());
+
+        //Act + Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            eventoService.buscarRecintoPorId(99);
+        });
+
+        assertEquals("Recinto con id: 99 no encontrado", exception.getMessage());
+    }
+
+
+    @Test
     void buscarRecintoPorNombre_encontrado() {
         //Arrange
         when(recintoRepository.findByNombreRecinto("Movistar Arena")).thenReturn(Optional.of(recintoEjemplo));
@@ -502,6 +540,23 @@ public class EventoServiceTest {
         assertNotNull(resultado);
         assertEquals("Movistar Arena", resultado.getNombreRecinto());
     }
+
+    @Test
+    void buscarRecintoPorNombre_noEncontrado_lanzaException() {
+        //Arrange
+        when(recintoRepository.findByNombreRecinto("Estadio No Existe")).thenReturn(Optional.empty());
+
+        //Act + Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            eventoService.buscarRecintoPorNombre("Estadio No Existe");
+        });
+
+        assertEquals("Recinto con nombre: Estadio No Existe no encontrado", exception.getMessage());
+    }
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
+//GUARDAR RECINTO
 
     @Test
     void guardarRecinto_exitoso() {
@@ -531,6 +586,9 @@ public class EventoServiceTest {
         assertEquals("Ya existe un recinto con rut: 77666555-4", exception.getMessage());
     }
 
+//-----------------------------------------------------------------------------------------------------------------------------
+//ACTUALIZAR RECINTO
+
     @Test
     void actualizarRecinto_exitoso() {
         //Arrange
@@ -553,6 +611,23 @@ public class EventoServiceTest {
     }
 
     @Test
+    void actualizarRecinto_noEncontrado_lanzaException() {
+        //Arrange
+        Recinto editado = new Recinto();
+        when(recintoRepository.findById(99)).thenReturn(Optional.empty());
+
+        //Act + Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            eventoService.actualizarRecinto(99, editado);
+        });
+
+        assertEquals("Recinto con id: 99 no encontrado", exception.getMessage());
+    }
+
+//-----------------------------------------------------------------------------------------------------------------------------
+//ELIMINAR RECINTO
+
+    @Test
     void eliminarRecinto_exitoso() {
         //Arrange
         when(recintoRepository.findById(1)).thenReturn(Optional.of(recintoEjemplo));
@@ -563,5 +638,19 @@ public class EventoServiceTest {
         //Assert
         verify(recintoRepository, times(1)).deleteById(1);
     }
-    //-----------------------------------------------------------------------------------------------------------------------------
+
+
+    @Test
+    void eliminarRecinto_noEncontrado_lanzaException() {
+        //Arrange
+        when(recintoRepository.findById(99)).thenReturn(Optional.empty());
+
+        //Act + Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            eventoService.eliminarRecinto(99);
+        });
+
+        assertEquals("Recinto con id: 99 no encontrado", exception.getMessage());
+    }
+   
 }
