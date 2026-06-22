@@ -34,7 +34,7 @@ public class Dataloader {
 
             
             FormaPago forma1 = new FormaPago(null, "Efectivo", null);
-            FormaPago forma2 = new FormaPago(null, "Tarjeta de credito", null);
+            FormaPago forma2 = new FormaPago(null, "Tarjeta de Credito", null);
             FormaPago forma3 = new FormaPago(null, "Tarjeta Debito", null);
             
             formaDePagoRepo.save(forma1);
