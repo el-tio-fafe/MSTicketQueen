@@ -195,6 +195,7 @@ public class EventoController {
         }
     }
 
+
     @PatchMapping("tipoEvento/id/{idTipoEvento}")
     @Operation(
         summary = "Actualizar un tipo de evento por su número de ID", 
@@ -206,6 +207,7 @@ public class EventoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @DeleteMapping("/tipoEvento/id/{idTipoEvento}")
     @Operation(
@@ -267,6 +269,7 @@ public class EventoController {
         }
     } 
 
+
     @PostMapping("/recinto/guardar")
     @Operation(
         summary = "Guardar un nuevo recinto", 
@@ -278,6 +281,7 @@ public class EventoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @PatchMapping("/recinto/actualizar/id/{idRecinto}")
     @Operation(
@@ -291,6 +295,7 @@ public class EventoController {
         }
     }
 
+    
     @DeleteMapping("/recinto/eliminar/id/{idRecinto}")
     @Operation(
         summary = "Eliminar un recinto por su número de ID", 
@@ -298,7 +303,7 @@ public class EventoController {
 
     public ResponseEntity<?> eliminarRecinto(@PathVariable Integer idRecinto){
         try {
-            eventoService.eliminarRecinto(idRecinto);;
+            eventoService.eliminarRecinto(idRecinto);
             return ResponseEntity.ok("Recinto con id: " + idRecinto + " eliminado con éxito");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
