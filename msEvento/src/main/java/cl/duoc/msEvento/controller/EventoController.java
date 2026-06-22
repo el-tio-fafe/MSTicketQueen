@@ -177,7 +177,7 @@ public class EventoController {
         description = "Endpoint para obtener un evento registrado en el sistema según su número de ID registrado en el sistema de control de eventos.")
     public ResponseEntity<?> buscarTiposEvento(@PathVariable Integer idTipoEvento){
         try {
-            return ResponseEntity.ok(eventoService.buscarEventoPorId(idTipoEvento));
+            return ResponseEntity.ok(eventoService.buscarTipoEventoPorId(idTipoEvento));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

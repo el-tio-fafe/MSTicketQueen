@@ -290,7 +290,7 @@ public class EventoControllerTest {
     @Test
     void buscarTiposEvento_encontrado() throws Exception {
         //Arrange
-        when(eventoService.buscarEventoPorId(1)).thenReturn(eventoEjemplo); // Nota: Tu controlador invoca a buscarEventoPorId internamente
+        when(eventoService.buscarTipoEventoPorId(1)).thenReturn(tipoEventoEjemplo); // Nota: Tu controlador invoca a buscarEventoPorId internamente
 
         //Act + Assert
         mock.perform(get("/api/v1/eventos/tiposEvento/buscar/id/1"))
@@ -300,7 +300,7 @@ public class EventoControllerTest {
     @Test
     void buscarTiposEvento_noEncontrado() throws Exception {
         //Arrange
-        when(eventoService.buscarEventoPorId(99))
+        when(eventoService.buscarTipoEventoPorId(99))
             .thenThrow(new RuntimeException("Tipo de Evento con id: 99 no encontrado"));
 
         //Act + Assert
