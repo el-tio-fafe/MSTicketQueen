@@ -13,15 +13,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msVentaTicket.model.Detalle;
 import cl.duoc.msVentaTicket.service.DetalleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/detalles")
+@Tag(name = "Detalles", description = "Endpoints relacionados con los detalles de compra, que permiten realizar operaciones CRUD sobre los detalles y consultarlos por evento.")
 public class DetalleController {
 
     @Autowired
     private DetalleService detalleService;
 
     @GetMapping
+    @Operation(
+        summary = "Obtener todos los detalles", 
+        description = "Endpoint para obtener una lista de todos los detalles registrados en el sistema de venta de tickets.")
     public ResponseEntity<?> listarDetalles(){
         try {
             List<Detalle> lista = detalleService.listarDetalles();
@@ -35,6 +41,9 @@ public class DetalleController {
     }
 
     @GetMapping("/buscar/id/{idDetalle}")
+    @Operation(
+        summary = "Obtener un detalle por ID", 
+        description = "Endpoint para obtener un detalle específico por su ID.")
     public ResponseEntity<?> buscarDetallePorId(@PathVariable Integer idDetalle){
         try {
             return ResponseEntity.ok(detalleService.buscarDetallePorId(idDetalle));
@@ -45,6 +54,9 @@ public class DetalleController {
 
 
     @GetMapping("/listar/detalles-por-evento/{idEvento}")
+    @Operation(
+        summary = "Obtener detalles por evento", 
+        description = "Endpoint para obtener una lista de detalles asociados a un evento específico por su ID.")
     public ResponseEntity<?> listarDetallesPorEvento(@PathVariable Integer idEvento){
         try {
             List<Detalle> lista = detalleService.listarDetallePorEvento(idEvento);
@@ -56,6 +68,9 @@ public class DetalleController {
 
 
     @PostMapping
+    @Operation(
+        summary = "Crear un nuevo detalle", 
+        description = "Endpoint para crear un nuevo detalle de compra en el sistema de venta de tickets.")
     public ResponseEntity<?> crearDetalle(@RequestBody Detalle detalle) {
         try {
             return ResponseEntity.ok(detalleService.crearDetalle(detalle));
